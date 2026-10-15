@@ -1,0 +1,830 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style><style>
+.fx{display:grid;gap:18px;border-top:1px solid var(--ink);padding-top:28px}
+.fx h2{font-size:28px;margin:0}
+.fx .lead{color:var(--muted);max-width:70ch}
+.fx-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+.fx-col{--c:var(--accent);background:var(--surface);border:1px solid var(--rule);border-top:4px solid var(--c);border-radius:10px;padding:18px 20px;display:grid;gap:12px;align-content:start;min-width:0}
+.fx-col.no{--c:var(--warm)} .fx-col.lim{--c:var(--muted)}
+.fx-col h3{margin:0;font-size:17px;color:var(--c)}
+.fx-col ul{margin:0;padding:0;list-style:none;display:grid;gap:12px}
+.fx-col li{font-size:15.5px;line-height:1.55}
+.fx-col li b{display:block;font-weight:600;color:var(--ink)}
+.fx-col li span{color:var(--muted)}
+@media (max-width:820px){.fx-grid{grid-template-columns:minmax(0,1fr)}}
+</style></head><body>
+<title>What the Points Keep</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,800&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: a dark black-box stage set into cool score paper; lenses as a numbered reduction (body → points → quality → residue), Effort readout beside the stage, notes below. */
+:root{
+  --paper:#ECEEF2; --surface:#F7F8FA; --ink:#14171D; --muted:#596070; --rule:#C9CED8;
+  --accent:#2C3CCB; --warm:#C9431F;
+  --stage:#0C0E12; --stage-ink:#E7E9EE; --stage-muted:#8A919E;
+  --display:"Bricolage Grotesque", "Helvetica Neue", Arial, sans-serif;
+  --body:"Newsreader", Georgia, "Times New Roman", serif;
+  --mono:"IBM Plex Mono", ui-monospace, Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --paper:#101217; --surface:#171A20; --ink:#E5E7EC; --muted:#959CA8; --rule:#2A2F38;
+  --accent:#8D99FF; --warm:#FF7C5C; --stage:#06070A; color-scheme:dark;}}
+:root[data-theme="dark"]{
+  --paper:#101217; --surface:#171A20; --ink:#E5E7EC; --muted:#959CA8; --rule:#2A2F38;
+  --accent:#8D99FF; --warm:#FF7C5C; --stage:#06070A; color-scheme:dark;}
+
+*{box-sizing:border-box}
+body{background:var(--paper);color:var(--ink);font-family:var(--body);font-size:17px;line-height:1.55;padding-inline:clamp(16px,4vw,48px);padding-block:28px 64px}
+.wrap{max-width:1240px;margin:0 auto;display:grid;gap:40px}
+h1,h2,h3{font-family:var(--display);text-wrap:balance;margin:0;letter-spacing:-.01em}
+.label{font-family:var(--mono);font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+p{margin:0}
+a{color:var(--accent)}
+button,select{font:inherit}
+
+/* header */
+header{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);gap:clamp(20px,4vw,56px);align-items:end}
+header h1{font-size:clamp(42px,7vw,92px);font-weight:800;line-height:.92;letter-spacing:-.035em}
+header h1 em{font-style:normal;color:var(--accent)}
+.lede{font-size:19px;max-width:58ch;margin-top:16px}
+.question{border-left:2px solid var(--ink);padding-left:18px;display:grid;gap:8px}
+.topbar{display:flex;justify-content:space-between;gap:12px;align-items:baseline;flex-wrap:wrap}
+.lang{font-family:var(--mono);font-size:12px;letter-spacing:.06em;color:var(--accent);text-decoration:none;border:1px solid var(--rule);padding:4px 10px;border-radius:3px}
+.lang:hover{border-color:var(--accent)}
+.question p{font-family:var(--display);font-size:clamp(20px,2.2vw,26px);line-height:1.22;font-weight:600}
+
+/* main */
+.main{display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:20px;align-items:start}
+.stagecol{display:grid;gap:12px;min-width:0}
+.stage{position:relative;background:var(--stage);border-radius:4px;overflow:hidden;display:flex;justify-content:center;align-items:center;min-height:240px}
+.stage canvas{display:block;max-width:100%}
+.stage .tag{position:absolute;left:12px;top:10px;font-family:var(--mono);font-size:11px;letter-spacing:.06em;color:var(--stage-muted);text-transform:uppercase;pointer-events:none}
+.stage .tag b{color:var(--stage-ink);font-weight:500}
+.stage .msg{position:absolute;inset:auto 12px 12px 12px;font-family:var(--mono);font-size:12px;color:var(--stage-ink);background:rgba(0,0,0,.6);padding:8px 10px;border-radius:3px}
+
+.lenses{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:0;border:1px solid var(--rule);border-radius:4px;overflow:hidden;background:var(--surface)}
+.lens{appearance:none;border:0;border-right:1px solid var(--rule);background:transparent;color:var(--ink);padding:10px 12px;text-align:left;cursor:pointer;display:grid;gap:2px}
+.lens:last-child{border-right:0}
+.lens .n{font-family:var(--mono);font-size:11px;color:var(--muted)}
+.lens .t{font-family:var(--display);font-weight:600;font-size:17px}
+.lens[aria-pressed="true"]{background:var(--ink);color:var(--paper)}
+.lens[aria-pressed="true"] .n{color:var(--paper);opacity:.7}
+.lens:focus-visible,.ctl:focus-visible,.btn:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+.transport{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.ctl,.btn{appearance:none;border:1px solid var(--rule);background:var(--surface);color:var(--ink);border-radius:3px;padding:6px 11px;font-family:var(--mono);font-size:12.5px;cursor:pointer;line-height:1.3}
+.ctl:hover,.btn:hover{border-color:var(--ink)}
+.ctl[aria-pressed="true"]{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.ctl:disabled,.btn[aria-disabled="true"]{opacity:.45;cursor:not-allowed}
+.clock{font-family:var(--mono);font-size:12.5px;color:var(--muted);font-variant-numeric:tabular-nums;margin-left:auto}
+.timeline{position:relative;background:var(--surface);border:1px solid var(--rule);border-radius:4px;cursor:pointer;touch-action:none}
+.timeline canvas{display:block;width:100%}
+
+/* side panel */
+.panel{display:grid;gap:18px;background:var(--surface);border:1px solid var(--rule);border-radius:4px;padding:18px;min-width:0}
+.drive{display:grid;gap:2px}
+.drive .name{font-family:var(--display);font-size:40px;font-weight:800;letter-spacing:-.02em;line-height:1}
+.drive .combo{font-family:var(--mono);font-size:12px;color:var(--muted)}
+.meters{display:grid;gap:12px}
+.meter{display:grid;gap:4px}
+.meter .row{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+.meter .f{font-family:var(--display);font-weight:600;font-size:15px}
+.meter .v{font-family:var(--mono);font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums}
+.bar{position:relative;height:8px;border-radius:4px;background:linear-gradient(90deg,var(--rule),var(--rule))}
+.bar i{position:absolute;top:-3px;width:3px;height:14px;background:var(--ink);border-radius:1px;transform:translateX(-1px)}
+.poles{display:flex;justify-content:space-between;font-family:var(--mono);font-size:10.5px;color:var(--muted);letter-spacing:.04em}
+.note{border-top:1px solid var(--rule);padding-top:16px;display:grid;gap:10px}
+.note h3{font-size:22px}
+.note p{font-size:16px}
+.kl{display:grid;grid-template-columns:auto minmax(0,1fr);gap:4px 10px;font-size:14.5px}
+.kl dt{font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);padding-top:3px}
+.kl dd{margin:0}
+.kl dd.lose{color:var(--warm)}
+
+/* lower sections */
+.lower{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:clamp(24px,4vw,56px);border-top:1px solid var(--ink);padding-top:28px}
+.lower h2{font-size:28px;margin-bottom:14px}
+.tablewrap{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:15px}
+th,td{text-align:left;padding:9px 10px 9px 0;border-bottom:1px solid var(--rule);vertical-align:top}
+th{font-family:var(--mono);font-size:11px;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);font-weight:500}
+td:first-child{font-family:var(--display);font-weight:600;white-space:nowrap}
+td .pole{font-family:var(--mono);font-size:12px;color:var(--muted);display:block}
+.fine{font-size:14px;color:var(--muted);margin-top:12px;max-width:62ch}
+.essay{display:grid;gap:14px;max-width:62ch}
+.essay p{font-size:17px}
+
+.source{border-top:1px solid var(--rule);padding-top:20px;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:16px;align-items:start}
+.source .actions{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+.source p{font-size:14.5px;color:var(--muted);max-width:70ch}
+input[type=file]{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}
+footer{font-family:var(--mono);font-size:12px;color:var(--muted);display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px}
+
+@media (max-width: 920px){
+  header{grid-template-columns:1fr}
+  .main{grid-template-columns:1fr}
+  .lower{grid-template-columns:1fr}
+  .source{grid-template-columns:1fr}
+  .source .actions{justify-content:flex-start}
+}
+@media (max-width: 520px){
+  .lens{padding:8px}
+  .lens .t{font-size:14px}
+  body{font-size:16px}
+}
+</style>
+
+<script id="to-top">
+try{ if('scrollRestoration' in history) history.scrollRestoration='manual'; }catch(e){}
+(function(){ var top=function(){ try{ window.scrollTo(0,0); document.documentElement.scrollTop=0; document.body&&(document.body.scrollTop=0); }catch(e){} };
+  top(); document.addEventListener('DOMContentLoaded',top); window.addEventListener('load',function(){ top(); setTimeout(top,60); setTimeout(top,300); });
+  window.addEventListener('pageshow',top); })();
+</script>
+<style id="readability">
+body{font-size:16.5px;line-height:1.6}
+.label{font-size:12px}
+.lede{font-size:18px;line-height:1.5}
+.question p{line-height:1.35}
+.lens .t,.seg .t{font-size:15px}
+.lens .n,.seg .n{font-size:11.5px}
+.ctl,.btn,.clock{font-size:13px}
+.drive .combo{font-size:13px}
+.meter .f{font-size:15px}
+.meter .v{font-size:12.5px}
+.poles{font-size:11.5px}
+.note h3{font-size:20px}
+.note p{font-size:15.5px;line-height:1.6}
+.kl{font-size:14.5px}
+.kl dt{font-size:11.5px}
+.fx,.lower,.uncanny{border-top:0;padding-top:0}
+.fx{gap:18px}
+.fx h2,.lower h2,.uncanny h2{font-size:clamp(23px,2.6vw,28px);line-height:1.15}
+.fx-col li{font-size:15.5px;line-height:1.55}
+.fx-col h3{font-size:16.5px}
+.lower{grid-template-columns:minmax(0,1fr)!important;gap:32px;max-width:860px}
+.lower>div{background:var(--surface);border:1px solid var(--rule);border-radius:12px;padding:clamp(18px,3vw,26px)}
+table{font-size:15px!important}
+th{font-size:11.5px!important;padding:9px 14px 9px 0}
+td{padding:10px 14px 10px 0;line-height:1.5}
+td .pole{font-size:12px}
+.fine{font-size:14.5px!important;line-height:1.6;max-width:70ch}
+.essay{max-width:68ch}
+.essay p,#essay p{font-size:16.5px!important;line-height:1.65}
+.uncanny{background:var(--surface);border:1px solid var(--rule);border-radius:12px;padding:clamp(18px,3vw,26px)}
+.uncanny p{font-size:16px;line-height:1.6}
+.uncanny figcaption{font-size:13.5px!important}
+.source p{font-size:14.5px}
+footer{font-size:12px}
+@media (max-width:640px){body{font-size:16px}.lede{font-size:17px}}
+</style>
+<div class="wrap">
+  <header>
+    <div>
+      <div class="topbar"><div class="label">Interactive study · 2026 · Jimin Byun</div><span style="display:flex;gap:8px;flex-wrap:wrap"><a class="lang" href="./">← Portfolio</a><a class="lang" href="bodies.html">Part 2: Borrowed Bodies</a></span></div>
+      <h1>What the <em>Points</em> Keep</h1>
+      <p class="lede">A dance phrase passed through a pose-tracking system and read through four lenses. Each lens shows what the machine receives from the moving body, what it can compute back, and what it leaves out.</p>
+    </div>
+    <div class="question">
+      <div class="label">Question</div>
+      <p>When a dancer’s movement becomes data, which qualities survive the translation, and which disappear?</p>
+    </div>
+  </header>
+
+  <section class="main" aria-label="Interactive stage">
+    <div class="stagecol">
+      <div class="stage" id="stage">
+        <canvas id="cv" aria-label="Stage rendering of the dance phrase"></canvas>
+        <div class="tag" id="tag"></div>
+        <div class="msg" id="msg" hidden></div>
+      </div>
+      <div class="lenses" role="group" aria-label="Lens">
+        <button class="lens" data-lens="body" aria-pressed="true"><span class="n">1</span><span class="t">Body</span></button>
+        <button class="lens" data-lens="points" aria-pressed="false"><span class="n">2</span><span class="t">Points</span></button>
+        <button class="lens" data-lens="quality" aria-pressed="false"><span class="n">3</span><span class="t">Quality</span></button>
+        <button class="lens" data-lens="residue" aria-pressed="false"><span class="n">4</span><span class="t">Residue</span></button>
+      </div>
+      <div class="transport">
+        <button class="ctl" id="play" aria-label="Play or pause">Pause</button>
+        <button class="ctl" id="restart">Restart</button>
+        <button class="ctl" id="speed" aria-label="Playback speed">1×</button>
+        <button class="ctl" id="sound" aria-pressed="false" hidden>Sound off</button>
+        <span class="clock" id="clock">0:00.0 / 0:00.0</span>
+      </div>
+      <div class="timeline" id="timeline" aria-label="Effort over the phrase. Click or drag to move through the phrase.">
+        <canvas id="tl"></canvas>
+      </div>
+    </div>
+
+    <aside class="panel" aria-label="Effort reading">
+      <div class="drive">
+        <div class="label">Laban action drive, now</div>
+        <div class="name" id="driveName">Glide</div>
+        <div class="combo" id="driveCombo">Light · Sustained · Direct</div>
+      </div>
+      <div class="meters" id="meters"></div>
+      <div class="note" id="note"></div>
+    </aside>
+  </section>
+
+  <section class="fx" aria-label="What this study shows"><h2>What this study shows</h2><p class="lead">A summary of what the pose data kept and lost in this duet.</p><div class="fx-grid"><div class="fx-col "><h3>Carried over</h3><ul><li><b>Rhythm</b><span>When a movement turns sudden the Time value rises, and when it slows the value falls.</span></li><li><b>Reach</b><span>The Residue lens draws how far each dancer reaches around the body.</span></li></ul></div><div class="fx-col no"><h3>Not recorded</h3><ul><li><b>Breath</b><span>There are no points on the chest or back, so the widening of the ribs leaves no trace.</span></li><li><b>Intention</b><span>A reach toward a partner and a push away, on the same path at the same speed, get the same values.</span></li></ul></div><div class="fx-col lim"><h3>Limits</h3><ul><li><b>Five points</b><span>Effort and the traces use only the head, wrists and ankles; the hands and feet themselves are not tracked.</span></li><li><b>The lift</b><span>From 15.4 to 21.9 seconds one dancer is hidden by the other and drops out of the data.</span></li><li><b>Effort values</b><span>They are an approximation and have not been checked against trained Laban analysts.</span></li></ul></div></div></section>
+  <section class="lower">
+    <div>
+      <h2>How the system reads movement</h2>
+      <div class="tablewrap">
+        <table>
+          <thead><tr><th>Effort</th><th>Computed from</th><th>How the Quality lens shows it</th></tr></thead>
+          <tbody>
+            <tr><td>Weight<span class="pole">light ↔ strong</span></td><td>Sum of the squared speeds of the head, wrists and ankles around the pelvis</td><td>Width of the trail</td></tr>
+            <tr><td>Time<span class="pole">sustained ↔ sudden</span></td><td>Mean acceleration of the same points</td><td>Colour of the trail, from blue (sustained) to red (sudden)</td></tr>
+            <tr><td>Flow<span class="pole">free ↔ bound</span></td><td>Mean jerk, the rate of change of acceleration</td><td>The trail breaks into pieces as the flow becomes bound</td></tr>
+            <tr><td>Space<span class="pole">indirect ↔ direct</span></td><td>Straightness of each wrist’s path over about one second</td><td>A dotted line from where the wrist was a second ago to where it is now</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="fine" id="method"></p>
+    </div>
+    <div class="essay">
+      <h2>What the data cannot hold</h2>
+      <p>The four values follow the speed, acceleration, jerk and path of five points. Changes of tempo and suddenness register in them, and the Quality lens makes them visible.</p>
+      <p>What they cannot register is why a movement is made. A reach toward someone and a push away, along the same path at the same speed, receive the same values. Maxine Sheets-Johnstone (1999) describes movement as a way of thinking that is felt from inside; the data has no record of that inside.</p>
+      <p>In doctoral research I want to study where and how such qualities are lost or changed as movement passes through motion capture, avatars and AI systems.</p>
+    </div>
+  </section>
+
+  <section class="source" aria-label="Phrase source">
+    <div>
+      <div class="label">Phrase source</div>
+      <p id="sourceText"></p>
+    </div>
+    <div class="actions">
+      <label class="btn" for="fVideo">Load video</label>
+      <input type="file" id="fVideo" accept="video/*">
+      <label class="btn" for="fPose">Load pose data</label>
+      <input type="file" id="fPose" accept=".json,application/json">
+      <button class="btn" id="analyze">Analyze loaded video</button>
+      <button class="btn" id="camera">Live camera</button>
+      <button class="btn" id="savePose" aria-disabled="true">Save pose data</button>
+    </div>
+  </section>
+
+  <footer><span>Jimin Byun · choreography, system and text</span><span id="built">Built with MediaPipe Pose and Canvas 2D</span></footer>
+</div>
+
+<video id="vid" playsinline muted preload="auto" crossorigin="anonymous" hidden></video>
+
+<script>
+(() => {
+"use strict";
+const $ = id => document.getElementById(id);
+const cv = $("cv"), ctx = cv.getContext("2d");
+const tl = $("tl"), tctx = tl.getContext("2d");
+const vid = $("vid");
+const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+/* ---------------- skeletons ---------------- */
+// Joint roles are named so drawing and features work for both skeleton formats.
+const SKELS = {
+  mp33: { n:33, name:"MediaPipe Pose Landmarker", unit:"33 landmarks",
+    conn:[[11,12],[11,13],[13,15],[12,14],[14,16],[11,23],[12,24],[23,24],[23,25],[25,27],[24,26],[26,28],[27,29],[29,31],[27,31],[28,30],[30,32],[28,32],[15,17],[15,19],[15,21],[17,19],[16,18],[16,20],[16,22],[18,20],[0,1],[1,2],[2,3],[3,7],[0,4],[4,5],[5,6],[6,8],[9,10]],
+    face:11, J:{nose:0,lsh:11,rsh:12,lel:13,rel:14,lwr:15,rwr:16,lhip:23,rhip:24,lkn:25,rkn:26,lan:27,ran:28} },
+  coco17: { n:17, name:"YOLO11 pose estimation with ByteTrack identity tracking", unit:"17 keypoints",
+    conn:[[5,6],[5,7],[7,9],[6,8],[8,10],[5,11],[6,12],[11,12],[11,13],[13,15],[12,14],[14,16],[0,1],[0,2],[1,3],[2,4]],
+    face:5, J:{nose:0,lsh:5,rsh:6,lel:7,rel:8,lwr:9,rwr:10,lhip:11,rhip:12,lkn:13,rkn:14,lan:15,ran:16} }
+};
+for (const k in SKELS){ const s=SKELS[k], J=s.J;
+  s.ext=[J.nose,J.lwr,J.rwr,J.lan,J.ran];                 // ribbons: head, wrists, ankles
+  s.feat=[J.nose,J.lwr,J.rwr,J.lan,J.ran,J.lhip,J.rhip];  // feature points
+  s.labels={[J.nose]:"head",[J.lwr]:"L wrist",[J.rwr]:"R wrist",[J.lan]:"L ankle",[J.ran]:"R ankle"}; }
+
+const FACTORS = [
+  {k:"W", name:"Weight", lo:"Light",     hi:"Strong"},
+  {k:"T", name:"Time",   lo:"Sustained", hi:"Sudden"},
+  {k:"F", name:"Flow",   lo:"Free",      hi:"Bound"},
+  {k:"S", name:"Space",  lo:"Indirect",  hi:"Direct"},
+];
+const DRIVES = {"000":"Float","001":"Glide","010":"Flick","011":"Dab","100":"Wring","101":"Press","110":"Slash","111":"Punch"};
+const COOL=[111,134,255], WARM=[255,106,69];
+const DANCER=["A","B","C"];
+const LENSES = {
+  body:{title:"Body", text:()=>"The phrase as performed. Weight, breath, gaze and intention arrive together and cannot be pulled apart. Every other lens is measured against this one.",
+    keeps:"Everything the eye takes in.", loses:"Being there: this is a recording."},
+  points:{title:"Points", text:()=>`Pose estimation reduces each body to ${S.skel.unit}, sampled about thirty times a second. Hollow points mark joints the system is unsure of; its confidence drops when a limb turns away or crosses the torso.`+
+      (S.maxPeople>1?" When the dancers touch, the system has to decide where one body ends and the other begins, and it does not always decide correctly.":""),
+    keeps:"Position, frame by frame.", loses:"Breath, gaze, muscular tension, intention."},
+  quality:{title:"Quality", text:()=>"Laban’s Effort describes how a movement is done rather than where it goes. Each factor is approximated from changes in position. A trail follows the head, wrists and ankles: it widens with speed, turns red with suddenness and breaks apart when the flow is bound.",
+    keeps:"Changes of speed and suddenness.", loses:"The felt reason for a dynamic."},
+  residue:{title:"Residue", text:()=>`With the ${S.maxPeople>1?"bodies":"body"} removed, the phrase becomes a drawing that grows as it plays. Wrists, ankles and head are traced around ${S.maxPeople>1?"each dancer’s":"the dancer’s"} own pelvis, inside the kinesphere Laban described as the space a body can reach without travelling. Measured this way, the camera’s zooms and pans leave almost no mark on the trace.`,
+    keeps:"The shape of each dancer’s reach.", loses:"Travel across the stage."}
+};
+
+/* ---------------- state ---------------- */
+const S = {
+  lens:"body", mode:"demo", aspect:16/9, skel:SKELS.mp33, maxPeople:1,
+  frames:{t:[], p:[]},    // p[i] = array of slots, each Float32Array(n*3) [x,y,conf] or null
+  feat:{W:[],T:[],F:[],S:[]}, jspeed:[],
+  hasVideo:false, mirror:false, camNote:"",
+  playing:!reduceMotion, rate:1, clock:0, lastTs:0,
+  poseName:"", videoName:"", sourceNote:"",
+  residueIdx:-1, needResidueReset:true, saveable:false
+};
+const residueCv = document.createElement("canvas"), rctx = residueCv.getContext("2d");
+
+/* ---------------- feature engine ---------------- */
+function pctl(arr, q){ if(!arr.length) return 0; const s=Float64Array.from(arr).sort(); return s[Math.min(s.length-1,Math.max(0,Math.floor(q*(s.length-1))))]; }
+function computeAll(){
+  const {t,p}=S.frames, n=t.length, A=S.aspect, sk=S.skel, J=sk.J, K=S.maxPeople;
+  const pts=sk.ext, E=sk.ext.length;
+  S.body=[];
+  const rawSum={W:new Float64Array(n),T:new Float64Array(n),F:new Float64Array(n),S:new Float64Array(n)};
+  const rawCnt=new Float64Array(n), sCnt=new Float64Array(n);
+  const js=[]; for(let i=0;i<n;i++){ const a=[]; for(let s=0;s<K;s++) a.push(new Float64Array(E)); js.push(a); }
+  if(n<4){ S.feat={W:[],T:[],F:[],S:[]}; S.jspeed=js; return; }
+  const dtAt=i=>Math.max(1/120,(t[i]-t[i-1])||1/30);
+  const win=Math.max(8,Math.round((n-1)/Math.max(.1,t[n-1]-t[0])));   // ≈1 s of frames
+  // camera scale shared by every dancer (one camera): the least foreshortened torso or leg segment, in torso lengths,
+  // held over about a second so bending, lying down and lifts do not read as the camera zooming
+  const BR=[[J.lsh,J.lhip,1],[J.rsh,J.rhip,1],[J.lhip,J.lkn,.92],[J.rhip,J.rkn,.92],[J.lkn,J.lan,.88],[J.rkn,J.ran,.88]];  // torso and legs only: arms stretch and cross bodies too freely
+  const rawC=new Float64Array(n);
+  for(let i=0;i<n;i++){ let best=0;
+    for(let s=0;s<K;s++){ const q=p[i][s]; if(!q) continue; const e=[];
+      for(const [a,b,r] of BR){ if(Math.min(q[a*3+2],q[b*3+2])<.4) continue; e.push(Math.hypot((q[a*3]-q[b*3])*A,q[a*3+1]-q[b*3+1])/r); }
+      if(e.length>=3){ e.sort((x,y)=>y-x); best=Math.max(best,e[1]); } }
+    rawC[i]=best; }
+  const camC=new Float64Array(n).fill(NaN);
+  for(let i=0;i<n;i++){ const v=[]; for(let k=Math.max(0,i-win);k<=Math.min(n-1,i+win);k++) if(rawC[k]>0) v.push(rawC[k]);
+    if(v.length){ v.sort((x,y)=>x-y); camC[i]=v[Math.min(v.length-1,Math.floor(v.length*.8))]; } }
+  { let last=NaN; for(let i=0;i<n;i++){ if(isFinite(camC[i])) last=camC[i]; else camC[i]=last; }
+    last=NaN; for(let i=n-1;i>=0;i--){ if(isFinite(camC[i])) last=camC[i]; else camC[i]=last; }
+    for(let i=0;i<n;i++) if(!isFinite(camC[i])) camC[i]=.2; }
+  const camS=new Float64Array(n), hw=Math.max(2,Math.round(win/2));
+  for(let i=0;i<n;i++){ let a=0,c=0; for(let k=Math.max(0,i-hw);k<=Math.min(n-1,i+hw);k++){ a+=camC[k]; c++; } camS[i]=Math.max(.03,a/c); }
+  for(let s=0;s<K;s++){
+    // per-frame body frame: pelvis centre, and the shared camera scale (torso lengths); carries over gaps
+    const scale=new Float64Array(n), pX=new Float64Array(n), pY=new Float64Array(n); let sc=0, cx=NaN, cy=NaN;
+    for(let i=0;i<n;i++){ const q=p[i][s]; if(!q){ scale[i]=camS[i]; pX[i]=cx; pY[i]=cy; continue; }
+      if(Math.min(q[J.lhip*3+2],q[J.rhip*3+2])>.2 || isNaN(cx)){ cx=(q[J.lhip*3]+q[J.rhip*3])/2*A; cy=(q[J.lhip*3+1]+q[J.rhip*3+1])/2; }
+      pX[i]=cx; pY[i]=cy;
+      scale[i]=camS[i]; }
+    S.body[s]={x:pX,y:pY,sc:scale};
+    // smoothed positions in torso units; NaN where absent
+    const X=pts.map(()=>new Float64Array(n).fill(NaN)), Y=pts.map(()=>new Float64Array(n).fill(NaN));
+    pts.forEach((j,k)=>{ let px=NaN,py=NaN; const a=.45;
+      for(let i=0;i<n;i++){ const q=p[i][s]; if(!q){ px=py=NaN; continue; }
+        const x=(q[j*3]*A-pX[i])/scale[i], y=(q[j*3+1]-pY[i])/scale[i];
+        px = isNaN(px)? x : a*x+(1-a)*px; py = isNaN(py)? y : a*y+(1-a)*py; X[k][i]=px; Y[k][i]=py; }
+      if(S.mode!=="live"&&S.mode!=="analyzing") for(let i=n-2;i>=0;i--){ if(isFinite(X[k][i])&&isFinite(X[k][i+1])){ X[k][i]=a*X[k][i]+(1-a)*X[k][i+1]; Y[k][i]=a*Y[k][i]+(1-a)*Y[k][i+1]; } } });
+    S.body[s].X=X; S.body[s].Y=Y;
+    const vx=pts.map(()=>new Float64Array(n).fill(NaN)),vy=pts.map(()=>new Float64Array(n).fill(NaN));
+    const ax=pts.map(()=>new Float64Array(n).fill(NaN)),ay=pts.map(()=>new Float64Array(n).fill(NaN));
+    for(let k=0;k<pts.length;k++) for(let i=1;i<n;i++){ const d=dtAt(i);
+      vx[k][i]=(X[k][i]-X[k][i-1])/d; vy[k][i]=(Y[k][i]-Y[k][i-1])/d;
+      ax[k][i]=(vx[k][i]-vx[k][i-1])/d; ay[k][i]=(vy[k][i]-vy[k][i-1])/d; }
+    for(let i=3;i<n;i++){ const d=dtAt(i); let w=0,ac=0,jk=0,ok=true;
+      for(let k=0;k<pts.length;k++){ const v2=vx[k][i]**2+vy[k][i]**2;
+        const jx=(ax[k][i]-ax[k][i-1])/d, jy=(ay[k][i]-ay[k][i-1])/d;
+        if(!isFinite(v2)||!isFinite(jx)||!isFinite(jy)){ ok=false; break; }
+        w+=v2; ac+=Math.hypot(ax[k][i],ay[k][i]); jk+=Math.hypot(jx,jy);
+        if(k<E) js[i][s][k]=Math.sqrt(v2); }
+      if(!ok){ for(let k=0;k<E;k++) js[i][s][k]=0; continue; }
+      rawSum.W[i]+=w; rawSum.T[i]+=ac/pts.length; rawSum.F[i]+=Math.log1p(jk/pts.length); rawCnt[i]++;
+    }
+    // Space: straightness of each wrist over ~1 s within an unbroken run
+    for(let i=0;i<n;i++){ let sum=0,c=0;
+      for(const k of [1,2]){ const i0=Math.max(0,i-win); let path=0, good=isFinite(X[k][i])&&isFinite(X[k][i0]);
+        for(let m=i0+1;m<=i&&good;m++){ const d=Math.hypot(X[k][m]-X[k][m-1],Y[k][m]-Y[k][m-1]); if(!isFinite(d)) good=false; else path+=d; }
+        if(good&&path>.15){ sum+=Math.hypot(X[k][i]-X[k][i0],Y[k][i]-Y[k][i0])/path; c++; } }
+      if(c){ rawSum.S[i]+=sum/c; sCnt[i]++; } }
+  }
+  // per-frame mean over dancers present, then smooth and normalize within the phrase
+  const out={};
+  for(const key of ["W","T","F","S"]){ const cnt= key==="S"? sCnt: rawCnt; const sm=new Float64Array(n);
+    let prev=NaN;
+    for(let i=0;i<n;i++){ const v= cnt[i]? rawSum[key][i]/cnt[i] : NaN;
+      if(isNaN(prev)) prev = isNaN(v)? NaN : v; else if(!isNaN(v)) prev=.78*prev+.22*v; sm[i]=prev; }
+    const valid=Array.from(sm).filter(v=>!isNaN(v));
+    const lo= key==="S"? .25 : pctl(valid,.05), hi= key==="S"? .95 : pctl(valid,.95);
+    out[key]=Array.from(sm,v=> isNaN(v)? .5 : Math.min(1,Math.max(0,(v-lo)/((hi-lo)||1)))); }
+  const all=[]; js.forEach(a=>a.forEach(b=>b.forEach(v=>{ if(v>0) all.push(v); }))); const jhi=pctl(all,.96)||1;
+  S.jspeed=js.map(a=>a.map(b=>Array.from(b,v=>Math.min(1.4,v/jhi))));
+  S.feat=out;
+}
+
+/* ---------------- synthetic demo figure (MediaPipe layout) ---------------- */
+function demoPhrase(){
+  const fps=30, dur=16, A=16/9, N=33, frames={t:[],p:[]};
+  const L={torso:.22,ua:.13,fa:.12,th:.19,sh:.185,neck:.085,sw:.08,hw:.055};
+  const ease=x=>x<0?0:x>1?1:x*x*(3-2*x), expo=x=>x<=0?0:x>=1?1:1-Math.pow(2,-10*x), lerp=(a,b,u)=>a+(b-a)*u;
+  function sec(s){
+    const P={tx:0,drop:0,lean:0,aL:.25,eL:.2,aR:.25,eR:.2,stepL:0,stepR:0,head:0,trem:0};
+    if(s<4){ const u=s/4*Math.PI*2;
+      P.aL=1.5+1.05*Math.sin(u*.75); P.eL=.6+.45*Math.sin(u*.75+1); P.aR=1.5+1.05*Math.sin(u*.75+1.9); P.eR=.6+.45*Math.sin(u*.75+2.6);
+      P.lean=.12*Math.sin(u*.5); P.drop=.02+.02*Math.sin(u); P.tx=.05*Math.sin(u*.5); }
+    else if(s<6.6){ const k=Math.floor((s-4)/.52), f=(s-4)-k*.52, e=expo(f/.09);
+      const poses=[[2.9,.05,.3,.9,.06,.10,-.08],[.4,1.4,2.8,.0,.0,-.06,.12],[2.2,.0,2.3,.0,.09,.05,-.15],[.2,.3,3.0,.05,.04,-.1,.05],[2.8,.1,.6,1.1,.1,.12,.08],[1.6,.2,1.7,.2,.0,0,0]];
+      const a=poses[k%poses.length], q=k===0?a:poses[(k-1)%poses.length], m=i=>lerp(q[i],a[i],e);
+      P.aL=m(0);P.eL=m(1);P.aR=m(2);P.eR=m(3);P.drop=m(4);P.lean=m(5);P.tx=m(6); }
+    else if(s<10.6){ const u=(s-6.6)/4*Math.PI*2;
+      P.aL=1.6+1.3*Math.sin(u*1.5); P.eL=.9+.7*Math.sin(u*1.5+.8); P.aR=1.6+1.3*Math.sin(u*1.5+Math.PI); P.eR=.9+.7*Math.sin(u*1.5+Math.PI+.8);
+      P.lean=.25*Math.sin(u); P.tx=.16*Math.sin(u*.5); P.drop=.06+.04*Math.sin(u*2); P.head=.25*Math.sin(u); }
+    else if(s<12.6){ const u=(s-10.6)/2;
+      P.aL=lerp(.4,2.1,ease(u)); P.eL=lerp(1.6,.15,ease(u)); P.aR=lerp(.4,2.0,ease(u)); P.eR=lerp(1.6,.2,ease(u)); P.drop=.1-.04*u; P.trem=.018; P.lean=-.05; }
+    else { const k=Math.floor((s-12.6)/.85), f=((s-12.6)-k*.85)/.85;
+      const goal=[[1.55,.0,.3,.2],[.3,.2,1.5,.0],[2.5,.0,2.5,.0],[.25,.2,.25,.2],[1.55,.0,1.55,.0]];
+      const a=goal[k%goal.length], q=k===0?[2.0,.2,2.0,.2]:goal[(k-1)%goal.length], e=ease(f/.6);
+      P.aL=lerp(q[0],a[0],e);P.eL=lerp(q[1],a[1],e);P.aR=lerp(q[2],a[2],e);P.eR=lerp(q[3],a[3],e); P.tx=((.04*k)%.12)-.04; P.drop=.03; }
+    return P;
+  }
+  function blend(s){ let P=sec(s);
+    for(const x of [4,6.6,10.6,12.6]){ const d=s-x; if(d>=0&&d<.3){ const prev=sec(x-.001), w=ease(d/.3); for(const k in P) P[k]=lerp(prev[k],P[k],w); } }
+    return P; }
+  let seed=7; const rnd=()=>((seed=(seed*16807)%2147483647)/2147483647-.5);
+  for(let i=0;i<fps*dur;i++){
+    const s=i/fps, P=blend(s), q=new Float32Array(N*3), tr=()=>P.trem?rnd()*P.trem:0;
+    const pel=[P.tx,.58+P.drop], sc=[pel[0]+L.torso*Math.sin(P.lean), pel[1]-L.torso*Math.cos(P.lean)], perp=[Math.cos(P.lean),Math.sin(P.lean)];
+    // the figure faces the viewer: its left side appears on screen right
+    const shL=[sc[0]+perp[0]*L.sw,sc[1]+perp[1]*L.sw], shR=[sc[0]-perp[0]*L.sw,sc[1]-perp[1]*L.sw];
+    const hipL=[pel[0]+perp[0]*L.hw,pel[1]+perp[1]*L.hw], hipR=[pel[0]-perp[0]*L.hw,pel[1]-perp[1]*L.hw];
+    const arm=(sh,a,e,side)=>{ const el=[sh[0]+side*L.ua*Math.sin(a)+tr(), sh[1]+L.ua*Math.cos(a)+tr()], ang=a+e;
+      const wr=[el[0]+side*L.fa*Math.sin(ang)+tr(), el[1]+L.fa*Math.cos(ang)+tr()]; return [el,wr,[wr[0]+side*.035*Math.sin(ang), wr[1]+.035*Math.cos(ang)]]; };
+    const [elL,wrL,hdL]=arm(shL,P.aL,P.eL,1), [elR,wrR,hdR]=arm(shR,P.aR,P.eR,-1);
+    const leg=(hip,axp)=>{ const an=[axp,.955], dx=an[0]-hip[0], dy=an[1]-hip[1], d=Math.min(L.th+L.sh-1e-3,Math.hypot(dx,dy));
+      const a1=Math.atan2(dy,dx), c=Math.acos(Math.min(1,(L.th*L.th+d*d-L.sh*L.sh)/(2*L.th*d))), side=hip[0]>pel[0]?1:-1;
+      return [[hip[0]+L.th*Math.cos(a1-side*c), hip[1]+L.th*Math.sin(a1-side*c)],an]; };
+    const [knL,anL]=leg(hipL,pel[0]+.09+P.stepL), [knR,anR]=leg(hipR,pel[0]-.09+P.stepR);
+    const hd=[sc[0]+L.neck*Math.sin(P.lean+P.head*.4), sc[1]-L.neck*Math.cos(P.lean+P.head*.4)];
+    const set=(j,pt,v=.97)=>{ q[j*3]=.5+pt[0]/A; q[j*3+1]=pt[1]; q[j*3+2]=v; }, eye=(dx,dy)=>[hd[0]+dx,hd[1]+dy];
+    set(0,hd); set(1,eye(.008,-.012)); set(2,eye(.014,-.012)); set(3,eye(.02,-.011)); set(4,eye(-.008,-.012)); set(5,eye(-.014,-.012)); set(6,eye(-.02,-.011));
+    set(7,eye(.03,-.004)); set(8,eye(-.03,-.004)); set(9,eye(.008,.012)); set(10,eye(-.008,.012));
+    set(11,shL);set(12,shR);set(13,elL);set(14,elR);
+    const occ=w=>Math.abs(w[0]-sc[0])<.05&&w[1]>sc[1]&&w[1]<pel[1]?.3:.97;
+    set(15,wrL,occ(wrL)); set(16,wrR,occ(wrR)); set(17,hdL,occ(wrL)*.9); set(18,hdR,occ(wrR)*.9);
+    set(19,[hdL[0]+.006,hdL[1]],occ(wrL)*.9); set(20,[hdR[0]-.006,hdR[1]],occ(wrR)*.9); set(21,[wrL[0]+.01,wrL[1]+.01],.8); set(22,[wrR[0]-.01,wrR[1]+.01],.8);
+    set(23,hipL);set(24,hipR);set(25,knL);set(26,knR);set(27,anL);set(28,anR);
+    set(29,[anL[0]-.012,anL[1]+.015]); set(30,[anR[0]+.012,anR[1]+.015]); set(31,[anL[0]+.03,anL[1]+.02]); set(32,[anR[0]-.03,anR[1]+.02]);
+    frames.t.push(s); frames.p.push([q]);
+  }
+  return {frames, aspect:A, skeleton:"mp33", people:1};
+}
+
+/* ---------------- data loading ---------------- */
+function setData(d){
+  S.frames=d.frames; S.aspect=d.aspect||S.aspect; S.skel=SKELS[d.skeleton]||SKELS.mp33; S.maxPeople=d.people||1;
+  S.camNote=d.note||""; computeAll(); S.needResidueReset=true; S.clock=0; layout(); renderNote(); updateMethod();
+}
+function parsePose(obj){
+  if(!obj||!Array.isArray(obj.t)||!Array.isArray(obj.p)) throw new Error("This file is not pose data saved by this page.");
+  const skeleton = obj.skeleton || "mp33", sk=SKELS[skeleton]; if(!sk) throw new Error("Unknown skeleton format in this file.");
+  const v2 = obj.format==="what-the-points-keep/pose-2";
+  let people=1;
+  const p = obj.p.map(fr=>{ const arr = v2? fr : [fr];
+    people=Math.max(people,arr.length);
+    return arr.map(a=> a? Float32Array.from(a): null); });
+  for(const fr of p) for(const a of fr) if(a && a.length!==sk.n*3) throw new Error(`Each body needs ${sk.n} keypoints.`);
+  p.forEach(fr=>{ while(fr.length<people) fr.push(null); });
+  return {frames:{t:obj.t.slice(),p}, aspect:obj.aspect||16/9, skeleton, people, note:obj.note||""};
+}
+function poseToJSON(){
+  const r=v=>Math.round(v*10000)/10000;
+  return JSON.stringify({format:"what-the-points-keep/pose-2", skeleton:Object.keys(SKELS).find(k=>SKELS[k]===S.skel), aspect:r(S.aspect), fps:30,
+    t:S.frames.t.map(r), p:S.frames.p.map(fr=>fr.map(a=>a?Array.from(a,r):null))});
+}
+async function tryAutoload(){
+  try{
+    const r=await fetch("duet.json",{cache:"no-store"}); if(!r.ok) return false;
+    const d=parsePose(await r.json()); setData(d); S.mode="recorded"; S.poseName="duet.json";
+    await loadVideoSrc("duet.mp4","duet.mp4",true); updateSource(); return true;
+  }catch(e){ return false; }
+}
+function loadVideoSrc(src,name,quiet){
+  return new Promise(res=>{
+    const done=ok=>{ vid.onloadeddata=null; vid.onerror=null; res(ok); };
+    vid.onloadeddata=()=>{ S.hasVideo=true; S.videoName=name; S.aspect=vid.videoWidth/vid.videoHeight||S.aspect; S.mirror=false; $("sound").hidden=false; layout(); done(true); };
+    vid.onerror=()=>{ if(!quiet) showMsg("This video could not be opened in this browser. Try an MP4 (H.264) file."); done(false); };
+    vid.srcObject=null; vid.src=src; vid.muted=!soundOn; vid.load();
+  });
+}
+
+/* ---------------- live / analysis (standalone or hosted page only) ---------------- */
+let landmarker=null, camStream=null, analysisRaf=0;
+async function getLandmarker(){
+  if(landmarker) return landmarker;
+  showMsg("Loading the pose model…");
+  const V="0.10.14", timeout=new Promise((_,rej)=>setTimeout(()=>rej(new Error("timeout")),20000));
+  const load=(async()=>{
+    const m=await import(`https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@${V}/vision_bundle.mjs`);
+    const fs=await m.FilesetResolver.forVisionTasks(`https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@${V}/wasm`);
+    const opts=d=>({baseOptions:{modelAssetPath:"https://storage.googleapis.com/mediapipe-models/pose_landmarker/pose_landmarker_full/float16/1/pose_landmarker_full.task",delegate:d},runningMode:"VIDEO",numPoses:2});
+    try{ return await m.PoseLandmarker.createFromOptions(fs,opts("GPU")); } catch(e){ return await m.PoseLandmarker.createFromOptions(fs,opts("CPU")); }
+  })();
+  try{ landmarker=await Promise.race([load,timeout]); hideMsg(); return landmarker; }
+  catch(e){ showMsg("The pose model can’t load in this viewer. Open the standalone page in Chrome to analyze video or use the camera. Recorded pose data plays here."); return null; }
+}
+const toArr=lm=>{ const q=new Float32Array(33*3); for(let j=0;j<33;j++){ q[j*3]=lm[j].x; q[j*3+1]=lm[j].y; q[j*3+2]=lm[j].visibility??1; } return q; };
+function resetLive(){ S.skel=SKELS.mp33; S.maxPeople=2; S.frames={t:[],p:[]}; S.feat={W:[],T:[],F:[],S:[]}; S.jspeed=[]; S.needResidueReset=true; S.camNote=""; renderNote(); updateMethod(); }
+function pushDetections(time,res){
+  const people=(res.landmarks||[]).slice(0,2).map(toArr);
+  // keep identities stable by matching hip centres to the previous frame
+  const prev=S.frames.p[S.frames.p.length-1];
+  if(prev && people.length===2 && prev[0] && prev[1]){
+    const c=q=>[(q[69]+q[72])/2,(q[70]+q[73])/2], d=(a,b)=>Math.hypot(a[0]-b[0],a[1]-b[1]);
+    if(d(c(people[0]),c(prev[1]))+d(c(people[1]),c(prev[0])) < d(c(people[0]),c(prev[0]))+d(c(people[1]),c(prev[1]))) people.reverse(); }
+  while(people.length<2) people.push(null);
+  if(people[0]||people[1]){ S.frames.t.push(time); S.frames.p.push(people); }
+}
+async function analyzeVideo(){
+  if(!S.hasVideo||S.mode==="live"){ showMsg("Load a video of the phrase first, then analyze it."); return; }
+  const lmk=await getLandmarker(); if(!lmk) return;
+  stopCamera(); S.mode="analyzing"; resetLive();
+  vid.pause(); vid.currentTime=0; vid.playbackRate=1; vid.muted=true;
+  await new Promise(r=>{ vid.onseeked=()=>{ vid.onseeked=null; r(); }; });
+  showMsg("Analyzing… the phrase plays once at normal speed.");
+  let lastT=-1;
+  const step=()=>{ if(S.mode!=="analyzing") return;
+    if(vid.currentTime!==lastT&&vid.readyState>=2){ lastT=vid.currentTime; pushDetections(vid.currentTime, lmk.detectForVideo(vid,performance.now())); if(S.frames.t.length%15===0) computeAll(); }
+    if(vid.ended){ finishAnalysis(); return; } analysisRaf=requestAnimationFrame(step); };
+  vid.play().then(()=>{ analysisRaf=requestAnimationFrame(step); }).catch(()=>showMsg("The video would not play. Press Analyze again."));
+}
+function finishAnalysis(){
+  cancelAnimationFrame(analysisRaf);
+  if(S.frames.t.length<10){ S.mode="recorded"; showMsg("No body was found in this video. Use a clip where the whole body is visible."); return; }
+  computeAll(); S.mode="recorded"; S.poseName="analyzed in browser"; S.saveable=true; S.needResidueReset=true;
+  vid.muted=!soundOn; vid.currentTime=0; S.playing=true; vid.play().catch(()=>{}); hideMsg(); updateSource();
+}
+async function startCamera(){
+  if(S.mode==="live"){ stopCamera(); return; }
+  if(!navigator.mediaDevices?.getUserMedia){ showMsg("The camera isn’t available in this viewer. Open the standalone page in Chrome to dance with the system."); return; }
+  const lmk=await getLandmarker(); if(!lmk) return;
+  try{ camStream=await navigator.mediaDevices.getUserMedia({video:{width:{ideal:1280},height:{ideal:720}},audio:false}); }
+  catch(e){ showMsg("Camera access was refused. Allow the camera for this page, then press Live camera again."); return; }
+  vid.src=""; vid.srcObject=camStream; vid.muted=true; await vid.play().catch(()=>{});
+  await new Promise(r=>{ if(vid.videoWidth) r(); else vid.onloadedmetadata=()=>r(); });
+  S.aspect=vid.videoWidth/vid.videoHeight||16/9; S.hasVideo=true; S.mirror=true; S.mode="live"; S.videoName="camera"; resetLive(); S.t0=performance.now();
+  $("camera").textContent="Stop camera"; layout(); updateSource(); hideMsg();
+  let last=-1;
+  const step=()=>{ if(S.mode!=="live") return; const now=performance.now();
+    if(vid.readyState>=2&&now-last>30){ last=now; pushDetections((now-S.t0)/1000, lmk.detectForVideo(vid,now));
+      if(S.frames.t.length>9000){ S.frames.t.splice(0,1800); S.frames.p.splice(0,1800); S.needResidueReset=true; }
+      if(S.frames.t.length%10===0) computeAll(); }
+    analysisRaf=requestAnimationFrame(step); };
+  analysisRaf=requestAnimationFrame(step);
+}
+function stopCamera(){
+  if(camStream){ camStream.getTracks().forEach(t=>t.stop()); camStream=null; }
+  if(S.mode==="live"){ cancelAnimationFrame(analysisRaf); S.hasVideo=false; vid.srcObject=null;
+    if(S.frames.t.length>10){ S.mode="recorded"; computeAll(); S.saveable=true; S.poseName="camera session"; }
+    else { S.mode="demo"; setData(demoPhrase()); }
+    S.clock=0; S.needResidueReset=true; layout(); updateSource(); }
+  $("camera").textContent="Live camera";
+}
+
+/* ---------------- time ---------------- */
+function duration(){ const t=S.frames.t; return t.length? t[t.length-1] : 0; }
+function curTime(){ if(S.mode==="live"||S.mode==="analyzing") return duration(); if(S.hasVideo) return vid.currentTime||0; return S.clock; }
+function frameAt(time){ const t=S.frames.t; let lo=0,hi=t.length-1; if(hi<0) return -1; while(lo<hi){ const m=(lo+hi+1)>>1; if(t[m]<=time) lo=m; else hi=m-1; } return lo; }
+
+/* ---------------- layout ---------------- */
+let W=0,H=0,DPR=1,rect={x:0,y:0,w:0,h:0};
+function layout(){
+  const st=$("stage"); DPR=Math.min(2,window.devicePixelRatio||1);
+  const maxW=st.clientWidth, maxH=Math.max(260,Math.min(window.innerHeight*.68,720));
+  W=Math.round(maxW); H=Math.round(Math.min(maxW/S.aspect,maxH));
+  cv.width=W*DPR; cv.height=H*DPR; cv.style.width=W+"px"; cv.style.height=H+"px";
+  let cw=W, ch=W/S.aspect; if(ch>H){ ch=H; cw=H*S.aspect; }
+  rect={x:(W-cw)/2,y:(H-ch)/2,w:cw,h:ch};
+  residueCv.width=cv.width; residueCv.height=cv.height; S.needResidueReset=true;
+  const tw=$("timeline").clientWidth; tl.width=tw*DPR; tl.height=118*DPR; tl.style.height="118px";
+}
+const P2=(q,j)=>{ let x=q[j*3]; if(S.mirror) x=1-x; return [rect.x+x*rect.w, rect.y+q[j*3+1]*rect.h]; };
+
+/* ---------------- drawing ---------------- */
+const rgb=(c,a)=>`rgba(${c[0]},${c[1]},${c[2]},${a})`;
+const mix=(a,b,u)=>[0,1,2].map(i=>Math.round(a[i]+(b[i]-a[i])*u));
+function drawVideo(alpha){
+  if(!S.hasVideo||vid.readyState<2||alpha<=0) return;
+  ctx.save(); ctx.globalAlpha=alpha; if(S.mirror){ ctx.translate(rect.x*2+rect.w,0); ctx.scale(-1,1); }
+  ctx.drawImage(vid,rect.x,rect.y,rect.w,rect.h); ctx.restore();
+}
+function drawFlesh(q){ // stand-in body when there is no video
+  const J=S.skel.J, lw=Math.max(6,rect.h*.034);
+  ctx.save(); ctx.lineCap="round"; ctx.lineJoin="round"; ctx.strokeStyle="rgba(214,205,196,.92)";
+  const seg=(a,b,w)=>{ const A=P2(q,a),B=P2(q,b); ctx.lineWidth=w; ctx.beginPath(); ctx.moveTo(...A); ctx.lineTo(...B); ctx.stroke(); };
+  seg(J.lsh,J.lhip,lw*2.4); seg(J.rsh,J.rhip,lw*2.4); seg(J.lsh,J.rsh,lw*1.6); seg(J.lhip,J.rhip,lw*1.8);
+  [[J.lsh,J.lel],[J.lel,J.lwr],[J.rsh,J.rel],[J.rel,J.rwr]].forEach(([a,b])=>seg(a,b,lw));
+  [[J.lhip,J.lkn],[J.lkn,J.lan],[J.rhip,J.rkn],[J.rkn,J.ran]].forEach(([a,b])=>seg(a,b,lw*1.25));
+  const nz=P2(q,J.nose), a=P2(q,J.lsh), b=P2(q,J.rsh), m=[(a[0]+b[0])/2,(a[1]+b[1])/2];
+  ctx.lineWidth=lw*.9; ctx.beginPath(); ctx.moveTo(...m); ctx.lineTo(nz[0]*.4+m[0]*.6, nz[1]*.4+m[1]*.6); ctx.stroke();
+  ctx.fillStyle="rgba(214,205,196,.92)"; ctx.beginPath(); ctx.arc(nz[0],nz[1]-lw*.2,lw*1.35,0,7); ctx.fill(); ctx.restore();
+}
+function drawSkeleton(q,alpha,labels,who){
+  const sk=S.skel;
+  ctx.save(); ctx.lineWidth=1.25; ctx.strokeStyle=`rgba(231,233,238,${.75*alpha})`;
+  for(const [a,b] of sk.conn){ if(Math.min(q[a*3+2],q[b*3+2])<.15) continue; const A=P2(q,a),B=P2(q,b); ctx.beginPath(); ctx.moveTo(...A); ctx.lineTo(...B); ctx.stroke(); }
+  for(let j=0;j<sk.n;j++){ const [x,y]=P2(q,j), v=q[j*3+2], r=j<sk.face?2:3.2;
+    ctx.beginPath(); ctx.arc(x,y,r,0,7);
+    if(v<.5){ ctx.strokeStyle=rgb(WARM,alpha); ctx.lineWidth=1.2; ctx.stroke(); } else { ctx.fillStyle=`rgba(231,233,238,${alpha})`; ctx.fill(); } }
+  if(labels){ const fs=Math.max(10,Math.round(rect.h*.021)); ctx.font=`${fs}px "IBM Plex Mono", monospace`; ctx.textBaseline="middle";
+    const J=sk.J;
+    for(const k in sk.labels){ const j=+k, [x,y]=P2(q,j), v=q[j*3+2];
+      if(S.maxPeople>1 && j!==J.lwr && j!==J.rwr) continue;   // with several dancers, label only the hands
+      const s=`${sk.labels[k]}  ${q[j*3].toFixed(3)}, ${q[j*3+1].toFixed(3)}${v<.5?"  ?":""}`;
+      const leftSide=(j===J.lwr||j===J.lan); const onLeft = S.mirror? !leftSide : leftSide;
+      // the dancer's left usually appears on screen right; place text away from the body
+      const right = !onLeft; ctx.textAlign= right? "left":"right";
+      ctx.fillStyle= v<.5? rgb(WARM,.95) : "rgba(231,233,238,.85)";
+      ctx.fillText(s, right? x+10 : x-10, (j===J.lan||j===J.ran)? y+14 : y-10); }
+    if(who){ const [x,y]=P2(q,J.nose); ctx.font=`600 ${fs+3}px "Bricolage Grotesque", sans-serif`; ctx.textAlign="center"; ctx.fillStyle="rgba(231,233,238,.95)"; ctx.fillText(who, x, y-fs*2.2); } }
+  ctx.restore();
+}
+function drawQuality(i){
+  const {p}=S.frames, f=S.feat, sk=S.skel; if(!f.W.length) return;
+  const span=Math.min(i,40);
+  ctx.save(); ctx.lineCap="round";
+  for(let s=0;s<S.maxPeople;s++) for(let e=0;e<sk.ext.length;e++){ const j=sk.ext[e];
+    for(let k=i-span+1;k<=i;k++){ if(k<1) continue; const a0=p[k-1][s], a1=p[k][s]; if(!a0||!a1) continue;
+      if(Math.min(a0[j*3+2],a1[j*3+2])<.2) continue;
+      const age=(i-k)/span, al=(1-age)*.95, bound=f.F[k]>.62; if(bound&&(k%3===0)) continue;
+      const sp=Math.min(1,S.jspeed[k]?.[s]?.[e]??0), w=1.4+Math.pow(sp,1.1)*rect.h*.034*(.4+.6*f.W[k]);
+      let A=P2(a0,j), B=P2(a1,j);
+      if(bound){ const jit=(f.F[k]-.62)*rect.h*.02; A=[A[0]+Math.sin(k*12.9+s)*jit, A[1]+Math.cos(k*7.1+s)*jit]; }
+      ctx.strokeStyle=rgb(mix(COOL,WARM,f.T[k]),al); ctx.lineWidth=w; ctx.beginPath(); ctx.moveTo(...A); ctx.lineTo(...B); ctx.stroke(); } }
+  const win=Math.min(i,30);
+  if(f.S[i]>.6&&win>5){ ctx.setLineDash([3,5]); ctx.lineWidth=1; ctx.strokeStyle=`rgba(231,233,238,${(f.S[i]-.6)*2})`;
+    for(let s=0;s<S.maxPeople;s++){ const a1=p[i][s], b=S.body[s]; if(!a1||!b||!b.X) continue;
+      for(const j of [sk.J.lwr,sk.J.rwr]){ const e=sk.ext.indexOf(j); if(e<0||Math.min(a1[j*3+2],.99)<.3) continue;
+        const ox=b.X[e][i-win], oy=b.Y[e][i-win]; if(!isFinite(ox)||!isFinite(oy)||!isFinite(b.x[i])) continue;
+        const A=P2([(b.x[i]+ox*b.sc[i])/S.aspect, b.y[i]+oy*b.sc[i], 1],0), B=P2(a1,j);
+        if(Math.hypot(A[0]-B[0],A[1]-B[1])>rect.h*.45) continue;
+        ctx.beginPath(); ctx.moveTo(...A); ctx.lineTo(...B); ctx.stroke(); } }
+    ctx.setLineDash([]); }
+  ctx.restore();
+}
+function kSlots(){ // dancers seen at a usable size for at least two seconds get a kinesphere
+  if(S._ks && S._ksN===S.frames.t.length) return S._ks;
+  const out=[]; for(let s=0;s<S.maxPeople;s++){ const b=S.body[s]; let c=0; if(b) for(let i=0;i<b.sc.length;i++) if(S.frames.p[i][s]&&b.sc[i]>=.1) c++; if(c>=60) out.push(s); }
+  if(!out.length) out.push(0); S._ks=out; S._ksN=S.frames.t.length; return out; }
+function kAnchor(s){ const ks=kSlots(), K=ks.length, idx=ks.indexOf(s); if(idx<0) return null; return {x:rect.x+rect.w*(idx+1)/(K+1), y:rect.y+rect.h*.46, u:Math.min(rect.h*.15, rect.w/(K+1)*.3)}; }
+function kPt(q,j,s,i){ const b=S.body[s], a=kAnchor(s); if(!b||!a) return null;
+  const rx=(q[j*3]*S.aspect-b.x[i])/b.sc[i], ry=(q[j*3+1]-b.y[i])/b.sc[i]; if(!isFinite(rx)||!isFinite(ry)) return null;
+  return [a.x+(S.mirror?-rx:rx)*a.u, a.y+ry*a.u]; }
+function kRel(s,e,i){ const b=S.body[s]; if(!b||!b.X) return null; const x=b.X[e][i], y=b.Y[e][i]; if(!isFinite(x)||!isFinite(y)) return null;
+  const a=kAnchor(s); if(!a) return null; return [a.x+(S.mirror?-x:x)*a.u, a.y+y*a.u]; }
+function residueTo(i){
+  const {p}=S.frames, n=S.frames.t.length, sk=S.skel;
+  if(S.needResidueReset||i<S.residueIdx){ rctx.setTransform(1,0,0,1,0,0); rctx.clearRect(0,0,residueCv.width,residueCv.height); S.residueIdx=0; S.needResidueReset=false;
+    // kinesphere guides: reach circle and pelvis mark for each dancer
+    rctx.setTransform(DPR,0,0,DPR,0,0);
+    S._ks=null; for(const s of kSlots()){ const a=kAnchor(s);
+      rctx.strokeStyle="rgba(231,233,238,.10)"; rctx.lineWidth=1; rctx.setLineDash([2,6]); rctx.beginPath(); rctx.arc(a.x,a.y,a.u*2.6,0,7); rctx.stroke(); rctx.setLineDash([]);
+      rctx.fillStyle="rgba(231,233,238,.35)"; rctx.fillRect(a.x-4,a.y-.5,8,1); rctx.fillRect(a.x-.5,a.y-4,1,8);
+      if(kSlots().length>1){ rctx.font='600 13px "Bricolage Grotesque", sans-serif'; rctx.textAlign="center"; rctx.fillStyle="rgba(231,233,238,.55)"; rctx.fillText(DANCER[kSlots().indexOf(s)], a.x, a.y+a.u*2.6+18); } } }
+  rctx.setTransform(DPR,0,0,DPR,0,0); rctx.lineCap="round";
+  for(let k=Math.max(1,S.residueIdx+1);k<=i;k++){ const u=n>1?k/(n-1):0, col=mix([120,140,255],[255,120,84],u);
+    for(let s=0;s<S.maxPeople;s++){ const a0=p[k-1][s], a1=p[k][s]; if(!a0||!a1) continue; const an=kAnchor(s); if(!an) continue; const un=an.u;
+      for(let e=0;e<sk.ext.length;e++){ const j=sk.ext[e]; if(Math.min(a0[j*3+2],a1[j*3+2])<.3) continue;
+        const A=kRel(s,e,k-1), B=kRel(s,e,k); if(!A||!B) continue;
+        if(Math.hypot(A[0]-B[0],A[1]-B[1])>un*.6) continue;   // skip identity swaps and tracking jumps
+        const sp=S.jspeed[k]?.[s]?.[e]??0, rel=Math.min(1,Math.max(0,(S.body[s].sc[k]-.06)/.1));
+        if(rel<=0) continue;
+        rctx.strokeStyle=rgb(col,.34*rel); rctx.lineWidth=.6+Math.min(1,sp)*1.6; rctx.beginPath(); rctx.moveTo(...A); rctx.lineTo(...B); rctx.stroke(); } } }
+  S.residueIdx=Math.max(S.residueIdx,i);
+  ctx.drawImage(residueCv,0,0,W,H);
+  // the current pose, faint, in the same body-centred frame
+  ctx.save(); ctx.lineWidth=1; ctx.strokeStyle="rgba(231,233,238,.22)"; ctx.fillStyle="rgba(231,233,238,.9)";
+  for(let s=0;s<S.maxPeople;s++){ const q=p[i][s]; if(!q) continue;
+    for(const [a,b] of sk.conn){ if(Math.min(q[a*3+2],q[b*3+2])<.3) continue; const A=kPt(q,a,s,i), B=kPt(q,b,s,i); if(!A||!B) continue; ctx.beginPath(); ctx.moveTo(...A); ctx.lineTo(...B); ctx.stroke(); }
+    for(const j of sk.ext){ if(q[j*3+2]<.3) continue; const P=kPt(q,j,s,i); if(!P) continue; ctx.beginPath(); ctx.arc(P[0],P[1],2.4,0,7); ctx.fill(); } }
+  ctx.restore();
+}
+function render(){
+  ctx.setTransform(DPR,0,0,DPR,0,0);
+  ctx.fillStyle=getComputedStyle(document.documentElement).getPropertyValue("--stage")||"#0C0E12"; ctx.fillRect(0,0,W,H);
+  if(S.booting){ ctx.fillStyle="rgba(231,233,238,.6)"; ctx.font='13px "IBM Plex Mono",monospace'; ctx.textAlign="center"; ctx.textBaseline="middle"; ctx.fillText("Loading the recording…", W/2, H/2); $("clock").textContent="0:00.0 / 0:00.0"; return; }
+  const n=S.frames.t.length, i=frameAt(curTime()), fr=i>=0? S.frames.p[i] : [];
+  const present=fr.filter(Boolean).length;
+  if(S.lens==="body"){ if(S.hasVideo) drawVideo(1); else fr.forEach(q=>q&&drawFlesh(q)); }
+  else if(S.lens==="points"){ drawVideo(.22); fr.forEach((q,s)=>q&&drawSkeleton(q,1,true,S.maxPeople>1?DANCER[s]:"")); }
+  else if(S.lens==="quality"){ drawVideo(.13); fr.forEach(q=>q&&drawSkeleton(q,.18,false,"")); if(i>=0) drawQuality(i); }
+  else if(S.lens==="residue"){ if(i>=0) residueTo(i); }
+  const L=LENSES[S.lens], src=S.mode==="demo"?"synthetic demo figure":S.mode==="live"?"live camera":S.mode==="analyzing"?"analyzing":"recorded performance";
+  $("tag").innerHTML=`<b>${L.title}</b> · ${src}${S.maxPeople>1&&i>=0?` · ${present} ${present===1?"body":"bodies"} tracked`:""}${n?` · frame ${Math.max(0,i)+1}/${n}`:""}`;
+  updateReadout(i); drawTimeline(i);
+  const d=duration(); $("clock").textContent=`${fmt(Math.min(curTime(),d))} / ${fmt(d)}`;
+}
+const fmt=s=>{ s=Math.max(0,s||0); const m=Math.floor(s/60); return `${m}:${(s-m*60).toFixed(1).padStart(4,"0")}`; };
+
+/* ---------------- readout ---------------- */
+function buildMeters(){
+  $("meters").innerHTML=FACTORS.map(F=>`<div class="meter" data-k="${F.k}"><div class="row"><span class="f">${F.name}</span><span class="v" data-v>—</span></div>
+    <div class="bar"><i data-i style="left:50%"></i></div><div class="poles"><span>${F.lo}</span><span>${F.hi}</span></div></div>`).join("");
+}
+let lastDrive="";
+function updateReadout(i){
+  const f=S.feat; if(i<0||!f.W.length) return; const val={};
+  FACTORS.forEach(F=>{ const v=f[F.k][Math.min(i,f[F.k].length-1)]??.5; val[F.k]=v;
+    const el=$("meters").querySelector(`[data-k="${F.k}"]`);
+    el.querySelector("[data-i]").style.left=(v*100).toFixed(1)+"%"; el.querySelector("[data-v]").textContent=`${v<.5?F.lo:F.hi} ${v.toFixed(2)}`; });
+  const key=`${val.W>=.5?1:0}${val.T>=.5?1:0}${val.S>=.5?1:0}`;
+  if(key!==lastDrive){ lastDrive=key; $("driveName").textContent=DRIVES[key];
+    $("driveCombo").textContent=`${val.W>=.5?"Strong":"Light"} · ${val.T>=.5?"Sudden":"Sustained"} · ${val.S>=.5?"Direct":"Indirect"}`; }
+}
+function renderNote(){
+  const L=LENSES[S.lens];
+  $("note").innerHTML=`<div class="label">Lens ${Object.keys(LENSES).indexOf(S.lens)+1} of 4</div><h3>${L.title}</h3><p>${L.text()}</p>
+  <dl class="kl"><dt>Keeps</dt><dd>${L.keeps}</dd><dt>Loses</dt><dd class="lose">${L.loses}</dd></dl>`;
+}
+function updateMethod(){
+  const multi=S.maxPeople>1;
+  $("method").textContent=`Pose: ${S.skel.name}, ${S.skel.unit} per body per frame${multi?`, up to ${S.maxPeople} dancers`:""}. `+
+    `Effort descriptors follow the computable measures reviewed by Larboulette and Gibet (2015)${multi?", averaged over the dancers in frame":""}. `+
+    `Motion is measured relative to each dancer’s pelvis and divided by one camera scale shared by both dancers, estimated from the torso and leg segments, so camera zooms and pans do not enter the reading; travel across the stage is left out with them. Values are normalized within the phrase, so they describe contrasts inside this performance rather than absolute measures. The action drive combines Weight, Time and Space at their midpoints.`+
+    (S.camNote? " "+S.camNote : "");
+  $("built").textContent=`Built with ${S.skel===SKELS.coco17?"YOLO11 pose":"MediaPipe Pose"} and Canvas 2D`;
+}
+
+/* ---------------- timeline ---------------- */
+function drawTimeline(i){
+  const w=tl.width/DPR, h=tl.height/DPR; tctx.setTransform(DPR,0,0,DPR,0,0);
+  const cs=getComputedStyle(document.documentElement), g=k=>cs.getPropertyValue(k).trim();
+  const ink=g("--ink"), muted=g("--muted"), rule=g("--rule"), acc=g("--accent"), surf=g("--surface");
+  tctx.fillStyle=surf; tctx.fillRect(0,0,w,h);
+  const n=S.frames.t.length, f=S.feat, padL=74, padR=10, rh=(h-14)/4, live=S.mode==="live"||S.mode==="analyzing";
+  const i0=live?Math.max(0,n-600):0, i1=n-1, span=Math.max(1,live?Math.max(600,i1-i0):i1-i0), X=k=>padL+(k-i0)/span*(w-padL-padR);
+  tctx.font='11px "IBM Plex Mono", monospace'; tctx.textBaseline="middle";
+  FACTORS.forEach((F,r)=>{ const y0=7+r*rh, y1=y0+rh-4;
+    tctx.fillStyle=muted; tctx.fillText(F.name.toUpperCase(),10,y0+(rh-4)/2);
+    tctx.strokeStyle=rule; tctx.lineWidth=1; tctx.beginPath(); tctx.moveTo(padL,y1+.5); tctx.lineTo(w-padR,y1+.5); tctx.stroke();
+    const arr=f[F.k]; if(!arr||arr.length<2) return;
+    const path=()=>{ tctx.beginPath(); for(let k=i0;k<=i1;k++){ const y=y1-(arr[k]??0)*(rh-8); k===i0?tctx.moveTo(X(k),y):tctx.lineTo(X(k),y); } };
+    path(); tctx.lineTo(X(i1),y1); tctx.lineTo(padL,y1); tctx.closePath(); tctx.globalAlpha=.16; tctx.fillStyle=acc; tctx.fill(); tctx.globalAlpha=1;
+    path(); tctx.strokeStyle=acc; tctx.lineWidth=1.4; tctx.stroke(); });
+  if(i>=0&&n>1){ const x=X(i); tctx.strokeStyle=ink; tctx.lineWidth=1.5; tctx.beginPath(); tctx.moveTo(x,2); tctx.lineTo(x,h-4); tctx.stroke(); }
+}
+function scrubTo(clientX){
+  if(S.mode==="live"||S.mode==="analyzing") return;
+  const r=$("timeline").getBoundingClientRect(), u=Math.min(1,Math.max(0,(clientX-r.left-74)/(r.width-84))), time=u*duration();
+  if(S.hasVideo) vid.currentTime=time; else S.clock=time;
+}
+
+/* ---------------- controls ---------------- */
+let soundOn=false;
+function setPlaying(on){ S.playing=on; $("play").textContent=on?"Pause":"Play"; if(S.hasVideo&&S.mode==="recorded"){ if(on) vid.play().catch(()=>{}); else vid.pause(); } }
+function showMsg(t){ $("msg").textContent=t; $("msg").hidden=false; }
+function hideMsg(){ $("msg").hidden=true; }
+function updateSource(){
+  let s;
+  if(S.mode==="demo") s="Showing a synthetic demo figure with five contrasting sections (sustained, sudden, free, bound, direct). Load a video and its pose data to replace it.";
+  else if(S.mode==="live") s="Live camera. Step back until your whole body is in frame. Residue keeps drawing until you stop the camera.";
+  else s=`Recorded performance${S.videoName?` · video: ${S.videoName}`:""}${S.poseName?` · pose: ${S.poseName}`:""} · ${S.frames.t.length} frames, ${duration().toFixed(1)} s${S.maxPeople>1?`, up to ${S.maxPeople} dancers`:""}.`;
+  $("sourceText").textContent=s; $("savePose").setAttribute("aria-disabled",S.saveable?"false":"true");
+}
+document.querySelectorAll(".lens").forEach(b=>b.addEventListener("click",()=>{
+  S.lens=b.dataset.lens; document.querySelectorAll(".lens").forEach(x=>x.setAttribute("aria-pressed",x===b?"true":"false"));
+  S.needResidueReset=true; renderNote(); if(!S.playing) render(); }));
+$("play").addEventListener("click",()=>setPlaying(!S.playing));
+$("restart").addEventListener("click",()=>{ if(S.hasVideo&&S.mode==="recorded") vid.currentTime=0; S.clock=0; S.needResidueReset=true; setPlaying(true); });
+const RATES=[1,.5,.25];
+$("speed").addEventListener("click",()=>{ S.rate=RATES[(RATES.indexOf(S.rate)+1)%RATES.length]; vid.playbackRate=S.rate; $("speed").textContent=S.rate+"×"; });
+$("sound").addEventListener("click",()=>{ soundOn=!soundOn; vid.muted=!soundOn; $("sound").setAttribute("aria-pressed",soundOn?"true":"false"); $("sound").textContent=soundOn?"Sound on":"Sound off"; });
+const tlEl=$("timeline"); let drag=false;
+tlEl.addEventListener("pointerdown",e=>{ drag=true; tlEl.setPointerCapture(e.pointerId); scrubTo(e.clientX); if(!S.playing) render(); });
+tlEl.addEventListener("pointermove",e=>{ if(drag){ scrubTo(e.clientX); if(!S.playing) render(); } });
+tlEl.addEventListener("pointerup",()=>drag=false); tlEl.addEventListener("pointercancel",()=>drag=false);
+$("fVideo").addEventListener("change",async e=>{ const f=e.target.files[0]; if(!f) return; stopCamera();
+  const ok=await loadVideoSrc(URL.createObjectURL(f),f.name);
+  if(ok){ if(S.mode==="demo"){ S.mode="recorded"; S.frames={t:[],p:[]}; S.feat={W:[],T:[],F:[],S:[]}; S.jspeed=[]; S.poseName="";
+      showMsg("Video loaded. Load its pose data, or press Analyze loaded video in the standalone page."); } else hideMsg();
+    S.needResidueReset=true; vid.currentTime=0; setPlaying(true); updateSource(); }
+  e.target.value=""; });
+$("fPose").addEventListener("change",async e=>{ const f=e.target.files[0]; if(!f) return; stopCamera();
+  try{ const d=parsePose(JSON.parse(await f.text())); if(S.hasVideo) d.aspect=S.aspect;
+    setData(d); S.mode="recorded"; S.poseName=f.name; S.saveable=false; hideMsg(); if(S.hasVideo) vid.currentTime=0; updateSource(); setPlaying(true); }
+  catch(err){ showMsg(err.message||"This file could not be read as pose data."); }
+  e.target.value=""; });
+$("analyze").addEventListener("click",analyzeVideo);
+$("camera").addEventListener("click",startCamera);
+$("savePose").addEventListener("click",()=>{ if(!S.saveable) return;
+  const a=document.createElement("a"); a.href=URL.createObjectURL(new Blob([poseToJSON()],{type:"application/json"})); a.download="phrase.json";
+  document.body.appendChild(a); a.click(); a.remove();
+  showMsg("Saved phrase.json. Put it next to this page with the video named phrase.mp4 and the page loads both on its own."); });
+vid.addEventListener("ended",()=>{ if(S.mode==="recorded"&&S.playing){ vid.currentTime=0; S.needResidueReset=true; vid.play().catch(()=>{}); } });
+window.addEventListener("resize",()=>{ layout(); render(); });
+
+/* ---------------- loop ---------------- */
+function tick(ts){
+  const dt=S.lastTs?Math.min(.1,(ts-S.lastTs)/1000):0; S.lastTs=ts;
+  if(S.playing&&!S.hasVideo&&(S.mode==="demo"||S.mode==="recorded")){ const d=duration(); S.clock+=dt*S.rate; if(d>0&&S.clock>d){ S.clock=0; S.needResidueReset=true; } }
+  render(); requestAnimationFrame(tick);
+}
+
+/* ---------------- boot ---------------- */
+buildMeters();
+S.booting=true; setTimeout(()=>{ if(S.booting){ S.booting=false; render(); } },10000);
+setData(demoPhrase());
+if(reduceMotion){ S.clock=duration()*.42; setPlaying(false); }
+updateSource(); layout();
+tryAutoload().then(ok=>{ S.booting=false; updateSource(); if(ok&&S.hasVideo){ if(reduceMotion){ vid.currentTime=duration()*.42; } else { vid.muted=true; vid.play().catch(()=>{}); } } });
+requestAnimationFrame(tick);
+})();
+</script>
+
+</body></html>

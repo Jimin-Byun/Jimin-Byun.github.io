@@ -1,0 +1,217 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="description" content="Portfolio of Jimin Byun, contemporary dancer, choreographer and researcher."><style>:root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style><title>Jimin Byun Portfolio</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: one calm column on cool score paper; a sticky index, the research interest as the first card, then works, thesis and studies as scannable blocks */
+:root{
+  --paper:#EEF0F4; --surface:#FFFFFF; --ink:#151821; --muted:#5A6272; --rule:#D5D9E2;
+  --accent:#2C3CCB; --accent-soft:#E6E8FA; --warm:#B93D1B; --stage:#0C0E12; --stage-ink:#EEF0F4;
+  --ok:#1F7A4D; --no:#B93D1B; --lim:#6B5B16;
+  --display:"Bricolage Grotesque","Helvetica Neue",Arial,sans-serif; --body:"IBM Plex Sans","Helvetica Neue",Arial,sans-serif; --mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --paper:#0F1116; --surface:#181B22; --ink:#E7E9EE; --muted:#9AA1AD; --rule:#2A2F39;
+  --accent:#9AA5FF; --accent-soft:#232848; --warm:#FF8A6A; --stage:#06070A; --stage-ink:#EEF0F4;
+  --ok:#5CCB92; --no:#FF8A6A; --lim:#D8C46A; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --paper:#0F1116; --surface:#181B22; --ink:#E7E9EE; --muted:#9AA1AD; --rule:#2A2F39;
+  --accent:#9AA5FF; --accent-soft:#232848; --warm:#FF8A6A; --stage:#06070A; --stage-ink:#EEF0F4;
+  --ok:#5CCB92; --no:#FF8A6A; --lim:#D8C46A; color-scheme:dark}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none!important}}
+body{background:var(--paper);color:var(--ink);font-family:var(--body);font-size:15.5px;line-height:1.65;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:0 64px}
+
+h1,h2,h3{font-family:var(--display);margin:0;text-wrap:balance;letter-spacing:-.01em}
+p{margin:0}
+a{color:var(--accent)}
+a:focus-visible,summary:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:4px}
+.wrap{max-width:1040px;margin:0 auto;display:grid;gap:72px}
+.label{font-family:var(--mono);font-size:11.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--muted)}
+
+/* sticky index */
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:color-mix(in srgb,var(--paper) 88%,transparent);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border-bottom:1px solid var(--rule);margin-inline:calc(-1 * max(16px,env(safe-area-inset-left,0px)))}
+.top .in{max-width:1040px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px max(16px,env(safe-area-inset-left,0px))}
+.top b{font-family:var(--display);font-weight:800;font-size:15px}
+.top ul{display:flex;gap:4px;list-style:none;margin:0;padding:0;overflow-x:auto}
+.top a{display:block;font-size:13.5px;font-weight:500;color:var(--muted);text-decoration:none;padding:6px 10px;border-radius:999px;white-space:nowrap}
+.top a:hover{color:var(--ink);background:var(--surface)}
+@media (max-width:640px){.top b{display:none}.top .in{justify-content:flex-start}}
+
+section{scroll-margin-top:72px;display:grid;gap:24px}
+.head{display:grid;gap:6px}
+.head h2{font-size:clamp(24px,3vw,30px);font-weight:800}
+.head p{color:var(--muted)}
+
+/* hero */
+.hero{padding-top:48px;display:grid;gap:18px}
+.role{font-family:var(--mono);font-size:12.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--accent)}
+.hero h1{font-size:clamp(44px,7vw,80px);font-weight:800;line-height:.95;letter-spacing:-.03em}
+.tag{font-size:clamp(17px,1.8vw,20px);max-width:40ch;line-height:1.45}
+.chips{display:flex;flex-wrap:wrap;gap:8px;list-style:none;margin:0;padding:0}
+.chips li{font-size:13.5px;color:var(--muted);background:var(--surface);border:1px solid var(--rule);padding:5px 12px;border-radius:999px}
+
+/* research interest */
+.ri{background:var(--surface);border:1px solid var(--rule);border-radius:12px;padding:clamp(20px,3vw,32px);display:grid;gap:20px}
+.ri-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(16px,3vw,32px)}
+.ri-grid div{display:grid;gap:8px;align-content:start;min-width:0}
+.ri-grid b{font-family:var(--mono);font-weight:500;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);border-top:2px solid var(--accent);padding-top:10px}
+.ri-grid div:nth-child(2) p{font-weight:600}
+@media (max-width:760px){.ri-grid{grid-template-columns:minmax(0,1fr)}}
+
+/* works */
+.work{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);gap:clamp(18px,3vw,36px);align-items:start;background:var(--surface);border:1px solid var(--rule);border-radius:12px;padding:clamp(14px,2vw,20px)}
+.film{position:relative;display:block;aspect-ratio:16/9;max-width:100%;border-radius:8px;overflow:hidden;background:var(--stage);color:var(--stage-ink);text-decoration:none}
+.film img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform .6s ease}
+.film:hover img{transform:scale(1.03)}
+.film::after{content:"";position:absolute;inset:auto 0 0 0;height:45%;background:linear-gradient(to top,rgba(0,0,0,.72),transparent)}
+.film .cta{position:absolute;z-index:1;left:12px;bottom:12px;display:flex;align-items:center;gap:10px;font-size:14px;font-weight:600}
+.film .play{width:38px;height:38px;border-radius:50%;background:rgba(255,255,255,.92);display:grid;place-items:center}
+.film .play::after{content:"";margin-left:3px;border-left:12px solid #0C0E12;border-top:7px solid transparent;border-bottom:7px solid transparent}
+.film .yr{position:absolute;z-index:1;right:12px;bottom:14px;font-family:var(--mono);font-size:12px}
+.wtxt{display:grid;gap:14px;min-width:0}
+.wtxt h3{font-size:clamp(22px,2.5vw,27px);font-weight:800;line-height:1.1}
+.wtxt h3 small{display:block;font-family:var(--body);font-weight:400;font-size:14px;color:var(--muted);margin-top:6px;letter-spacing:0}
+.meta{display:flex;flex-wrap:wrap;gap:6px;list-style:none;margin:0;padding:0}
+.meta li{font-size:12.5px;background:var(--paper);border-radius:6px;padding:3px 9px;color:var(--muted)}
+.theme{font-family:var(--display);font-weight:600;font-size:16.5px;line-height:1.4;border-left:3px solid var(--warm);padding-left:12px}
+.moves{display:grid;gap:8px;list-style:none;margin:0;padding:0}
+.moves li{display:grid;grid-template-columns:5.2em minmax(0,1fr);gap:10px;font-size:14.5px;line-height:1.55}
+.moves span{font-family:var(--mono);font-size:11.5px;letter-spacing:.04em;color:var(--warm);padding-top:3px}
+.old{font-size:13px;color:var(--muted)}
+.mv{font-size:14.5px;color:var(--muted)}
+.mv span{display:block;font-family:var(--mono);font-size:11.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--warm);margin-bottom:2px}
+@media (max-width:820px){.work{grid-template-columns:minmax(0,1fr)}}
+
+/* thesis */
+.thesis{background:var(--surface);border:1px solid var(--rule);border-radius:12px;padding:clamp(20px,3vw,32px);display:grid;gap:20px}
+.thesis h3{font-size:clamp(20px,2.4vw,26px);font-weight:700;line-height:1.3}
+.thesis .m{font-size:14px;color:var(--muted);margin-top:6px}
+.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.stat{background:var(--paper);border-radius:8px;padding:14px 16px;display:grid;gap:2px}
+.stat b{font-family:var(--display);font-weight:800;font-size:clamp(26px,3vw,34px);line-height:1.1;font-variant-numeric:tabular-nums;color:var(--accent)}
+.stat span{font-size:13.5px;color:var(--muted);line-height:1.45}
+.thesis p.t{max-width:70ch}
+@media (max-width:600px){.stats{grid-template-columns:minmax(0,1fr)}}
+
+/* studies */
+.studies{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px}
+.study{display:grid;grid-template-rows:auto 1fr;background:var(--surface);border:1px solid var(--rule);border-radius:12px;overflow:hidden;text-decoration:none;color:inherit;transition:border-color .2s,transform .2s}
+.study:hover{border-color:var(--accent);transform:translateY(-2px)}
+.study .shot{aspect-ratio:828/436;max-width:100%;background:var(--stage)}
+.study .shot img{display:block;width:100%;height:100%;object-fit:cover}
+.study .s{padding:18px 20px 20px;display:grid;gap:10px;align-content:start}
+.study .n{font-family:var(--mono);font-size:12px;letter-spacing:.06em;color:var(--accent)}
+.study h3{font-size:22px;font-weight:800}
+.study .q{font-weight:600;font-size:15.5px;line-height:1.45}
+.study .d{font-size:14.5px;color:var(--muted)}
+.study .tags{display:flex;flex-wrap:wrap;gap:6px;list-style:none;margin:2px 0 0;padding:0}
+.study .tags li{font-family:var(--mono);font-size:11.5px;border:1px solid var(--rule);padding:2px 8px;border-radius:999px;color:var(--muted)}
+.study .go{font-weight:600;font-size:14.5px;color:var(--accent);margin-top:4px}
+.study .go::after{content:" →"}
+@media (max-width:760px){.studies{grid-template-columns:minmax(0,1fr)}}
+
+/* findings */
+.fd{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+.fcol{background:var(--surface);border:1px solid var(--rule);border-radius:12px;padding:18px 20px;display:grid;gap:10px;align-content:start;border-top:4px solid var(--c)}
+.fcol.ok{--c:var(--ok)} .fcol.no{--c:var(--no)} .fcol.lim{--c:var(--lim)}
+.fcol h3{font-size:17px;font-weight:700;color:var(--c)}
+.fcol ul{margin:0;padding-left:18px;display:grid;gap:6px;font-size:15px;line-height:1.5}
+@media (max-width:760px){.fd{grid-template-columns:minmax(0,1fr)}}
+
+details{background:var(--surface);border:1px solid var(--rule);border-radius:12px;padding:0 20px}
+summary{cursor:pointer;padding:16px 0;font-weight:600;list-style:none;display:flex;justify-content:space-between;gap:12px}
+summary::-webkit-details-marker{display:none}
+summary::after{content:"+";font-family:var(--mono);color:var(--accent);font-size:18px;line-height:1}
+details[open] summary::after{content:"−"}
+.dbody{display:grid;gap:14px;padding-bottom:20px}
+.dbody p{font-size:14.5px;color:var(--muted);max-width:76ch}
+.tw{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:14.5px}
+th{font-family:var(--mono);font-weight:500;font-size:11.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);text-align:left;padding:8px 14px 8px 0;border-bottom:1px solid var(--ink)}
+td{padding:9px 14px 9px 0;border-bottom:1px solid var(--rule);vertical-align:top}
+td:first-child{font-weight:600;white-space:nowrap}
+td small{display:block;font-family:var(--mono);font-weight:400;font-size:11px;color:var(--muted)}
+footer{font-family:var(--mono);font-size:11.5px;color:var(--muted);border-top:1px solid var(--rule);padding-top:16px}
+</style>
+<script>document.documentElement.lang="en"</script>
+<script>
+try{ if('scrollRestoration' in history) history.scrollRestoration='manual'; }catch(e){}
+(function(){ var top=function(){ try{ if(location.hash) history.replaceState(null,'',location.pathname+location.search); window.scrollTo(0,0); }catch(e){} };
+  top(); document.addEventListener('DOMContentLoaded',top); window.addEventListener('load',function(){ top(); setTimeout(top,60); }); window.addEventListener('pageshow',top); })();
+</script>
+</head><body><nav class="top" aria-label="Sections"><div class="in"><b>Jimin Byun</b><ul><li><a href="#research">Research</a></li><li><a href="#choreography">Choreography</a></li><li><a href="#thesis">Thesis</a></li><li><a href="#studies">Studies</a></li></ul></div></nav>
+<div class="wrap">
+<header class="hero">
+  <div class="role">Contemporary dancer · choreographer · researcher</div>
+  <h1>Jimin Byun</h1>
+  <p class="tag">My work looks at what happens to a dancer’s movement when it passes through motion capture, avatars and AI.</p>
+  <ul class="chips"><li>MA Cultural Contents, Korea University, 2026</li><li>BA Dance, Pusan National University, 2024</li></ul>
+</header>
+
+<section id="research" aria-labelledby="h-ri">
+  <div class="ri"><div class="label" id="h-ri">Research interest</div><div class="ri-grid"><div><b>Observed</b><p>When I turned my own dancing into pose data (YOLO11, MediaPipe), the timing and speed of each phrase carried over. Breath in the torso and the articulation of the hands and feet did not, because these pose-estimation tools place no points on the chest or along the fingers and toes.</p></div><div><b>Question</b><p>As movement is mediated through technologies such as motion capture, avatars and AI, where are such qualities lost or changed, and what does that change for the dancers, choreographers and audiences who work with the result?</p></div><div><b>Approach</b><p>Making and testing work with these systems in the studio, and reading what the data records against performance analysis and dancers’ own accounts of moving.</p></div></div></div>
+</section>
+
+<section id="choreography" aria-labelledby="h-ch">
+  <div class="head"><div class="label">01</div><h2 id="h-ch">Choreography</h2><p>Two stage works I choreographed and performed.</p></div>
+  <article class="work">
+    <a class="film" href="https://vimeo.com/1236078173?share=copy&amp;fl=sv&amp;fe=ci" target="_blank" rel="noopener" aria-label="Watch excerpt: Doomsday Festival: Going Too Far">
+      <img src="thumb-doom.jpg" alt="Three dancers on a dark stage: one stands apart, two are locked together on the floor" width="1280" height="720" loading="lazy">
+      <span class="cta"><span class="play" aria-hidden="true"></span>Watch excerpt</span><span class="yr">Vimeo · 2024</span>
+    </a>
+    <div class="wtxt">
+      <h3>Doomsday Festival: Going Too Far<small>종말페스티벌: 뇌절</small></h3>
+      <ul class="meta"><li>Nov 8, 2024</li><li>Busan Arts Center</li><li>28th New Wave Dance Festival</li><li>Choreographer &amp; performer</li><li>3 dancers</li></ul>
+      <p class="theme">The last signals of humanity, resonating in chaos.</p>
+      <p>The end of humankind, read through communication. As the environment collapses, bodies become biological antennae whose nervous systems rewire, sending signals no one can yet decode.</p>
+      <p class="mv"><span>Movement</span>Mechanical everyday phrases break into trembling, antenna-like gestures, split into each dancer’s own signal, then gather into one body that keeps transmitting.</p>
+      <p class="old">Earlier version (invited performance, 2022): <a href="https://vimeo.com/1236076076?share=copy&amp;fl=sv&amp;fe=ci" target="_blank" rel="noopener">vimeo.com/1236076076</a></p>
+    </div>
+  </article>
+  <article class="work">
+    <a class="film" href="https://vimeo.com/1236075191" target="_blank" rel="noopener" aria-label="Watch excerpt: A Splendid World">
+      <img src="thumb-world.jpg" alt="Five dancers in loose blue costumes piled low on the floor, legs kicking up" width="1280" height="720" loading="lazy">
+      <span class="cta"><span class="play" aria-hidden="true"></span>Watch excerpt</span><span class="yr">Vimeo · 2023</span>
+    </a>
+    <div class="wtxt">
+      <h3>A Splendid World<small>주옥같은 세상</small></h3>
+      <ul class="meta"><li>Nov 7, 2023</li><li>10.16 Memorial Hall, Pusan National University</li><li>Graduation Choreography Showcase</li><li>Choreographer &amp; performer</li><li>6 dancers · 8 min</li></ul>
+      <p class="theme">A comedy from far away, a tragedy up close.</p>
+      <p>Prompted by the possibility of a Mount Baekdu eruption. The dancers are volcanic ejecta that break out of the earth, roam the air and come upon a human.</p>
+      <p class="mv"><span>Movement</span>Floor-bound shaking and bouncing before the eruption gives way to group movement across the whole space, until a human appears.</p>
+      
+    </div>
+  </article>
+</section>
+
+<section id="thesis" aria-labelledby="h-th">
+  <div class="head"><div class="label">02</div><h2 id="h-th">Master’s thesis</h2></div>
+  <div class="thesis">
+    <div><h3>Trends and Challenges in Dance Research Based on AI and Immersive Media Technologies</h3><p class="m">MA thesis, Korea University · Feb 2026 · Advisor: Prof. Jungwoo Kim</p></div>
+    <div class="stats"><div class="stat"><b>56</b><span>KCI journal articles and graduate theses, 2012–2025</span></div><div class="stat"><b>≈73%</b><span>qualitative studies</span></div><div class="stat"><b>3</b><span>periods: 2012–19, 2020–23, 2024–25</span></div></div>
+    <p class="t">Empirical and mixed-method evaluations, and studies of motion-sensing interactive choreography, were rare. The thesis proposed motion-capture-based recording and evaluation frameworks as next steps, which is where the two studies below begin.</p>
+  </div>
+</section>
+
+<section id="studies" aria-labelledby="h-st">
+  <div class="head"><div class="label">03</div><h2 id="h-st">Interactive studies</h2><p>Recordings of my own dancing, turned into pose data and given back to other bodies.</p></div>
+  <div class="studies">
+    <a class="study" href="points.html">
+      <div class="shot"><img src="thumb-points.jpg" alt="Violet and red traces of two dancers’ wrists and ankles on a dark stage" width="828" height="436" loading="lazy"></div>
+      <div class="s"><div class="n">Study 1 · Duet</div><h3>What the Points Keep</h3><p class="q">When movement becomes data, what survives and what disappears?</p><p class="d">A duet read through four lenses: the filmed body, the tracked points, approximate Laban Effort, and the trace each dancer leaves around the body.</p>
+        <ul class="tags"><li>YOLO11 pose</li><li>2D · 17 points</li><li>Laban Effort</li></ul><span class="go">Open the study</span></div>
+    </a>
+    <a class="study" href="bodies.html">
+      <div class="shot"><img src="thumb-bodies.jpg" alt="A grey mannequin figure on a round stage, with the original video in the corner" width="828" height="436" loading="lazy"></div>
+      <div class="s"><div class="n">Study 2 · Solo</div><h3>Borrowed Bodies</h3><p class="q">When another body carries a movement, what does that body change?</p><p class="d">A solo lifted into 3D and carried by four avatar bodies, viewed from five angles beside the original video.</p>
+        <ul class="tags"><li>MediaPipe 3D</li><li>Avatar</li><li>Uncanny valley</li></ul><span class="go">Open the study</span></div>
+    </a>
+  </div>
+</section>
+
+<footer>Jimin Byun · 2026</footer>
+</div>
+</body></html>

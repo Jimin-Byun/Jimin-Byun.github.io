@@ -1,0 +1,668 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style><style>
+.fx{display:grid;gap:18px;border-top:1px solid var(--ink);padding-top:28px}
+.fx h2{font-size:28px;margin:0}
+.fx .lead{color:var(--muted);max-width:70ch}
+.fx-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+.fx-col{--c:var(--accent);background:var(--surface);border:1px solid var(--rule);border-top:4px solid var(--c);border-radius:10px;padding:18px 20px;display:grid;gap:12px;align-content:start;min-width:0}
+.fx-col.no{--c:var(--warm)} .fx-col.lim{--c:var(--muted)}
+.fx-col h3{margin:0;font-size:17px;color:var(--c)}
+.fx-col ul{margin:0;padding:0;list-style:none;display:grid;gap:12px}
+.fx-col li{font-size:15.5px;line-height:1.55}
+.fx-col li b{display:block;font-weight:600;color:var(--ink)}
+.fx-col li span{color:var(--muted)}
+@media (max-width:820px){.fx-grid{grid-template-columns:minmax(0,1fr)}}
+</style></head><body>
+<title>Borrowed Bodies</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,800&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+KR:wght@500;700&family=Noto+Serif+KR:wght@400;600&display=swap">
+<style>
+/* Layout: a lit black-box stage holding 3D bodies, the source video kept small in its corner; body and viewpoint choices under the stage, the Effort reading beside it, method and essay below. Same paper/ink system as "What the Points Keep" so the two works read as a pair. */
+:root{
+  --paper:#ECEEF2; --surface:#F7F8FA; --ink:#14171D; --muted:#596070; --rule:#C9CED8;
+  --accent:#2C3CCB; --warm:#C9431F;
+  --stage:#0C0E12; --stage-ink:#E7E9EE; --stage-muted:#8A919E;
+  --title:"Bricolage Grotesque","Helvetica Neue",Arial,sans-serif;
+  --display:"Bricolage Grotesque","Helvetica Neue",Arial,sans-serif;
+  --body:"Newsreader",Georgia,"Times New Roman",serif;
+  --mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --paper:#101217; --surface:#171A20; --ink:#E5E7EC; --muted:#959CA8; --rule:#2A2F38; --accent:#8D99FF; --warm:#FF7C5C; --stage:#06070A; color-scheme:dark;}}
+:root[data-theme="dark"]{--paper:#101217; --surface:#171A20; --ink:#E5E7EC; --muted:#959CA8; --rule:#2A2F38; --accent:#8D99FF; --warm:#FF7C5C; --stage:#06070A; color-scheme:dark;}
+*{box-sizing:border-box}
+body{background:var(--paper);color:var(--ink);font-family:var(--body);font-size:17px;line-height:1.55;padding-inline:clamp(16px,4vw,48px);padding-block:28px 64px;}
+.wrap{max-width:1240px;margin:0 auto;display:grid;gap:40px}
+h1,h2,h3{font-family:var(--display);text-wrap:balance;margin:0;letter-spacing:-.01em}
+p{margin:0}
+a{color:var(--accent)}
+button{font:inherit}
+.label{font-family:var(--mono);font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.topbar{display:flex;justify-content:space-between;gap:12px;align-items:baseline;flex-wrap:wrap}
+.links{display:flex;gap:8px;flex-wrap:wrap}
+.lang{font-family:var(--mono);font-size:12px;letter-spacing:.04em;color:var(--accent);text-decoration:none;border:1px solid var(--rule);padding:4px 10px;border-radius:3px}
+.lang:hover{border-color:var(--accent)}
+header{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);gap:clamp(20px,4vw,56px);align-items:end}
+header h1{font-family:var(--title);font-size:clamp(46px,7.5vw,100px);font-weight:800;line-height:.9;letter-spacing:-.04em;margin-top:6px}
+header h1 em{font-style:normal;color:var(--accent)}
+.subtitle{font-family:var(--display);font-weight:700;font-size:clamp(18px,2vw,22px);margin-top:10px;color:var(--muted)}
+.lede{font-size:1.1em;max-width:58ch;margin-top:16px}
+.question{border-left:2px solid var(--ink);padding-left:18px;display:grid;gap:8px}
+.question p{font-family:var(--display);font-size:clamp(19px,2.1vw,25px);line-height:1.3;font-weight:700}
+
+.main{display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:20px;align-items:start}
+.stagecol{display:grid;gap:12px;min-width:0}
+.stage{position:relative;background:var(--stage);border-radius:4px;overflow:hidden;aspect-ratio:16/9;max-height:72vh;width:100%}
+.stage canvas{display:block;width:100%;height:100%;cursor:grab;touch-action:none}
+.stage canvas:active{cursor:grabbing}
+.tag{position:absolute;left:12px;top:10px;font-family:var(--mono);font-size:11px;letter-spacing:.06em;color:var(--stage-muted);text-transform:uppercase;pointer-events:none}
+.tag b{color:var(--stage-ink);font-weight:500}
+.inset{position:absolute;right:12px;bottom:12px;height:46%;min-height:120px;border:1px solid rgba(231,233,238,.25);border-radius:3px;overflow:hidden;background:#000}
+.inset canvas{display:block;height:100%;width:auto}
+.inset span{position:absolute;left:6px;top:4px;font-family:var(--mono);font-size:10px;letter-spacing:.06em;color:#E7E9EE;text-transform:uppercase;text-shadow:0 1px 2px #000}
+.hint{position:absolute;left:12px;bottom:10px;font-family:var(--mono);font-size:11px;color:var(--stage-muted);pointer-events:none}
+.msg{position:absolute;inset:auto 12px 12px 12px;font-family:var(--mono);font-size:12px;color:var(--stage-ink);background:rgba(0,0,0,.6);padding:8px 10px;border-radius:3px}
+
+.choices{display:grid;gap:8px}
+.row{display:grid;grid-template-columns:72px minmax(0,1fr);gap:10px;align-items:center}
+.row>.label{font-size:11px}
+.seg{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(0,1fr);border:1px solid var(--rule);border-radius:4px;overflow:hidden;background:var(--surface)}
+.seg button{appearance:none;border:0;border-right:1px solid var(--rule);background:transparent;color:var(--ink);padding:9px 10px;text-align:left;cursor:pointer;display:grid;gap:1px;min-width:0}
+.seg button:last-child{border-right:0}
+.seg .n{font-family:var(--mono);font-size:10.5px;color:var(--muted)}
+.seg .t{font-family:var(--display);font-weight:600;font-size:15.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--paper)}
+.seg button[aria-pressed="true"] .n{color:var(--paper);opacity:.7}
+.seg button:focus-visible,.ctl:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.transport{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.ctl{appearance:none;border:1px solid var(--rule);background:var(--surface);color:var(--ink);border-radius:3px;padding:6px 11px;font-family:var(--mono);font-size:12.5px;cursor:pointer;line-height:1.3}
+.ctl:hover{border-color:var(--ink)}
+.ctl[aria-pressed="true"]{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.clock{font-family:var(--mono);font-size:12.5px;color:var(--muted);font-variant-numeric:tabular-nums;margin-left:auto}
+.timeline{position:relative;background:var(--surface);border:1px solid var(--rule);border-radius:4px;cursor:pointer;touch-action:none}
+.timeline canvas{display:block;width:100%}
+
+.panel{display:grid;gap:18px;background:var(--surface);border:1px solid var(--rule);border-radius:4px;padding:18px;min-width:0}
+.drive .name{font-family:var(--display);font-size:36px;font-weight:800;letter-spacing:-.02em;line-height:1.05}
+.drive .combo{font-family:var(--mono);font-size:12px;color:var(--muted)}
+.meters{display:grid;gap:12px}
+.meter{display:grid;gap:4px}
+.meter .r{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+.meter .f{font-family:var(--display);font-weight:600;font-size:15px}
+.meter .v{font-family:var(--mono);font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums}
+.bar{position:relative;height:8px;border-radius:4px;background:var(--rule)}
+.bar i{position:absolute;top:-3px;width:3px;height:14px;background:var(--ink);border-radius:1px;transform:translateX(-1px)}
+.poles{display:flex;justify-content:space-between;font-family:var(--mono);font-size:10.5px;color:var(--muted)}
+.note{border-top:1px solid var(--rule);padding-top:16px;display:grid;gap:10px}
+.note h3{font-size:21px}
+.note p{font-size:.94em}
+.kl{display:grid;grid-template-columns:auto minmax(0,1fr);gap:4px 10px;font-size:.88em}
+.kl dt{font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);padding-top:3px}
+.kl dd{margin:0}
+.kl dd.chg{color:var(--warm)}
+
+.lower{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);gap:clamp(24px,4vw,56px);border-top:1px solid var(--ink);padding-top:28px}
+.lower h2{font-size:28px;margin-bottom:14px}
+.tablewrap{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:.9em}
+th,td{text-align:left;padding:9px 10px 9px 0;border-bottom:1px solid var(--rule);vertical-align:top}
+th{font-family:var(--mono);font-size:11px;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);font-weight:500}
+td:first-child{font-family:var(--display);font-weight:600;white-space:nowrap}
+.fine{font-size:.84em;color:var(--muted);margin-top:12px;max-width:64ch}
+.essay{display:grid;gap:14px;max-width:62ch}
+
+.uncanny{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(24px,4vw,56px);border-top:1px solid var(--ink);padding-top:28px;align-items:start}
+.uncanny h2{font-size:28px;margin-bottom:14px}
+.uncanny .text{display:grid;gap:14px;max-width:62ch}
+.uncanny figure{margin:0;display:grid;gap:8px;min-width:0}
+.uncanny figcaption{font-size:.84em;color:var(--muted)}
+.uncanny svg{width:100%;height:auto;display:block}
+.uncanny .still{stroke:var(--rule);stroke-width:2;fill:none;stroke-dasharray:5 5}
+.uncanny .moving{stroke:var(--accent);stroke-width:2.5;fill:none}
+.uncanny .axis{stroke:var(--muted);stroke-width:1}
+.uncanny .zero{stroke:var(--rule);stroke-width:1}
+.uncanny .lbl{font-family:var(--mono);font-size:11px;fill:var(--muted)}
+.uncanny .pt{fill:var(--ink)}
+.uncanny .ptl{font-family:var(--display);font-size:13px;font-weight:600;fill:var(--ink)}
+.uncanny .valley{fill:var(--warm);font-family:var(--mono);font-size:11px}
+@media (max-width:920px){.uncanny{grid-template-columns:1fr}}
+footer{font-family:var(--mono);font-size:12px;color:var(--muted);display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;border-top:1px solid var(--rule);padding-top:16px}
+@media (max-width:920px){header,.main,.lower{grid-template-columns:1fr}}
+@media (max-width:560px){.row{grid-template-columns:1fr}.seg .t{font-size:13.5px}.seg button{padding:8px 6px}.inset{height:40%}}
+@media (prefers-reduced-motion: reduce){*{scroll-behavior:auto}}
+</style>
+
+<script id="to-top">
+try{ if('scrollRestoration' in history) history.scrollRestoration='manual'; }catch(e){}
+(function(){ var top=function(){ try{ window.scrollTo(0,0); document.documentElement.scrollTop=0; document.body&&(document.body.scrollTop=0); }catch(e){} };
+  top(); document.addEventListener('DOMContentLoaded',top); window.addEventListener('load',function(){ top(); setTimeout(top,60); setTimeout(top,300); });
+  window.addEventListener('pageshow',top); })();
+</script>
+<style id="readability">
+body{font-size:16.5px;line-height:1.6}
+.label{font-size:12px}
+.lede{font-size:18px;line-height:1.5}
+.question p{line-height:1.35}
+.lens .t,.seg .t{font-size:15px}
+.lens .n,.seg .n{font-size:11.5px}
+.ctl,.btn,.clock{font-size:13px}
+.drive .combo{font-size:13px}
+.meter .f{font-size:15px}
+.meter .v{font-size:12.5px}
+.poles{font-size:11.5px}
+.note h3{font-size:20px}
+.note p{font-size:15.5px;line-height:1.6}
+.kl{font-size:14.5px}
+.kl dt{font-size:11.5px}
+.fx,.lower,.uncanny{border-top:0;padding-top:0}
+.fx{gap:18px}
+.fx h2,.lower h2,.uncanny h2{font-size:clamp(23px,2.6vw,28px);line-height:1.15}
+.fx-col li{font-size:15.5px;line-height:1.55}
+.fx-col h3{font-size:16.5px}
+.lower{grid-template-columns:minmax(0,1fr)!important;gap:32px;max-width:860px}
+.lower>div{background:var(--surface);border:1px solid var(--rule);border-radius:12px;padding:clamp(18px,3vw,26px)}
+table{font-size:15px!important}
+th{font-size:11.5px!important;padding:9px 14px 9px 0}
+td{padding:10px 14px 10px 0;line-height:1.5}
+td .pole{font-size:12px}
+.fine{font-size:14.5px!important;line-height:1.6;max-width:70ch}
+.essay{max-width:68ch}
+.essay p,#essay p{font-size:16.5px!important;line-height:1.65}
+.uncanny{background:var(--surface);border:1px solid var(--rule);border-radius:12px;padding:clamp(18px,3vw,26px)}
+.uncanny p{font-size:16px;line-height:1.6}
+.uncanny figcaption{font-size:13.5px!important}
+.source p{font-size:14.5px}
+footer{font-size:12px}
+@media (max-width:640px){body{font-size:16px}.lede{font-size:17px}}
+.caveat{font-size:14.5px;line-height:1.6;color:var(--muted);background:var(--surface);border:1px solid var(--rule);border-left:3px solid var(--warm);border-radius:8px;padding:10px 14px;max-width:78ch}.caveat b{font-family:var(--mono);font-weight:500;font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--warm);margin-right:8px}</style>
+<div class="wrap">
+  <header>
+    <div>
+      <div class="topbar"><div class="label" data-t="eyebrow"></div><div class="links"><a class="lang" href="./">← Portfolio</a><a class="lang" href="points.html">Part 1: What the Points Keep</a></div></div>
+      <h1>Borrowed <em>Bodies</em></h1>
+      
+      <p class="lede" data-t="lede"></p>
+    </div>
+    <div class="question"><div class="label" data-t="qLabel"></div><p data-t="question"></p></div>
+  </header>
+
+  <section class="main">
+    <div class="stagecol">
+      <div class="stage" id="stage">
+        <canvas id="gl"></canvas>
+        <div class="tag" id="tag"></div>
+        <div class="inset" id="inset"><canvas id="insetCv" width="480" height="270"></canvas><span data-t="original"></span></div>
+        <video id="vid" playsinline muted preload="auto" hidden></video>
+        <div class="hint" id="hint" data-t="hint"></div>
+        <div class="msg" id="msg" hidden></div>
+      </div>
+      <div class="choices">
+        <div class="row"><span class="label" data-t="bodyLabel"></span><div class="seg" id="bodies" role="group"></div></div>
+        <div class="row"><span class="label" data-t="viewLabel"></span><div class="seg" id="views" role="group"></div></div>
+      </div>
+      <div class="transport">
+        <button class="ctl" id="play"></button>
+        <button class="ctl" id="restart" data-t="restart"></button>
+        <button class="ctl" id="speed">1×</button>
+        <button class="ctl" id="sound" aria-pressed="false"></button>
+        <button class="ctl" id="insetBtn" aria-pressed="true" data-t="originalBtn"></button>
+        <span class="clock" id="clock">0:00.0</span>
+      </div>
+      <div class="timeline" id="timeline"><canvas id="tl"></canvas></div>
+    </div>
+    <aside class="panel">
+      <div class="drive"><div class="label" data-t="driveLabel"></div><div class="name" id="driveName">—</div><div class="combo" id="driveCombo"></div></div>
+      <div class="meters" id="meters"></div>
+      <div class="note" id="bodyNote"></div>
+      <div class="note" id="viewNote"></div>
+    </aside>
+  </section>
+
+  <section class="fx" aria-label="What this study shows"><h2>What this study shows</h2><p class="lead">A summary of what moved across to the avatar and what did not.</p><p class="caveat"><b>Note</b> This study was made with one phone camera and freely available pose-estimation tools. Within these limits the 3D reconstruction and its analysis remain partial: some limb errors and depth estimates could not be resolved.</p><div class="fx-grid"><div class="fx-col "><h3>Carried over</h3><ul><li><b>Timing</b><span>Every pose is placed at the moment it was recorded, so the phrasing stays intact.</span></li><li><b>Travel</b><span>Movement across the floor is rebuilt from the fixed camera.</span></li></ul></div><div class="fx-col no"><h3>Not recorded</h3><ul><li><b>Spine and breath</b><span>There are no joints along the spine or on the chest; the bend between pelvis and chest is estimated.</span></li><li><b>Fingers and toes</b><span>Two points per hand and per foot can turn them but cannot bend them.</span></li></ul></div><div class="fx-col lim"><h3>Limits</h3><ul><li><b>Depth</b><span>It is the model’s estimate from one camera. The side view shows where it is least reliable.</span></li><li><b>Hidden limbs</b><span>Some errors remain where an arm or leg is hidden behind the body.</span></li><li><b>Jumps</b><span>They lose their height, because the lowest point of the body is kept on the floor.</span></li></ul></div></div></section>
+  <section class="lower">
+    <div>
+      <h2 data-t="methodTitle"></h2>
+      <div class="tablewrap"><table><thead><tr><th data-t="thStep"></th><th data-t="thHow"></th></tr></thead><tbody id="methodRows"></tbody></table></div>
+      <p class="fine" data-t="methodFine"></p>
+    </div>
+    <div class="essay" id="essay"><h2 data-t="essayTitle"></h2></div>
+  </section>
+  <section class="uncanny" aria-label="Where the uncanny valley sits"><div class="text"><h2>Where the uncanny valley sits</h2><p>Masahiro Mori (1970) proposed that our affinity for an artificial figure rises as it becomes more human-like, drops sharply just before full likeness, and that movement makes the drop deeper.</p><p>In an fMRI study, Ayse Pinar Saygin and colleagues (2012) found the strongest repetition suppression in the brain’s action-perception network for an android that looked human but moved mechanically, and traced it to the mismatch between appearance and motion. This study shows the reverse arrangement: human movement on figures that are not quite human.</p></div><figure><svg viewBox="0 0 640 330" role="img" aria-label="Affinity / Human likeness →"><line class="axis" x1="54" y1="20" x2="54" y2="278"/><line class="axis" x1="54" y1="278" x2="620" y2="278"/><line class="zero" x1="54" y1="184.8" x2="620" y2="184.8"/><path class="still" d="M54.0,179.1 C68.1,176.7 110.6,170.3 138.9,164.8 C167.2,159.3 195.5,152.3 223.8,146.1 C252.1,139.9 280.4,133.5 308.7,127.5 C337.0,121.5 370.0,114.1 393.6,110.3 C417.2,106.5 434.2,102.2 450.2,104.6 C466.2,107.0 476.6,104.1 489.8,124.6 C503.0,145.2 517.2,214.9 529.4,227.8 C541.7,240.7 553.0,219.9 563.4,202.0 C573.8,184.1 582.3,144.7 591.7,120.3 C601.1,96.0 615.3,66.6 620.0,55.8"/><path class="moving" d="M54.0,177.7 C68.1,174.7 110.6,166.6 138.9,159.8 C167.2,152.9 195.5,144.2 223.8,136.5 C252.1,128.7 280.4,120.6 308.7,113.2 C337.0,105.7 370.0,96.4 393.6,91.7 C417.2,86.9 434.2,81.5 450.2,84.5 C466.2,87.5 476.6,79.2 489.8,109.6 C503.0,139.9 517.2,248.5 529.4,266.5 C541.7,284.5 553.0,244.6 563.4,217.5 C573.8,190.5 582.3,136.5 591.7,104.2 C601.1,71.9 615.3,37.0 620.0,23.6"/><text class="lbl" x="620" y="308" text-anchor="end">Human likeness →</text><text class="lbl" x="44" y="24" text-anchor="end" transform="rotate(-90 44 24)">Affinity</text><text class="valley" x="529.4" y="284.5" text-anchor="middle">uncanny valley</text><line class="still" x1="66" y1="304" x2="88" y2="304"/><text class="lbl" x="94" y="308">still</text><line class="moving" x1="146" y1="304" x2="168" y2="304"/><text class="lbl" x="174" y="308">moving</text></svg><figcaption>Masahiro Mori’s curve (1970), redrawn.</figcaption></figure></section>
+  
+  <footer><span data-t="credit"></span><span data-t="built"></span></footer>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/utils/SkeletonUtils.js"></script>
+<script>
+(() => {
+"use strict";
+const LANG="en";
+const T = {"eyebrow": "Interactive study · 2026 · Jimin Byun", "lede": "A recorded solo, lifted into three dimensions and carried by four bodies that never danced it. Choose a body and a point of view; the original recording stays in the corner for comparison.", "qLabel": "Question", "question": "When a movement is carried by a different body, does its expression belong to the movement or to the body that carries it?", "original": "Original", "hint": "Drag to orbit · scroll to zoom", "bodyLabel": "Body", "viewLabel": "View", "restart": "Restart", "originalBtn": "Original video", "driveLabel": "Laban action drive, now", "methodTitle": "How the avatars are built", "thStep": "Step", "thHow": "Method", "methodFine": "All four bodies move with the same joint data. The mannequin, heavy and glass bodies use one rigged figure (X Bot, Adobe Mixamo) whose limb segments are resized to the dancer’s own lengths; the particle body is drawn directly from the joints. The data has no spine joints, so the bend between pelvis and chest is estimated.", "essayTitle": "What the body lends", "credit": "Jimin Byun · concept, system and text", "built": "three.js · MediaPipe Pose · YOLO11 · X Bot (Adobe Mixamo)", "play": "Play", "pause": "Pause", "soundOn": "Sound on", "soundOff": "Sound off", "noGL": "This browser could not start 3D graphics.", "noData": "The movement data did not load. Reload the page to try again.", "bodyNoteLabel": "Body", "viewNoteLabel": "Point of view", "kept": "Kept", "changed": "Changed", "method": [["Recording", "A fixed phone camera in the studio, 55 seconds, read on every frame (30 per second)."], ["Pose", "YOLO11 finds the dancer in each frame. The frame is cropped around her and passed to MediaPipe Pose, which estimates 33 joints in 3D, in metres around the hips. Depth is the model’s estimate from one camera, not a measurement."], ["Limb repair", "Single-camera pose models can swap left and right or mirror a limb in depth from one frame to the next. Left–right swaps were found by checking against a second detector (YOLO11) and the previous frame, and reversed (86 frames); sudden depth flips were reversed by comparison with the previous frame (215 cases); a knee bending backwards was turned forward (52 cases). Each limb is then turned within the picture plane toward the detector’s reading while keeping its length and depth."], ["Smoothing", "A five-frame median filter removes single-frame spikes, then zero-phase smoothing over time. Each limb segment keeps one length, its median over the recording."], ["Floor", "Travel across the floor comes from the dancer’s position and apparent size in the frame. The lowest point of the body rests on the floor, so jumps are lost. While a foot is planted it is held in place and the leg bends to reach it (two-bone IK)."], ["Uncertainty", "A limb fades when the pose model reports low confidence, usually when it is hidden behind the body or turned away from the camera."]], "essay": ["The avatar keeps the timing of the phrase, because every pose is placed at the moment it was recorded. It does not keep what the data never had: measured depth, a spine, bending fingers.", "Susan Leigh Foster (2011) describes kinesthetic empathy as a viewer’s bodily sense of another body’s movement. The heavy and glass bodies leave the motion unchanged and change only the form that carries it, which lets a viewer ask how much of what reads as expression comes from that form.", "Merce Cunningham’s <i>BIPED</i> (1999), made with Paul Kaiser and Shelley Eshkar, set motion-captured figures beside live dancers. This study starts from one phone video with no markers.", "In doctoral research I want to study where and how such qualities are lost or changed as movement passes through motion capture, avatars and AI systems."], "bodies": {"mannequin": {"title": "Mannequin", "text": "The movement on a figure with no face, costume or skin.", "kept": "Joint positions and their timing.", "changed": "Face, gaze, clothing."}, "heavy": {"title": "Heavy", "text": "The same figure inflated along its surface. The motion data is unchanged.", "kept": "Joint positions and their timing.", "changed": "The body’s apparent mass."}, "glass": {"title": "Glass", "text": "A transparent figure. Limbs that cross in front of the torso stay visible.", "kept": "Joint positions and their timing.", "changed": "Opacity."}, "particles": {"title": "Particles", "text": "Points drawn from the joints. They trail behind fast movement and gather again in stillness.", "kept": "Trajectory and speed.", "changed": "The outline of the body."}}, "views": {"audience": {"title": "Audience", "text": "Close to where the original camera sat: the frontal view stage choreography is composed for."}, "above": {"title": "Above", "text": "A view from directly above. The floor pattern and the path of travel become visible."}, "side": {"title": "Side", "text": "The depth axis a single camera cannot measure. What you see is the model’s estimate, and it is least reliable here."}, "inside": {"title": "Inside", "text": "From the dancer’s head. The audience disappears and the room turns with her."}, "free": {"title": "Free", "text": "Drag to orbit around the dancer; scroll or pinch to zoom."}}, "factors": {"W": {"name": "Weight", "lo": "Light", "hi": "Strong"}, "T": {"name": "Time", "lo": "Sustained", "hi": "Sudden"}, "F": {"name": "Flow", "lo": "Free", "hi": "Bound"}, "S": {"name": "Space", "lo": "Indirect", "hi": "Direct"}}, "drives": {"000": ["Float", "Light · Sustained · Indirect"], "001": ["Glide", "Light · Sustained · Direct"], "010": ["Flick", "Light · Sudden · Indirect"], "011": ["Dab", "Light · Sudden · Direct"], "100": ["Wring", "Strong · Sustained · Indirect"], "101": ["Press", "Strong · Sustained · Direct"], "110": ["Slash", "Strong · Sudden · Indirect"], "111": ["Punch", "Strong · Sudden · Direct"]}, "bodiesOnStage": n=>`${n} ${n===1?"body":"bodies"} on stage`};
+const tx = k => (T[k] ?? k);
+document.documentElement.lang = LANG;
+document.querySelectorAll("[data-t]").forEach(el=>{ el.innerHTML = tx(el.dataset.t); });
+document.getElementById("essay").insertAdjacentHTML("beforeend", T.essay.map(p=>`<p>${p}</p>`).join(""));
+document.getElementById("methodRows").innerHTML = T.method.map(r=>`<tr><td>${r[0]}</td><td>${r[1]}</td></tr>`).join("");
+
+const $=id=>document.getElementById(id);
+const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
+const vid=$("vid"), stage=$("stage"), glc=$("gl"), tl=$("tl"), tctx=tl.getContext("2d");
+const showMsg=t=>{ $("msg").textContent=t; $("msg").hidden=false; }, hideMsg=()=>{ $("msg").hidden=true; };
+if(typeof THREE==="undefined"){ showMsg(tx("noGL")); return; }
+
+/* ---------------- data ---------------- */
+// avatar.json: t[], joints[] (MediaPipe ids kept), f[frame][slot] = null | [rx,ry,rz, x0,y0,z0, x1,y1,z1, ...] metres, y up, joints relative to root
+let D=null, K=0, JI={};
+const MP={nose:0,leye:2,reye:5,lear:7,rear:8,lsh:11,rsh:12,lel:13,rel:14,lwr:15,rwr:16,lpi:17,rpi:18,lin:19,rin:20,lhip:23,rhip:24,lkn:25,rkn:26,lan:27,ran:28,lhe:29,rhe:30,lft:31,rft:32};
+const EXT=["nose","lwr","rwr","lan","ran"];
+
+/* ---------------- effort (3D, body-centred) ---------------- */
+const FACT=[{k:"W"},{k:"T"},{k:"F"},{k:"S"}];
+const DR=["000","001","010","011","100","101","110","111"];
+let FE={W:[],T:[],F:[],S:[]};
+const pctl=(a,q)=>{ if(!a.length) return 0; const s=Float64Array.from(a).sort(); return s[Math.min(s.length-1,Math.floor(q*(s.length-1)))]; };
+function jointPos(fr,s,name){ const a=D.f[fr][s]; if(!a) return null; const k=JI[name]; return [a[3+k*3],a[4+k*3],a[5+k*3]]; }
+function computeEffort(){
+  const n=D.t.length, sum={W:new Float64Array(n),T:new Float64Array(n),F:new Float64Array(n),S:new Float64Array(n)}, cnt=new Float64Array(n), sc=new Float64Array(n);
+  const win=30;
+  for(let s=0;s<K;s++){
+    const P=EXT.map(e=>{ const x=[],y=[],z=[]; for(let i=0;i<n;i++){ const p=jointPos(i,s,e); x.push(p?p[0]:NaN); y.push(p?p[1]:NaN); z.push(p?p[2]:NaN);} return {x,y,z}; });
+    for(let i=3;i<n;i++){ const dt=Math.max(1/120,D.t[i]-D.t[i-1]); let w=0,ac=0,jk=0,ok=true;
+      for(const p of P){ const v=k=>[(p.x[k]-p.x[k-1])/dt,(p.y[k]-p.y[k-1])/dt,(p.z[k]-p.z[k-1])/dt];
+        const v0=v(i),v1=v(i-1),v2=v(i-2); const a0=v0.map((c,m)=>(c-v1[m])/dt), a1=v1.map((c,m)=>(c-v2[m])/dt);
+        const sp=Math.hypot(...v0); if(!isFinite(sp)||!isFinite(a1[0])){ ok=false; break; }
+        w+=sp*sp; ac+=Math.hypot(...a0); jk+=Math.hypot(...a0.map((c,m)=>(c-a1[m])/dt)); }
+      if(!ok) continue; sum.W[i]+=w; sum.T[i]+=ac/P.length; sum.F[i]+=Math.log1p(jk/P.length); cnt[i]++;
+      let ss=0,c=0; for(const p of [P[1],P[2]]){ const i0=Math.max(0,i-win); let path=0,good=true;
+        for(let m=i0+1;m<=i;m++){ const d=Math.hypot(p.x[m]-p.x[m-1],p.y[m]-p.y[m-1],p.z[m]-p.z[m-1]); if(!isFinite(d)){good=false;break;} path+=d; }
+        if(good&&path>.08){ ss+=Math.hypot(p.x[i]-p.x[i0],p.y[i]-p.y[i0],p.z[i]-p.z[i0])/path; c++; } }
+      if(c){ sum.S[i]+=ss/c; sc[i]++; } }
+  }
+  for(const k of ["W","T","F","S"]){ const c=k==="S"?sc:cnt, sm=new Float64Array(n); let prev=NaN;
+    for(let i=0;i<n;i++){ const v=c[i]?sum[k][i]/c[i]:NaN; if(isNaN(prev)) prev=v; else if(!isNaN(v)) prev=.8*prev+.2*v; sm[i]=prev; }
+    const val=Array.from(sm).filter(v=>!isNaN(v)), lo=k==="S"?.25:pctl(val,.05), hi=k==="S"?.95:pctl(val,.95);
+    FE[k]=Array.from(sm,v=>isNaN(v)?.5:Math.min(1,Math.max(0,(v-lo)/((hi-lo)||1)))); }
+}
+
+/* ---------------- three.js scene ---------------- */
+const renderer=new THREE.WebGLRenderer({canvas:glc,antialias:true});
+renderer.setPixelRatio(Math.min(2,window.devicePixelRatio||1));
+renderer.shadowMap.enabled=true; renderer.shadowMap.type=THREE.PCFSoftShadowMap;
+renderer.outputEncoding=THREE.sRGBEncoding;
+const scene=new THREE.Scene(); scene.background=new THREE.Color(0x0c0e12); scene.fog=new THREE.Fog(0x0c0e12,9,22);
+const camera=new THREE.PerspectiveCamera(34,16/9,.05,60);
+const controls=new THREE.OrbitControls(camera,glc); controls.enableDamping=true; controls.dampingFactor=.08; controls.target.set(0,.9,0);
+controls.minDistance=1.2; controls.maxDistance=16; controls.maxPolarAngle=Math.PI*.495;
+scene.add(new THREE.HemisphereLight(0xb8c4ff,0x0a0806,.32));
+const key=new THREE.SpotLight(0xfff1e0,1.05,30,Math.PI/6.5,.65,1.4); key.position.set(2.5,7,5); key.castShadow=true; key.shadow.mapSize.set(1024,1024); key.shadow.bias=-.0004; key.shadow.camera.near=2; key.shadow.camera.far=20; scene.add(key); scene.add(key.target);
+const rim=new THREE.DirectionalLight(0x7f8cff,.55); rim.position.set(-4,4,-6); scene.add(rim);
+// floor: matte stage with a faint centre mark and reach rings
+const floor=new THREE.Mesh(new THREE.CircleGeometry(9,96), new THREE.MeshStandardMaterial({color:0x07080b,roughness:1,metalness:0}));
+floor.rotation.x=-Math.PI/2; floor.receiveShadow=true; scene.add(floor);
+const ringMat=new THREE.LineBasicMaterial({color:0x2c3140,transparent:true,opacity:.7});
+for(const r of [1,2,3.5,5]){ const g=new THREE.BufferGeometry().setFromPoints(Array.from({length:129},(_,i)=>new THREE.Vector3(Math.cos(i/128*Math.PI*2)*r,.002,Math.sin(i/128*Math.PI*2)*r))); scene.add(new THREE.Line(g,ringMat)); }
+const cross=new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(-.15,.003,0),new THREE.Vector3(.15,.003,0),new THREE.Vector3(0,.003,-.15),new THREE.Vector3(0,.003,.15)]);
+scene.add(new THREE.LineSegments(cross,new THREE.LineBasicMaterial({color:0x5a6070})));
+
+/* ---------------- bodies ---------------- */
+const SEGS=[["lsh","lel",.046],["lel","lwr",.038],["rsh","rel",.046],["rel","rwr",.038],["lhip","lkn",.07],["lkn","lan",.052],["rhip","rkn",.07],["rkn","ran",.052],["lhe","lft",.036],["rhe","rft",.036]];
+const BODY_STYLES={
+  mannequin:{scale:1, mat:()=>new THREE.MeshStandardMaterial({color:0xd8d2c8,roughness:.62,metalness:.02})},
+  heavy:{scale:2.1, mat:()=>new THREE.MeshStandardMaterial({color:0x3b3633,roughness:1,metalness:0})},
+  glass:{scale:1.05, mat:()=>new THREE.MeshStandardMaterial({color:0x9fd4ff,roughness:.1,metalness:.1,transparent:true,opacity:.2,depthWrite:false,side:THREE.DoubleSide,emissive:0x2a4c7a,emissiveIntensity:.5})},
+};
+const unitCyl=new THREE.CylinderGeometry(1,1,1,18,1,true), unitSph=new THREE.SphereGeometry(1,20,14);
+const UP=new THREE.Vector3(0,1,0);
+function makeMeshBody(style){
+  const st=BODY_STYLES[style], g=new THREE.Group(), m=st.mat(), parts={segs:[],caps:[]};
+  const base=m.opacity; m.transparent=true;
+  const add=(geo)=>{ const mm=m.clone(); mm.userData.base=base; const me=new THREE.Mesh(geo,mm); me.castShadow=style!=="glass"; me.receiveShadow=style==="mannequin"; g.add(me); return me; };
+  for(const s of SEGS){ parts.segs.push({a:s[0],b:s[1],r:s[2]*st.scale,cyl:add(unitCyl),ca:add(unitSph),cb:add(unitSph)}); }
+  const torsoGeo=new THREE.CylinderGeometry(1,.92,1,24,1,false);
+  parts.chest=add(torsoGeo); parts.abdomen=add(new THREE.CylinderGeometry(.92,1,1,24,1,false)); parts.waist=add(unitSph); parts.shoulders=add(unitSph);
+  parts.pelvis=add(unitSph); parts.neck=add(unitCyl); parts.head=add(unitSph);
+  parts.lhand=add(unitSph); parts.rhand=add(unitSph); parts.scale=st.scale; g.userData=parts; return g;
+}
+const va=new THREE.Vector3(), vb=new THREE.Vector3(), vd=new THREE.Vector3(), vm=new THREE.Vector3();
+function placeSeg(cyl,a,b,r){ vd.subVectors(b,a); const L=vd.length()||1e-4; vm.addVectors(a,b).multiplyScalar(.5); cyl.position.copy(vm); cyl.scale.set(r,L,r); cyl.quaternion.setFromUnitVectors(UP,vd.normalize()); }
+const basis=new THREE.Matrix4(), xa=new THREE.Vector3(), ya=new THREE.Vector3(), za=new THREE.Vector3();
+const qA=new THREE.Quaternion(), qB=new THREE.Quaternion();
+// orient a part: y along `up`, x along `side` made perpendicular to it
+function orient(q,up,side){ ya.copy(up).normalize(); xa.copy(side).addScaledVector(ya,-side.dot(ya)).normalize(); za.crossVectors(xa,ya).normalize(); basis.makeBasis(xa,ya,za); q.setFromRotationMatrix(basis); }
+const xS=new THREE.Vector3(), xH=new THREE.Vector3(), Tv=new THREE.Vector3(), upP=new THREE.Vector3(), dnC=new THREE.Vector3(), Wp=new THREE.Vector3(), tmpv=new THREE.Vector3();
+function poseMeshBody(g,J){
+  const P=g.userData, s=P.scale, rs=Math.sqrt(s);
+  for(const sg of P.segs){ const a=J[sg.a], b=J[sg.b]; placeSeg(sg.cyl,a,b,sg.r); sg.ca.position.copy(a); sg.ca.scale.setScalar(sg.r); sg.cb.position.copy(b); sg.cb.scale.setScalar(sg.r); }
+  const shM=va.addVectors(J.lsh,J.rsh).multiplyScalar(.5).clone(), hipM=vb.addVectors(J.lhip,J.rhip).multiplyScalar(.5).clone();
+  const shW=J.lsh.distanceTo(J.rsh), hipW=J.lhip.distanceTo(J.rhip);
+  // two-part torso: the chest follows the shoulders, the pelvis follows the hips, and the waist sits where both agree,
+  // so twist and side bend between ribcage and pelvis become visible (an estimate: the data has no spine joints)
+  xS.subVectors(J.lsh,J.rsh).normalize(); xH.subVectors(J.lhip,J.rhip).normalize();
+  Tv.subVectors(shM,hipM); const L=Tv.length()||.45;
+  upP.copy(Tv).addScaledVector(xH,-Tv.dot(xH)).normalize();
+  dnC.copy(Tv).negate(); dnC.addScaledVector(xS,-dnC.dot(xS)).normalize();
+  Wp.copy(hipM).addScaledVector(upP,L*.45).add(tmpv.copy(shM).addScaledVector(dnC,L*.55)).multiplyScalar(.5);
+  orient(qA,tmpv.subVectors(shM,Wp),xS); P.chest.quaternion.copy(qA);
+  const chL=shM.distanceTo(Wp); P.chest.position.copy(Wp).lerp(shM,.5); P.chest.scale.set(shW*.56*rs,chL*1.08,.1*s+.045);
+  orient(qB,tmpv.subVectors(Wp,hipM),xH); P.abdomen.quaternion.copy(qB);
+  const abL=hipM.distanceTo(Wp); P.abdomen.position.copy(hipM).lerp(Wp,.5); P.abdomen.scale.set(Math.max(hipW*.62,shW*.42)*rs,abL*1.05,.09*s+.04);
+  P.shoulders.position.copy(shM).addScaledVector(ya.copy(shM).sub(Wp).normalize(),-.03); P.shoulders.quaternion.copy(qA); P.shoulders.scale.set(shW*.62*rs,.09*s+.02,.105*s+.05);
+  P.waist.position.copy(Wp); P.waist.quaternion.copy(qA).slerp(qB,.5); P.waist.scale.set(Math.max(hipW*.6,shW*.45)*rs,.07*s,(.09*s+.04));
+  P.pelvis.position.copy(hipM); P.pelvis.quaternion.copy(qB); P.pelvis.scale.set(hipW*.75*rs,.12*s,.11*s);
+  const headC=va.addVectors(J.lear,J.rear).multiplyScalar(.5).lerp(J.nose,.25).clone();
+  placeSeg(P.neck,shM,headC.clone().lerp(shM,.35),.045*s); P.head.position.copy(headC);
+  P.head.quaternion.copy(qA); P.head.scale.set(.085*rs,.115*rs,.1*rs);
+  // hands as flat paddles: length toward the fingers, width across index to little finger
+  const hand=(w,pi,ix,me)=>{ const tip=vm.addVectors(J[pi],J[ix]).multiplyScalar(.5); const dir=tmpv.subVectors(tip,w);
+    if(dir.lengthSq()<1e-8){ me.position.copy(w); me.scale.setScalar(.045*rs); return; }
+    orient(me.quaternion,dir,vd.subVectors(J[ix],J[pi])); me.position.copy(w).addScaledVector(dir.normalize(),.055*rs); me.scale.set(.042*rs,.065*rs,.017*rs+.004); };
+  hand(J.lwr,"lpi","lin",P.lhand); hand(J.rwr,"rpi","rin",P.rhand);
+}
+// particle body: points spread over the limbs, shedding drift particles from hands, feet and head
+const NB=2600, NS=2400;
+function makeParticleBody(){
+  const g=new THREE.Group();
+  const geo=new THREE.BufferGeometry(); const pos=new Float32Array(NB*3), seed=new Float32Array(NB*4);
+  for(let i=0;i<NB;i++){ seed[i*4]=Math.floor(Math.random()*(SEGS.length+3)); seed[i*4+1]=Math.random(); seed[i*4+2]=Math.random()*Math.PI*2; seed[i*4+3]=Math.sqrt(Math.random()); }
+  geo.setAttribute("position",new THREE.BufferAttribute(pos,3));
+  const mat=new THREE.PointsMaterial({color:0xffc9ae,size:.016,sizeAttenuation:true,transparent:true,opacity:.55,depthWrite:false,blending:THREE.AdditiveBlending});
+  const pts=new THREE.Points(geo,mat); g.add(pts);
+  const sg=new THREE.BufferGeometry(), sp=new Float32Array(NS*3), sc=new Float32Array(NS*3);
+  sg.setAttribute("position",new THREE.BufferAttribute(sp,3)); sg.setAttribute("color",new THREE.BufferAttribute(sc,3));
+  const smat=new THREE.PointsMaterial({size:.018,sizeAttenuation:true,vertexColors:true,transparent:true,opacity:1,depthWrite:false,blending:THREE.AdditiveBlending});
+  const shed=new THREE.Points(sg,smat); shed.frustumCulled=false; pts.frustumCulled=false; g.add(shed);
+  g.userData={pts,seed,shed,vel:new Float32Array(NS*3),life:new Float32Array(NS),next:0,prev:{}};
+  return g;
+}
+const TORSO_SEGS=[["lsh","lhip",.13],["rsh","rhip",.13],["lsh","rsh",.08]];
+function poseParticleBody(g,J,dt,live){
+  const U=g.userData, pos=U.pts.geometry.attributes.position.array, all=SEGS.concat(TORSO_SEGS);
+  for(let i=0;i<NB;i++){ const si=U.seed[i*4]|0, t=U.seed[i*4+1], ang=U.seed[i*4+2], rr=U.seed[i*4+3];
+    let ax,ay,az,bx,by,bz,r;
+    if(si<all.length){ const s=all[si]; const A=J[s[0]],B=J[s[1]]; ax=A.x;ay=A.y;az=A.z;bx=B.x;by=B.y;bz=B.z;r=s[2]; }
+    else { const c=J.headC; ax=c.x;ay=c.y-.1;az=c.z;bx=c.x;by=c.y+.1;bz=c.z;r=.09; }
+    const x=ax+(bx-ax)*t, y=ay+(by-ay)*t, z=az+(bz-az)*t;
+    pos[i*3]=x+Math.cos(ang)*r*rr; pos[i*3+1]=y+Math.sin(ang*1.7)*r*rr*.6; pos[i*3+2]=z+Math.sin(ang)*r*rr; }
+  U.pts.geometry.attributes.position.needsUpdate=true;
+  const sp=U.shed.geometry.attributes.position.array, sc=U.shed.geometry.attributes.color.array;
+  if(live && dt>0){ for(const e of ["lwr","rwr","lan","ran","headC"]){ const p=J[e], q=U.prev[e];
+      if(q){ const vx=(p.x-q.x)/dt, vy=(p.y-q.y)/dt, vz=(p.z-q.z)/dt, speed=Math.hypot(vx,vy,vz), count=Math.min(14,Math.floor(speed*4));
+        for(let k=0;k<count;k++){ const i=U.next; U.next=(U.next+1)%NS; sp[i*3]=p.x; sp[i*3+1]=p.y; sp[i*3+2]=p.z;
+          U.vel[i*3]=vx*.25+(Math.random()-.5)*.3; U.vel[i*3+1]=vy*.25+(Math.random()-.2)*.25; U.vel[i*3+2]=vz*.25+(Math.random()-.5)*.3; U.life[i]=1; } }
+      U.prev[e]=p.clone(); }
+    for(let i=0;i<NS;i++){ if(U.life[i]<=0){ sc[i*3]=sc[i*3+1]=sc[i*3+2]=0; continue; } U.life[i]-=dt*.7;
+      sp[i*3]+=U.vel[i*3]*dt; sp[i*3+1]+=U.vel[i*3+1]*dt; sp[i*3+2]+=U.vel[i*3+2]*dt; U.vel[i*3+1]-=.15*dt;
+      const l=Math.max(0,U.life[i]); sc[i*3]=l*1; sc[i*3+1]=l*.62; sc[i*3+2]=l*.45; }
+    U.shed.geometry.attributes.position.needsUpdate=true; U.shed.geometry.attributes.color.needsUpdate=true; }
+  else if(!live){ U.prev={}; }
+}
+
+/* ---------------- avatar instances ---------------- */
+let AV=[], bodyMode="mannequin";
+function buildAvatars(){
+  AV.forEach(a=>{ scene.remove(a.mesh.mannequin); scene.remove(a.mesh.heavy); scene.remove(a.mesh.glass); scene.remove(a.part); }); AV=[];
+  const legData=(()=>{ for(let i=0;i<D.f.length;i++){ const a=D.f[i][0]; if(!a) continue; const p=k=>new THREE.Vector3(a[3+JI[k]*3],a[4+JI[k]*3],a[5+JI[k]*3]); return p("lhip").distanceTo(p("lkn"))+p("lkn").distanceTo(p("lan")); } return .8; })();
+  for(let s=0;s<K;s++){ const part=makeParticleBody(); scene.add(part);
+    const limbData=(()=>{ for(let i=0;i<D.f.length;i++){ const a=D.f[i][s]; if(!a) continue; const p=k=>new THREE.Vector3(a[3+JI[k]*3],a[4+JI[k]*3],a[5+JI[k]*3]); const o={}; for(const [b,c,f,t] of LIMBS){ if(JI[f]!==undefined&&JI[t]!==undefined) o[f+"-"+t]=p(f).distanceTo(p(t)); } return o; } return null; })();
+    if(HUMAN_GLTF){ const H=makeHuman(legData,limbData); scene.add(H.root); AV.push({human:H,mesh:{},part,J:{},vis:false}); }
+    else { const mesh={mannequin:makeMeshBody("mannequin"),heavy:makeMeshBody("heavy"),glass:makeMeshBody("glass")}; Object.values(mesh).forEach(m=>scene.add(m)); AV.push({mesh,part,J:{},vis:false}); } }
+  applyBodyMode();
+}
+function applyBodyMode(){ AV.forEach(a=>{ for(const k in a.mesh) a.mesh[k].visible=(k===bodyMode)&&a.vis; if(a.human){ a.human.root.visible=bodyMode!=="particles"&&a.vis; if(bodyMode!=="particles") setHumanStyle(a.human,bodyMode); } a.part.visible=bodyMode==="particles"&&a.vis; }); }
+const tmp=new THREE.Vector3();
+// limbs fade where the pose model is unsure of a joint
+const fade=c=> c>=.7?1 : c<=.3?.15 : .15+(c-.3)/.4*.85;
+function setOp(me,c){ const o=me.material.userData.base*fade(c); if(Math.abs(me.material.opacity-o)>.01){ me.material.opacity=o; me.material.depthWrite=o>.95&&me.material.userData.base>.95; } }
+function applyConfidence(g,C){ const P=g.userData;
+  for(const sg of P.segs){ const c=Math.min(C[sg.a]??1,C[sg.b]??1); setOp(sg.cyl,c); setOp(sg.ca,C[sg.a]??1); setOp(sg.cb,C[sg.b]??1); }
+  setOp(P.chest,Math.min(C.lsh,C.rsh)); setOp(P.shoulders,Math.min(C.lsh,C.rsh)); setOp(P.abdomen,Math.min(C.lsh,C.rsh,C.lhip,C.rhip)); setOp(P.waist,Math.min(C.lsh,C.rsh,C.lhip,C.rhip)); setOp(P.pelvis,Math.min(C.lhip,C.rhip)); setOp(P.neck,Math.min(C.nose,C.lsh,C.rsh)); setOp(P.head,C.nose);
+  setOp(P.lhand,C.lwr); setOp(P.rhand,C.rwr); }
+
+/* ---------------- rigged human body (X Bot, Adobe Mixamo) driven by the tracked joints ---------------- */
+let HUMAN_GLTF=null;
+const BN=n=>"mixamorig"+n;
+const ORDER=["Hips","Spine","Spine1","Spine2","Neck","Head","LeftShoulder","LeftArm","LeftForeArm","LeftHand","RightShoulder","RightArm","RightForeArm","RightHand","LeftUpLeg","LeftLeg","LeftFoot","RightUpLeg","RightLeg","RightFoot"];
+const LIMBS=[["LeftArm","LeftForeArm","lsh","lel"],["LeftForeArm","LeftHand","lel","lwr"],["RightArm","RightForeArm","rsh","rel"],["RightForeArm","RightHand","rel","rwr"],
+  ["LeftUpLeg","LeftLeg","lhip","lkn"],["LeftLeg","LeftFoot","lkn","lan"],["RightUpLeg","RightLeg","rhip","rkn"],["RightLeg","RightFoot","rkn","ran"],
+  ["LeftFoot","LeftToeBase","lan","lft"],["RightFoot","RightToeBase","ran","rft"]];
+// which tracked joints a bone depends on, for the uncertainty fade
+function boneConfKeys(name){ const n=name.replace("mixamorig","");
+  const side=n.startsWith("Left")?"l":n.startsWith("Right")?"r":"";
+  if(/Hand|Thumb|Index|Middle|Ring|Pinky/.test(n)) return [side+"wr"];
+  if(/ForeArm/.test(n)) return [side+"el",side+"wr"];
+  if(/Arm/.test(n)) return [side+"sh",side+"el"];
+  if(/Shoulder/.test(n)) return [side+"sh"];
+  if(/UpLeg/.test(n)) return [side+"hip",side+"kn"];
+  if(/Leg/.test(n)) return [side+"kn",side+"an"];
+  if(/Foot|Toe/.test(n)) return [side+"an"];
+  if(/Head|Neck|Eye/.test(n)) return ["nose"];
+  if(/Spine/.test(n)) return ["lsh","rsh","lhip","rhip"];
+  return ["lhip","rhip"]; }
+function humanMaterial(style,part){
+  const joint=part==="joints";
+  const m= style==="glass"
+    ? new THREE.MeshStandardMaterial({color:0x9fd4ff,roughness:.1,metalness:.1,transparent:true,opacity:.22,depthWrite:false,side:THREE.DoubleSide,emissive:0x2a4c7a,emissiveIntensity:.5,skinning:true})
+    : style==="heavy"
+    ? new THREE.MeshStandardMaterial({color:joint?0x2c2826:0x3b3633,roughness:1,metalness:0,skinning:true,transparent:true})
+    : new THREE.MeshStandardMaterial({color:joint?0xa9a39a:0xd8d2c8,roughness:.55,metalness:.02,skinning:true,transparent:true});
+  m.userData.boneAlpha={value:new Float32Array(80).fill(1)}; m.userData.inflate={value:0};
+  m.onBeforeCompile=sh=>{
+    sh.uniforms.boneAlpha=m.userData.boneAlpha; sh.uniforms.inflate=m.userData.inflate;
+    sh.vertexShader="uniform float boneAlpha[80];\nuniform float inflate;\nvarying float vAlpha;\n"+sh.vertexShader
+      .replace("#include <begin_vertex>","vec3 transformed = vec3( position ) + normal * inflate;\nvAlpha = dot(skinWeight, vec4(boneAlpha[int(skinIndex.x)], boneAlpha[int(skinIndex.y)], boneAlpha[int(skinIndex.z)], boneAlpha[int(skinIndex.w)]));");
+    sh.fragmentShader="varying float vAlpha;\n"+sh.fragmentShader.replace("#include <dithering_fragment>","#include <dithering_fragment>\ngl_FragColor.a *= vAlpha;");
+  };
+  return m;
+}
+function makeHuman(legData,limbData){
+  const root=THREE.SkeletonUtils.clone(HUMAN_GLTF.scene);
+  const meshes=[], bones={};
+  root.traverse(o=>{ if(o.isSkinnedMesh){ o.frustumCulled=false; o.castShadow=true; meshes.push(o); } if(o.isBone) bones[o.name]=o; });
+  const B=n=>bones[BN(n)];
+  meshes.forEach(m=>m.skeleton.pose());
+  root.updateMatrixWorld(true);
+  const wp=n=>B(n).getWorldPosition(new THREE.Vector3());
+  const legRest=wp("LeftUpLeg").distanceTo(wp("LeftLeg"))+wp("LeftLeg").distanceTo(wp("LeftFoot"));
+  const hRest=wp("HeadTop_End").y-wp("LeftToeBase").y;
+  root.scale.multiplyScalar(legData/legRest); root.updateMatrixWorld(true);
+  // match each limb segment to the dancer's own length, so hands and feet land where the data puts them
+  if(limbData){ for(const [b,c,f,t] of LIMBS){ const L=limbData[f+"-"+t]; if(!L||!B(c)) continue;
+      const cur=wp(b).distanceTo(wp(c)); if(cur>1e-4){ B(c).position.multiplyScalar(L/cur); root.updateMatrixWorld(true); } } }
+  const rest={}; for(const n of ORDER.concat(["LeftToeBase","RightToeBase","HeadTop_End"])){ if(B(n)) rest[n]={q:B(n).getWorldQuaternion(new THREE.Quaternion()),p:wp(n)}; }
+  const d=(a,b)=>new THREE.Vector3().subVectors(typeof b==="string"?wp(b):b,typeof a==="string"?wp(a):a);
+  const RV={
+    hipsUp:d("Hips","Spine"), hipsSide:d("RightUpLeg","LeftUpLeg"),
+    chestUp:d("Spine2","Neck"), chestSide:d("RightArm","LeftArm"),
+    headUp:d("Head","HeadTop_End"), headSide: (B("LeftEye")&&B("RightEye"))? d("RightEye","LeftEye") : d("RightArm","LeftArm"),
+    lhandUp:d("LeftHand","LeftHandMiddle1"), lhandSide:d("LeftHandPinky1","LeftHandIndex1"),
+    rhandUp:d("RightHand","RightHandMiddle1"), rhandSide:d("RightHandIndex1","RightHandPinky1"),
+    hipOffset:d(wp("LeftUpLeg").add(wp("RightUpLeg")).multiplyScalar(.5),"Hips")
+  };
+  const limbRest={}; for(const [b,c] of LIMBS) limbRest[b]=d(b,c).normalize();
+  // per-style materials; the heavy body is inflated along its normals in the vertex shader
+  const geoH=(()=>{ const g=meshes[0].geometry; g.computeBoundingBox(); const bb=g.boundingBox; return Math.max(bb.max.y-bb.min.y,bb.max.z-bb.min.z); })();
+  const localPerMetre=geoH/(hRest*legData/legRest);
+  const mats={}; for(const st of ["mannequin","heavy","glass"]){ mats[st]=meshes.map(m=>{ const mm=humanMaterial(st,/Joint/i.test(m.name)?"joints":"surface"); if(st==="heavy") mm.userData.inflate.value=.032*localPerMetre; return mm; }); }
+  const boneList=meshes[0].skeleton.bones, boneKeys=boneList.map(b=>boneConfKeys(b.name));
+  return {root,meshes,B,rest,RV,limbRest,mats,boneList,boneKeys,style:null,parentQ:B("Hips").parent.getWorldQuaternion(new THREE.Quaternion())};
+}
+const _qa=new THREE.Quaternion(), _qb=new THREE.Quaternion(), _mb=new THREE.Matrix4();
+function basisQ(up,side,out){ ya.copy(up).normalize(); xa.copy(side).addScaledVector(ya,-side.dot(ya)).normalize(); za.crossVectors(xa,ya); _mb.makeBasis(xa,ya,za); return out.setFromRotationMatrix(_mb); }
+function twoVec(rUp,rSide,tUp,tSide,out){ basisQ(rUp,rSide,_qa); basisQ(tUp,tSide,_qb); return out.copy(_qb).multiply(_qa.invert()); }
+const HV={}; const hv=k=>HV[k]||(HV[k]=new THREE.Vector3());
+function poseHuman(H,J,C){
+  const R={};
+  const shM=hv("shM").addVectors(J.lsh,J.rsh).multiplyScalar(.5), hipM=hv("hipM").addVectors(J.lhip,J.rhip).multiplyScalar(.5);
+  const L=shM.distanceTo(hipM)||.45;
+  const xS_=hv("xs").subVectors(J.lsh,J.rsh).normalize(), xH_=hv("xh").subVectors(J.lhip,J.rhip).normalize();
+  const T=hv("T").subVectors(shM,hipM), up=hv("up").copy(T).addScaledVector(xH_,-T.dot(xH_)).normalize();
+  const dn=hv("dn").copy(T).negate(); dn.addScaledVector(xS_,-dn.dot(xS_)).normalize();
+  const W=hv("W").copy(hipM).addScaledVector(up,L*.45).add(hv("t2").copy(shM).addScaledVector(dn,L*.55)).multiplyScalar(.5);
+  R.Hips=twoVec(H.RV.hipsUp,H.RV.hipsSide,hv("a").subVectors(W,hipM),hv("b").subVectors(J.lhip,J.rhip),new THREE.Quaternion());
+  R.Spine2=twoVec(H.RV.chestUp,H.RV.chestSide,hv("a").subVectors(shM,W),hv("b").subVectors(J.lsh,J.rsh),new THREE.Quaternion());
+  R.Spine=R.Hips.clone().slerp(R.Spine2,1/3); R.Spine1=R.Hips.clone().slerp(R.Spine2,2/3);
+  R.Head=twoVec(H.RV.headUp,H.RV.headSide,hv("a").subVectors(J.headC,shM),hv("b").subVectors(J.lear,J.rear),new THREE.Quaternion());
+  R.Neck=R.Spine2.clone().slerp(R.Head,.5); R.LeftShoulder=R.Spine2; R.RightShoulder=R.Spine2;
+  for(const [b,c,f,t] of LIMBS){ if(!J[f]||!J[t]) continue; R[b]=new THREE.Quaternion().setFromUnitVectors(H.limbRest[b],hv("a").subVectors(J[t],J[f]).normalize()); }
+  const handMid=(a_,b_)=>hv("m").addVectors(J[a_],J[b_]).multiplyScalar(.5);
+  R.LeftHand=twoVec(H.RV.lhandUp,H.RV.lhandSide,hv("a").subVectors(handMid("lin","lpi"),J.lwr),hv("b").subVectors(J.lin,J.lpi),new THREE.Quaternion());
+  R.RightHand=twoVec(H.RV.rhandUp,H.RV.rhandSide,hv("a").subVectors(handMid("rin","rpi"),J.rwr),hv("b").subVectors(J.rin,J.rpi),new THREE.Quaternion());
+  const worldQ={};
+  for(const n of ORDER){ const bone=H.B(n); if(!bone||!R[n]) continue;
+    worldQ[n]=R[n].clone().multiply(H.rest[n].q);
+    const pn=bone.parent.name.replace("mixamorig","");
+    const pq= worldQ[pn] || (n==="Hips"? H.parentQ : bone.parent.getWorldQuaternion(new THREE.Quaternion()));
+    bone.quaternion.copy(pq.clone().invert().multiply(worldQ[n])); }
+  // place the pelvis: data hip midpoint plus the model's own hip offset, turned with the pelvis
+  const hipsTarget=hv("ht").copy(H.RV.hipOffset).applyQuaternion(R.Hips).add(hipM);
+  const hb=H.B("Hips"); hb.position.copy(hb.parent.worldToLocal(hipsTarget.clone()));
+  // uncertainty: fade the skin around bones whose joints the model was unsure of
+  if(C){ const mats=H.mats[H.style]; for(let i=0;i<H.boneList.length&&i<80;i++){ let c=1; for(const k of H.boneKeys[i]) c=Math.min(c,C[k]??1); const a=fade(c); for(const m of mats) m.userData.boneAlpha.value[i]=a; } }
+}
+function setHumanStyle(H,st){ if(H.style===st) return; H.style=st; H.meshes.forEach((m,i)=>{ m.material=H.mats[st][i]; m.castShadow=st!=="glass"; }); }
+function setFrameFloat(ft,dt,live){
+  if(AV.length<K) return;
+  const n=D.t.length; const i0=Math.max(0,Math.min(n-1,Math.floor(ft))), i1=Math.min(n-1,i0+1), u=Math.min(1,Math.max(0,ft-i0));
+  for(let s=0;s<K;s++){ const A=AV[s], a=D.f[i0][s], b=D.f[i1][s]||a;
+    const vis=!!a; if(vis!==A.vis){ A.vis=vis; } if(!vis){ continue; }
+    const J=A.J, rx=a[0]+(b[0]-a[0])*u, ry=a[1]+(b[1]-a[1])*u, rz=a[2]+(b[2]-a[2])*u;
+    for(const name in JI){ const k=JI[name]; const x=a[3+k*3]+(b[3+k*3]-a[3+k*3])*u, y=a[4+k*3]+(b[4+k*3]-a[4+k*3])*u, z=a[5+k*3]+(b[5+k*3]-a[5+k*3])*u;
+      (J[name]||(J[name]=new THREE.Vector3())).set(rx+x,ry+y,rz+z); }
+    J.headC=(J.headC||new THREE.Vector3()).addVectors(J.lear,J.rear).multiplyScalar(.5).lerp(J.nose,.25);
+    const ca=D.c&&D.c[i0]&&D.c[i0][s], cb=D.c&&D.c[i1]&&D.c[i1][s]||ca, CF=A.C||(A.C={});
+    for(const name in JI){ const k=JI[name]; CF[name]= ca? ca[k]+((cb?cb[k]:ca[k])-ca[k])*u : 1; }
+    if(bodyMode==="particles") poseParticleBody(A.part,J,dt,live); else { A.part.userData.prev={}; if(A.human){ setHumanStyle(A.human,bodyMode); poseHuman(A.human,J,CF); } else { poseMeshBody(A.mesh[bodyMode],J); applyConfidence(A.mesh[bodyMode],CF); } }
+  }
+  applyBodyMode();
+}
+
+/* ---------------- views ---------------- */
+let view="audience", camAnim=null;
+const VIEWS={ audience:{p:[0,1.3,5.4],t:[0,.9,0]}, above:{p:[0,6.2,.4],t:[0,0,0]}, side:{p:[7.4,1.3,0],t:[0,.9,0]} };
+function goView(v,instant){
+  view=v; controls.enabled=v!=="inside";
+  if(v==="inside"||v==="free"){ camAnim=null; return; }
+  const V=VIEWS[v]; const from={p:camera.position.clone(),t:controls.target.clone()}, to={p:new THREE.Vector3(...V.p),t:new THREE.Vector3(...V.t)};
+  if(instant||reduceMotion){ camera.position.copy(to.p); controls.target.copy(to.t); camAnim=null; } else camAnim={from,to,t0:performance.now(),dur:900};
+}
+controls.addEventListener("start",()=>{ if(view!=="free"&&view!=="inside"){ view="free"; markView(); renderViewNote(); } camAnim=null; });
+const look=new THREE.Vector3(), fwd=new THREE.Vector3(), eye=new THREE.Vector3();
+function insideCam(){
+  const A=AV.find(a=>a.vis); if(!A) return; const J=A.J;
+  xa.subVectors(J.lsh,J.rsh).setY(0).normalize(); fwd.crossVectors(xa,UP).normalize().multiplyScalar(-1);
+  // forward is the side the nose is on
+  tmp.subVectors(J.nose,J.headC); if(tmp.dot(fwd)<0) fwd.multiplyScalar(-1);
+  eye.copy(J.headC).addScaledVector(fwd,.12); eye.y+=.04;
+  camera.position.lerp(eye,.35); look.copy(eye).addScaledVector(fwd,2).setY(eye.y-.25); controls.target.lerp(look,.35); camera.lookAt(controls.target);
+}
+
+/* ---------------- UI: choices, notes, meters ---------------- */
+const BODIES=["mannequin","heavy","glass","particles"], VIEWLIST=["audience","above","side","inside","free"];
+$("bodies").innerHTML=BODIES.map((b,i)=>`<button data-b="${b}" aria-pressed="${i===0}"><span class="n">${i+1}</span><span class="t">${T.bodies[b].title}</span></button>`).join("");
+$("views").innerHTML=VIEWLIST.map((v,i)=>`<button data-v="${v}" aria-pressed="${i===0}"><span class="n">${"ABCDE"[i]}</span><span class="t">${T.views[v].title}</span></button>`).join("");
+const markView=()=>$("views").querySelectorAll("button").forEach(x=>x.setAttribute("aria-pressed",x.dataset.v===view?"true":"false"));
+function renderBodyNote(){ const B=T.bodies[bodyMode];
+  $("bodyNote").innerHTML=`<div class="label">${T.bodyNoteLabel}</div><h3>${B.title}</h3><p>${B.text}</p><dl class="kl"><dt>${T.kept}</dt><dd>${B.kept}</dd><dt>${T.changed}</dt><dd class="chg">${B.changed}</dd></dl>`; }
+function renderViewNote(){ const V=T.views[view]; $("viewNote").innerHTML=`<div class="label">${T.viewNoteLabel}</div><h3>${V.title}</h3><p>${V.text}</p>`; }
+$("bodies").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; bodyMode=b.dataset.b;
+  $("bodies").querySelectorAll("button").forEach(x=>x.setAttribute("aria-pressed",x===b?"true":"false")); renderBodyNote(); AV.forEach(a=>a.part.userData.prev={}); applyBodyMode(); });
+$("views").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; goView(b.dataset.v); markView(); renderViewNote(); });
+$("meters").innerHTML=FACT.map(F=>`<div class="meter" data-k="${F.k}"><div class="r"><span class="f">${T.factors[F.k].name}</span><span class="v" data-v>—</span></div><div class="bar"><i data-i style="left:50%"></i></div><div class="poles"><span>${T.factors[F.k].lo}</span><span>${T.factors[F.k].hi}</span></div></div>`).join("");
+let lastDrive="";
+function updateReadout(i){
+  if(!FE.W.length) return; const v={};
+  for(const F of FACT){ const x=FE[F.k][i]??.5; v[F.k]=x; const el=$("meters").querySelector(`[data-k="${F.k}"]`);
+    el.querySelector("[data-i]").style.left=(x*100).toFixed(1)+"%"; el.querySelector("[data-v]").textContent=`${x<.5?T.factors[F.k].lo:T.factors[F.k].hi} ${x.toFixed(2)}`; }
+  const key=`${v.W>=.5?1:0}${v.T>=.5?1:0}${v.S>=.5?1:0}`;
+  if(key!==lastDrive){ lastDrive=key; $("driveName").textContent=T.drives[key][0]; $("driveCombo").textContent=T.drives[key][1]; }
+}
+renderBodyNote(); renderViewNote();
+
+/* ---------------- time & transport ---------------- */
+let playing=!reduceMotion, rate=1, clock=0, hasVideo=false, soundOn=false;
+const dur=()=>D? D.t[D.t.length-1] : 0;
+let OFF=0;
+const now=()=> hasVideo? Math.max(0,(vid.currentTime||0)-OFF) : clock;
+function frameFloat(t){ const a=D.t; let lo=0,hi=a.length-1; while(lo<hi){ const m=(lo+hi+1)>>1; if(a[m]<=t) lo=m; else hi=m-1; }
+  const nx=Math.min(a.length-1,lo+1); return lo + (nx>lo? Math.min(1,Math.max(0,(t-a[lo])/(a[nx]-a[lo]))) : 0); }
+function setPlaying(on){ playing=on; $("play").textContent=on?T.pause:T.play; if(hasVideo){ if(on) vid.play().catch(()=>{}); else vid.pause(); } }
+$("play").addEventListener("click",()=>setPlaying(!playing));
+$("restart").addEventListener("click",()=>{ if(hasVideo) vid.currentTime=OFF; clock=0; AV.forEach(a=>a.part.userData.prev={}); setPlaying(true); });
+$("speed").addEventListener("click",()=>{ rate= rate===1?.5: rate===.5?.25:1; vid.playbackRate=rate; $("speed").textContent=rate+"×"; });
+$("sound").textContent=T.soundOff;
+$("sound").addEventListener("click",()=>{ soundOn=!soundOn; vid.muted=!soundOn; $("sound").setAttribute("aria-pressed",soundOn); $("sound").textContent=soundOn?T.soundOn:T.soundOff; });
+$("insetBtn").addEventListener("click",()=>{ const on=$("inset").hidden; $("inset").hidden=!on; $("insetBtn").setAttribute("aria-pressed",on?"true":"false"); });
+vid.addEventListener("ended",()=>{ if(playing){ vid.currentTime=OFF; vid.play().catch(()=>{}); } });
+vid.addEventListener("timeupdate",()=>{ if(hasVideo && vid.currentTime<OFF-.05) vid.currentTime=OFF; });
+
+/* ---------------- timeline ---------------- */
+function sizeTimeline(){ const dpr=Math.min(2,window.devicePixelRatio||1), w=$("timeline").clientWidth; tl.width=w*dpr; tl.height=110*dpr; tl.style.height="110px"; tctx.setTransform(dpr,0,0,dpr,0,0); }
+function drawTimeline(fi){
+  const w=tl.clientWidth, h=110, cs=getComputedStyle(document.documentElement), g=k=>cs.getPropertyValue(k).trim();
+  tctx.fillStyle=g("--surface"); tctx.fillRect(0,0,w,h); if(!D) return;
+  const n=D.t.length, padL=74, padR=10, rh=(h-12)/4, X=k=>padL+k/(n-1)*(w-padL-padR);
+  tctx.font=`11px ${LANG==="ko"?'"IBM Plex Sans KR",':''}"IBM Plex Mono",monospace`; tctx.textBaseline="middle";
+  FACT.forEach((F,r)=>{ const y0=6+r*rh, y1=y0+rh-4; tctx.fillStyle=g("--muted"); tctx.fillText(T.factors[F.k].name.toUpperCase(),10,y0+(rh-4)/2);
+    tctx.strokeStyle=g("--rule"); tctx.lineWidth=1; tctx.beginPath(); tctx.moveTo(padL,y1+.5); tctx.lineTo(w-padR,y1+.5); tctx.stroke();
+    const a=FE[F.k]; if(!a.length) return; const path=()=>{ tctx.beginPath(); for(let k=0;k<n;k+=2){ const y=y1-a[k]*(rh-8); k?tctx.lineTo(X(k),y):tctx.moveTo(X(k),y);} };
+    path(); tctx.lineTo(X(n-1),y1); tctx.lineTo(padL,y1); tctx.closePath(); tctx.globalAlpha=.16; tctx.fillStyle=g("--accent"); tctx.fill(); tctx.globalAlpha=1;
+    path(); tctx.strokeStyle=g("--accent"); tctx.lineWidth=1.3; tctx.stroke(); });
+  const x=X(Math.min(n-1,fi)); tctx.strokeStyle=g("--ink"); tctx.lineWidth=1.5; tctx.beginPath(); tctx.moveTo(x,2); tctx.lineTo(x,h-3); tctx.stroke();
+}
+let drag=false; const tlEl=$("timeline");
+const scrub=cx=>{ if(!D) return; const r=tlEl.getBoundingClientRect(), u=Math.min(1,Math.max(0,(cx-r.left-74)/(r.width-84))); const t=u*dur(); if(hasVideo) vid.currentTime=t+OFF; else clock=t; AV.forEach(a=>a.part.userData.prev={}); };
+tlEl.addEventListener("pointerdown",e=>{ drag=true; tlEl.setPointerCapture(e.pointerId); scrub(e.clientX); });
+tlEl.addEventListener("pointermove",e=>{ if(drag) scrub(e.clientX); }); tlEl.addEventListener("pointerup",()=>drag=false); tlEl.addEventListener("pointercancel",()=>drag=false);
+
+/* ---------------- resize & loop ---------------- */
+function resize(){ const w=stage.clientWidth, h=stage.clientHeight; renderer.setSize(w,h,false); camera.aspect=w/h; camera.updateProjectionMatrix(); sizeTimeline(); }
+window.addEventListener("resize",resize);
+let last=0, lastT=-1;
+const fmt=s=>{ s=Math.max(0,s||0); const m=Math.floor(s/60); return `${m}:${(s-m*60).toFixed(1).padStart(4,"0")}`; };
+function tick(ts){
+  const dt=last? Math.min(.1,(ts-last)/1000) : 0; last=ts;
+  if(D){ if(playing&&!hasVideo){ clock+=dt*rate; if(clock>dur()){ clock=0; AV.forEach(a=>a.part.userData.prev={}); } }
+    const t=now(), fi=frameFloat(t), mdt=Math.max(0,t-lastT); const live = mdt>0 && mdt<.2; lastT=t;
+    setFrameFloat(fi, live?mdt:0, live || bodyMode!=="particles");
+    const i=Math.round(fi); updateReadout(i); drawTimeline(fi);
+    const vis=AV.filter(a=>a.vis).length;
+    $("tag").innerHTML=`<b>${T.bodies[bodyMode].title}</b> · ${T.views[view].title} · ${T.bodiesOnStage(vis)}`;
+    $("clock").textContent=`${fmt(t)} / ${fmt(dur())}`; }
+  if(camAnim){ const u=Math.min(1,(ts-camAnim.t0)/camAnim.dur), e=u<.5?2*u*u:1-Math.pow(-2*u+2,2)/2;
+    camera.position.lerpVectors(camAnim.from.p,camAnim.to.p,e); controls.target.lerpVectors(camAnim.from.t,camAnim.to.t,e); if(u>=1) camAnim=null; }
+  if(hasVideo && !$("inset").hidden && vid.readyState>=2){ const ic=$("insetCv"); ic.getContext("2d").drawImage(vid,0,0,ic.width,ic.height); }
+  if(view==="inside") insideCam(); else controls.update();
+  renderer.render(scene,camera); requestAnimationFrame(tick);
+}
+
+/* ---------------- boot ---------------- */
+resize(); goView("audience",true); setPlaying(playing);
+fetch("avatar.json").then(r=>{ if(!r.ok) throw 0; return r.json(); }).then(d=>{
+  D=d; K=d.slots; OFF=d.offset||0; d.joints.forEach((mp,k)=>{ for(const nm in MP) if(MP[nm]===mp) JI[nm]=k; });
+  computeEffort();
+  const go=()=>buildAvatars();
+  if(THREE.GLTFLoader&&THREE.SkeletonUtils){
+    // body.json is glTF with its buffer embedded; rebuild a binary GLB in memory so the loader makes no further requests
+    fetch("body.json").then(r=>{ if(!r.ok) throw 0; return r.json(); }).then(js=>{
+      const bin=Uint8Array.from(atob(js.buffers[0].uri.split(",")[1]),c=>c.charCodeAt(0)); delete js.buffers[0].uri; js.buffers[0].byteLength=bin.length;
+      let jb=new TextEncoder().encode(JSON.stringify(js)); const jp=(4-jb.length%4)%4, bp=(4-bin.length%4)%4;
+      const total=12+8+jb.length+jp+8+bin.length+bp, buf=new ArrayBuffer(total), dv=new DataView(buf), u8=new Uint8Array(buf);
+      dv.setUint32(0,0x46546C67,true); dv.setUint32(4,2,true); dv.setUint32(8,total,true);
+      dv.setUint32(12,jb.length+jp,true); dv.setUint32(16,0x4E4F534A,true); u8.set(jb,20); for(let i=0;i<jp;i++) u8[20+jb.length+i]=0x20;
+      const o=20+jb.length+jp; dv.setUint32(o,bin.length+bp,true); dv.setUint32(o+4,0x004E4942,true); u8.set(bin,o+8);
+      new THREE.GLTFLoader().parse(buf,"",g=>{ HUMAN_GLTF=g; go(); },()=>go());
+    }).catch(()=>go());
+  } else go();
+  vid.src="solo.mp4"; vid.muted=true;
+  vid.addEventListener("loadeddata",()=>{ const ic=$("insetCv"); ic.height=360; ic.width=Math.round(360*vid.videoWidth/vid.videoHeight); hasVideo=true; vid.playbackRate=rate; vid.currentTime=OFF+(reduceMotion?dur()*.42:0); if(!reduceMotion&&playing) vid.play().catch(()=>{}); },{once:true});
+  vid.addEventListener("error",()=>{ hasVideo=false; $("inset").hidden=true; },{once:true});
+  if(reduceMotion) clock=dur()*.42;
+}).catch(()=>showMsg(tx("noData")));
+requestAnimationFrame(tick);
+})();
+</script>
+
+</body></html>
