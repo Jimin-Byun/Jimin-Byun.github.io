@@ -1,4 +1,7 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="description" content="Portfolio of Jimin Byun, contemporary dancer, choreographer and researcher."><style>:root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style><title>Jimin Byun Portfolio</title>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="description" content="Portfolio of Jimin Byun, contemporary dancer, choreographer and researcher."><style>:root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}.film iframe{position:absolute;inset:0;width:100%;height:100%;border:0;z-index:2;background:#000}
+.film.playing::after,.film.playing .cta,.film.playing .yr{display:none}
+.vlink{font-size:12.5px;color:var(--muted)}
+</style><title>Jimin Byun Portfolio</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
@@ -214,4 +217,19 @@ try{ if('scrollRestoration' in history) history.scrollRestoration='manual'; }cat
 
 <footer>Jimin Byun · 2026</footer>
 </div>
+<script>
+document.querySelectorAll('a.film').forEach(function(a){
+  var m=(a.getAttribute('href')||'').match(/vimeo\.com\/(\d+)/); if(!m) return;
+  var id=m[1];
+  a.addEventListener('click',function(e){
+    if(a.classList.contains('playing')) return;
+    e.preventDefault();
+    var f=document.createElement('iframe');
+    f.src='https://player.vimeo.com/video/'+id+'?autoplay=1&title=0&byline=0&portrait=0&dnt=1';
+    f.allow='autoplay; fullscreen; picture-in-picture'; f.allowFullscreen=true;
+    f.title=a.getAttribute('aria-label')||'Video';
+    a.classList.add('playing'); a.removeAttribute('href'); a.setAttribute('role','presentation'); a.appendChild(f);
+  });
+});
+</script>
 </body></html>
