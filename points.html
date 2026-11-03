@@ -245,9 +245,9 @@ footer{font-size:12px}
     </div>
     <div class="essay">
       <h2>What the data cannot hold</h2>
-      <p>The four values follow the speed, acceleration, jerk and path of five points. Changes of tempo and suddenness register in them, and the Quality lens makes them visible.</p>
+      <p>The four values follow the speed, acceleration, jerk and path of five points. They register changes in tempo and suddenness, and the Quality lens makes them visible.</p>
       <p>What they cannot register is why a movement is made. A reach toward someone and a push away, along the same path at the same speed, receive the same values. Maxine Sheets-Johnstone (1999) describes movement as a way of thinking that is felt from inside; the data has no record of that inside.</p>
-      <p>In doctoral research I want to study where and how such qualities are lost or changed as movement passes through motion capture, avatars and AI systems.</p>
+      <p>In my doctoral research, I want to study where and how such qualities are lost or changed as movement passes through motion capture, avatars, and AI systems.</p>
     </div>
   </section>
 
@@ -736,8 +736,7 @@ function updateMethod(){
   const multi=S.maxPeople>1;
   $("method").textContent=`Pose: ${S.skel.name}, ${S.skel.unit} per body per frame${multi?`, up to ${S.maxPeople} dancers`:""}. `+
     `Effort descriptors follow the computable measures reviewed by Larboulette and Gibet (2015)${multi?", averaged over the dancers in frame":""}. `+
-    `Motion is measured relative to each dancer’s pelvis and divided by one camera scale shared by both dancers, estimated from the torso and leg segments, so camera zooms and pans do not enter the reading; travel across the stage is left out with them. Values are normalized within the phrase, so they describe contrasts inside this performance rather than absolute measures. The action drive combines Weight, Time and Space at their midpoints.`+
-    (S.camNote? " "+S.camNote : "");
+    `Motion is measured relative to each dancer’s pelvis and divided by one camera scale shared by both dancers, estimated from the torso and leg segments, so camera zooms and pans do not enter the reading; travel across the stage is left out with them. Values are normalized within the phrase, so they describe contrasts inside this performance rather than absolute measures. The action drive combines Weight, Time and Space at their midpoints.`;
   $("built").textContent=`Built with ${S.skel===SKELS.coco17?"YOLO11 pose":"MediaPipe Pose"} and Canvas 2D`;
 }
 
