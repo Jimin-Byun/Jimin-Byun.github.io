@@ -341,9 +341,9 @@ function drawFigure(ctx, f, W, H, color, style, alpha = 1) {
     ctx.lineWidth = unit * 2.6;
     ctx.beginPath();
     for (const [a, b] of BONES) { const A = P(a), B = P(b); ctx.moveTo(A[0], A[1]); ctx.lineTo(B[0], B[1]); }
-    ctx.moveTo(mid[0], mid[1]); ctx.lineTo(head[0], head[1] + unit * 4);
+    ctx.moveTo(mid[0], mid[1]); ctx.lineTo(head[0], head[1] + unit * 1.8);
     ctx.stroke();
-    ctx.beginPath(); ctx.arc(head[0], head[1], unit * 4.2, 0, Math.PI * 2); ctx.fill();
+    ctx.beginPath(); ctx.arc(head[0], head[1], unit * 2.0, 0, Math.PI * 2); ctx.fill();
   } else {
     ctx.lineWidth = Math.max(1, unit * 0.45);
     ctx.beginPath();
