@@ -1,0 +1,38 @@
+Smoothing Dial
+
+REHEARSAL SKETCH · PROTOTYPE
+Smoothing Dial
+Real-time pose estimation smooths a dancer's tracked joints to remove jitter. The same filter flattens the short pauses and sharp accents that give a phrase its weight. Turn the dial and watch what the avatar keeps, and what the dancer would have to change to be read.
+Demo phrase
+Load a dance clip
+Synthetic 12-second phrase: gather and pause, reach, upper-body accent, heavy rise.
+Tracked body
+raw joint data
+
+
+Avatar
+smoothed for display
+
+❚❚ Smoothing
+60
+
+accents kept, jitter shows
+stable, accents fade
+DELAY
+50 ms
+PEAK KEPT
+—
+Trace
+        reaching wrist
+        other wrist
+        chest
+        pelvis
+      
+Show raw data behind the avatar
+Speed of the reaching wrist
+raw
+avatar
+
+The filter is a causal exponential smoother, the kind real-time tracking pipelines use because they cannot see the next frame. Stronger smoothing steadies the avatar but delays it and lowers its peaks. The dancer's options are to move bigger and slower until the system reads them, or to change the setting.
+The demo phrase is synthetic, built to include a held breath, a fast reach, a short upper-body accent and a rise that accelerates. A loaded clip is analyzed in your browser with MediaPipe Pose Landmarker and never leaves your device. Clips are read up to 60 seconds.
+Sketch by Jimin Byun, 2026.
