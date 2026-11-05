@@ -1,0 +1,509 @@
+<title>Smoothing Dial</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="A rehearsal sketch: how real-time smoothing in pose estimation flattens a dancer's pauses and accents.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@1,6..72,400;1,6..72,500&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: a rehearsal-room bench — two stages side by side (body / avatar), the dial between them and the trace, one quiet column of text. */
+:root {
+  --bg: #eceef1;
+  --surface: #f8f9fb;
+  --stage: #ffffff;
+  --ink: #1a1e27;
+  --muted: #5a6170;
+  --line: #d2d6dd;
+  --raw: #c0185a;
+  --avatar: #33466b;
+  --band: rgba(51, 70, 107, 0.07);
+  --display: "Newsreader", "Iowan Old Style", Georgia, serif;
+  --body: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #11141a; --surface: #181c24; --stage: #0c0f14; --ink: #e5e8ee; --muted: #98a0b0;
+    --line: #2b313d; --raw: #ff5a92; --avatar: #a6badf; --band: rgba(166, 186, 223, 0.08);
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #11141a; --surface: #181c24; --stage: #0c0f14; --ink: #e5e8ee; --muted: #98a0b0;
+  --line: #2b313d; --raw: #ff5a92; --avatar: #a6badf; --band: rgba(166, 186, 223, 0.08);
+  color-scheme: dark;
+}
+body { background: var(--bg); color: var(--ink); font-family: var(--body); font-size: 15px; line-height: 1.55; }
+.wrap {
+  max-width: 1080px; margin: 0 auto;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 40px 56px;
+  display: grid; gap: 28px;
+}
+header { display: grid; gap: 10px; max-width: 64ch; }
+.eyebrow { margin: 0; font-family: var(--mono); font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+h1 { margin: 0; font-family: var(--display); font-style: italic; font-weight: 400; font-size: clamp(38px, 6vw, 58px); line-height: 1.02; text-wrap: balance; }
+.lede { margin: 0; font-size: 16px; color: var(--ink); }
+.lede em { font-style: normal; color: var(--raw); }
+
+.source { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 18px; }
+.seg { display: inline-flex; border: 1px solid var(--line); border-radius: 999px; padding: 3px; background: var(--surface); }
+.seg button {
+  font: 500 13px var(--body); color: var(--muted); background: transparent; border: 0; border-radius: 999px;
+  padding: 7px 14px; cursor: pointer;
+}
+.seg button[aria-pressed="true"] { background: var(--ink); color: var(--bg); }
+.status { font-family: var(--mono); font-size: 12px; color: var(--muted); min-width: 0; }
+.status.err { color: var(--raw); }
+progress { width: 160px; height: 6px; accent-color: var(--avatar); }
+
+.stages { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+.stage { margin: 0; display: grid; gap: 8px; min-width: 0; }
+.stage figcaption { display: flex; flex-direction: column; align-items: center; gap: 0; font-size: 13px; text-align: center; }
+.stage figcaption b { font-weight: 600; font-size: 15px; }
+.stage figcaption span { font-family: var(--mono); font-size: 12px; color: var(--muted); }
+.box {
+  position: relative; margin-inline: auto; width: 100%; max-width: 100%;
+  background: var(--stage); border: 1px solid var(--line); border-radius: 6px; overflow: hidden;
+}
+.box canvas, .box video { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.box video { object-fit: contain; }
+.key-raw { color: var(--raw); }
+.key-av { color: var(--avatar); }
+
+.dial {
+  display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 14px 20px;
+  background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 16px 18px;
+}
+.play {
+  width: 44px; height: 44px; border-radius: 50%; border: 1px solid var(--line); background: var(--stage);
+  color: var(--ink); cursor: pointer; display: grid; place-items: center; font: 600 13px var(--body);
+}
+.dial-main { display: grid; gap: 6px; min-width: 0; }
+.dial-main label { display: flex; justify-content: space-between; font-size: 13px; font-weight: 600; }
+.dial-main label output { font-family: var(--mono); font-weight: 500; }
+input[type="range"] { width: 100%; accent-color: var(--avatar); }
+.ends { display: flex; justify-content: space-between; font-family: var(--mono); font-size: 11px; color: var(--muted); }
+.reads { display: grid; grid-auto-flow: column; gap: 20px; font-variant-numeric: tabular-nums; }
+.read { display: grid; gap: 2px; }
+.read small { font-family: var(--mono); font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); }
+.read strong { font-family: var(--mono); font-size: 20px; font-weight: 500; }
+.opts { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: 10px 22px; font-size: 13px; color: var(--muted); }
+.opts select { font: 13px var(--body); color: var(--ink); background: var(--stage); border: 1px solid var(--line); border-radius: 4px; padding: 3px 6px; }
+
+.trace { display: grid; gap: 8px; }
+.trace-head { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 6px 16px; font-size: 13px; }
+.trace-head b { font-weight: 600; }
+.legend { display: flex; gap: 16px; font-family: var(--mono); font-size: 12px; color: var(--muted); }
+.legend i { display: inline-block; width: 16px; height: 2px; vertical-align: middle; margin-right: 6px; }
+.chartbox { position: relative; height: 160px; background: var(--stage); border: 1px solid var(--line); border-radius: 6px; cursor: ew-resize; }
+.chartbox canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+
+.notes { display: grid; gap: 8px; max-width: 70ch; font-size: 13px; color: var(--muted); border-top: 1px solid var(--line); padding-top: 18px; }
+.notes p { margin: 0; }
+
+button:focus-visible, input:focus-visible, select:focus-visible { outline: 2px solid var(--raw); outline-offset: 2px; }
+
+@media (max-width: 720px) {
+  .stages { grid-template-columns: 1fr; }
+  .dial { grid-template-columns: auto 1fr; }
+  .reads { grid-column: 1 / -1; justify-content: start; }
+}
+</style>
+
+<main class="wrap">
+  <header>
+    <p class="eyebrow">Rehearsal sketch · prototype</p>
+    <h1>Smoothing Dial</h1>
+    <p class="lede">Real-time pose estimation smooths a dancer's tracked joints to remove jitter. The same filter flattens the <em>short pauses and sharp accents</em> that give a phrase its weight. Turn the dial and watch what the avatar keeps, and what the dancer would have to change to be read.</p>
+  </header>
+
+  <section class="source" aria-label="Source">
+    <div class="seg" role="group" aria-label="Choose source">
+      <button type="button" id="btnDemo" aria-pressed="true">Demo phrase</button>
+      <button type="button" id="btnLoad" aria-pressed="false">Load a dance clip</button>
+    </div>
+    <input type="file" id="file" accept="video/*" hidden>
+    <span class="status" id="status">Synthetic 12-second phrase: gather and pause, reach, upper-body accent, heavy rise.</span>
+    <progress id="prog" max="1" value="0" hidden></progress>
+  </section>
+
+  <section class="stages">
+    <figure class="stage">
+      <figcaption><b class="key-raw">Tracked body</b><span>raw joint data</span></figcaption>
+      <div class="box" id="boxDancer">
+        <video id="video" muted playsinline loop hidden></video>
+        <canvas id="cvDancer"></canvas>
+      </div>
+    </figure>
+    <figure class="stage">
+      <figcaption><b class="key-av">Avatar</b><span id="avCap">smoothed for display</span></figcaption>
+      <div class="box" id="boxAvatar">
+        <canvas id="cvAvatar"></canvas>
+      </div>
+    </figure>
+  </section>
+
+  <section class="dial" aria-label="Smoothing">
+    <button type="button" class="play" id="play" aria-label="Pause">❚❚</button>
+    <div class="dial-main">
+      <label for="smooth">Smoothing <output id="smoothOut">60</output></label>
+      <input type="range" id="smooth" min="0" max="95" step="1" value="60">
+      <div class="ends"><span>accents kept, jitter shows</span><span>stable, accents fade</span></div>
+    </div>
+    <div class="reads">
+      <div class="read"><small>Delay</small><strong id="lag">50 ms</strong></div>
+      <div class="read"><small>Peak kept</small><strong id="kept">—</strong></div>
+    </div>
+    <div class="opts">
+      <label>Trace <select id="joint">
+        <option value="rw">reaching wrist</option>
+        <option value="lw">other wrist</option>
+        <option value="chest">chest</option>
+        <option value="pelvis">pelvis</option>
+      </select></label>
+      <label><input type="checkbox" id="ghost" checked> Show raw data behind the avatar</label>
+    </div>
+  </section>
+
+  <section class="trace" aria-label="Speed trace">
+    <div class="trace-head">
+      <b id="traceTitle">Speed of the reaching wrist</b>
+      <div class="legend"><span><i style="background:var(--raw)"></i>raw</span><span><i style="background:var(--avatar)"></i>avatar</span></div>
+    </div>
+    <div class="chartbox" id="chartbox"><canvas id="chart"></canvas></div>
+  </section>
+
+  <footer class="notes">
+    <p>The filter is a causal exponential smoother, the kind real-time tracking pipelines use because they cannot see the next frame. Stronger smoothing steadies the avatar but delays it and lowers its peaks. The dancer's options are to move bigger and slower until the system reads them, or to change the setting.</p>
+    <p>The demo phrase is synthetic, built to include a held breath, a fast reach, a short upper-body accent and a rise that accelerates. A loaded clip is analyzed in your browser with MediaPipe Pose Landmarker and never leaves your device. Clips are read up to 60 seconds.</p>
+    <p>Sketch by Jimin Byun, 2026.</p>
+  </footer>
+</main>
+
+<script type="module">
+const FPS = 30;
+const MP_IDX = [0, 11, 12, 13, 14, 15, 16, 23, 24, 25, 26, 27, 28];
+const BONES = [[1,2],[1,3],[3,5],[2,4],[4,6],[1,7],[2,8],[7,8],[7,9],[9,11],[8,10],[10,12]];
+const JOINT_LABEL = { rw: "reaching wrist", lw: "other wrist", chest: "chest", pelvis: "pelvis" };
+const $ = (id) => document.getElementById(id);
+
+const state = {
+  source: "demo", frames: [], smoothed: [], aspect: 3 / 4, marks: [],
+  t: 0, playing: true, joint: "rw", s: 0.6, rawSpeed: [], avSpeed: [], last: 0,
+};
+
+/* ---------- synthetic phrase ---------- */
+function rng(seed) { return () => { seed |= 0; seed = seed + 0x6D2B79F5 | 0; let t = Math.imul(seed ^ seed >>> 15, 1 | seed); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+const clamp = (x) => Math.max(0, Math.min(1, x));
+const ease = (x) => { x = clamp(x); return x * x * (3 - 2 * x); };
+const ramp = (t, a, b) => ease((t - a) / (b - a));
+const expOut = (t, a, b) => { const x = clamp((t - a) / (b - a)); return x === 1 ? 1 : 1 - Math.pow(2, -10 * x); };
+const cubicIn = (t, a, b) => { const x = clamp((t - a) / (b - a)); return x * x * x; };
+
+function demoPose(t) {
+  let b;
+  if (t < 2) b = 0.5 - 0.5 * Math.cos(Math.PI * t);
+  else if (t < 3) b = ramp(t, 2, 2.6);
+  else if (t < 9) b = 1 - ramp(t, 3, 3.12);
+  else b = 0.4 * (0.5 - 0.5 * Math.cos(Math.PI * (t - 9)));
+  const c = ramp(t, 2.1, 2.6) * (1 - ramp(t, 3.0, 3.08));
+  const r = expOut(t, 3.05, 3.35) * (1 - ramp(t, 5, 6.1));
+  const a = ramp(t, 6.5, 6.55) * (1 - ramp(t, 6.58, 6.72)) + 0.6 * ramp(t, 6.95, 6.99) * (1 - ramp(t, 7.02, 7.15));
+  const w = ramp(t, 7.2, 7.8) * (1 - ramp(t, 10, 11.2));
+  const k = t < 8.1 ? ramp(t, 7.3, 8.1) : 1 - cubicIn(t, 8.1, 8.75);
+  const lift = (t > 8.1 && t < 10.5) ? (1 - k) * (1 - ramp(t, 8.9, 10)) : 0;
+  const sway = t > 9 ? 0.012 * Math.sin(2 * Math.PI * (t - 9) / 3) : 0;
+
+  const cx = 0.5 + sway - 0.045 * w;
+  const shY = 0.30 - 0.012 * b + 0.018 * c + 0.07 * k;
+  const half = 0.085 - 0.015 * c;
+  const ls = [cx - half + 0.035 * a, shY - 0.012 * a];
+  const rs = [cx + half + 0.035 * a, shY + 0.012 * a];
+  const head = [cx + 0.045 * a, shY - 0.11 + 0.02 * c];
+  const hipY = 0.55 + 0.075 * k;
+  const hx = cx - 0.012 * w;
+  const lh = [hx - 0.06, hipY], rh = [hx + 0.06, hipY];
+  const la = [0.43, 0.92], ra = [0.57, 0.92];
+  const lk = [(lh[0] + la[0]) / 2 - 0.02 * k, (hipY + 0.92) / 2];
+  const rk = [(rh[0] + ra[0]) / 2 + 0.02 * k, (hipY + 0.92) / 2];
+  const th = 1.45 + 0.22 * c + (-0.9 - 1.45) * r;
+  const re = [rs[0] + 0.12 * Math.cos(th), rs[1] + 0.12 * Math.sin(th)];
+  const th2 = th - 0.15 * r + 0.45 * c;
+  const rw = [re[0] + 0.11 * Math.cos(th2), re[1] + 0.11 * Math.sin(th2)];
+  const ph = Math.PI - 1.45 - 0.22 * c + 2.1 * lift;
+  const le = [ls[0] + 0.12 * Math.cos(ph), ls[1] + 0.12 * Math.sin(ph)];
+  const ph2 = ph - 0.45 * c + 0.2 * lift;
+  const lw = [le[0] + 0.11 * Math.cos(ph2), le[1] + 0.11 * Math.sin(ph2)];
+  return [head, ls, rs, le, re, lw, rw, lh, rh, lk, rk, la, ra];
+}
+
+function buildDemo() {
+  const rand = rng(7), n = 12 * FPS, frames = [];
+  const sx = 1 / (3 / 4);
+  for (let i = 0; i < n; i++) {
+    const p = demoPose(i / FPS), f = new Float32Array(26);
+    p.forEach(([x, y], j) => {
+      f[j * 2] = 0.5 + (x - 0.5) * sx + (rand() - 0.5) * 0.005;
+      f[j * 2 + 1] = y + (rand() - 0.5) * 0.005;
+    });
+    frames.push(f);
+  }
+  state.frames = frames;
+  state.aspect = 3 / 4;
+  state.marks = [
+    { a: 2.1, b: 3.05, label: "gather · pause" },
+    { a: 3.05, b: 3.45, label: "reach" },
+    { a: 6.48, b: 7.2, label: "accent" },
+    { a: 8.1, b: 8.8, label: "heavy rise" },
+  ];
+}
+
+/* ---------- smoothing + speeds ---------- */
+function smoothAll() {
+  const s = state.s, out = [];
+  let prev = null;
+  for (const f of state.frames) {
+    const g = new Float32Array(26);
+    for (let k = 0; k < 26; k++) g[k] = prev ? s * prev[k] + (1 - s) * f[k] : f[k];
+    out.push(g); prev = g;
+  }
+  state.smoothed = out;
+  computeSpeeds();
+  const lagMs = Math.round(s / (1 - s) / FPS * 1000);
+  $("lag").textContent = lagMs + " ms";
+  $("smoothOut").textContent = Math.round(s * 100);
+}
+
+function jointXY(f, key) {
+  const p = (j) => [f[j * 2] * state.aspect, f[j * 2 + 1]];
+  if (key === "rw") return p(6);
+  if (key === "lw") return p(5);
+  const [i, j] = key === "chest" ? [1, 2] : [7, 8];
+  const A = p(i), B = p(j);
+  return [(A[0] + B[0]) / 2, (A[1] + B[1]) / 2];
+}
+function speedSeries(frames) {
+  const v = [0];
+  for (let i = 1; i < frames.length; i++) {
+    const a = jointXY(frames[i - 1], state.joint), b = jointXY(frames[i], state.joint);
+    v.push(Math.hypot(b[0] - a[0], b[1] - a[1]) * FPS);
+  }
+  return v;
+}
+function computeSpeeds() {
+  state.rawSpeed = speedSeries(state.frames);
+  state.avSpeed = speedSeries(state.smoothed);
+  const mr = Math.max(...state.rawSpeed), ma = Math.max(...state.avSpeed);
+  $("kept").textContent = mr > 0 ? Math.round(ma / mr * 100) + "%" : "—";
+  $("traceTitle").textContent = "Speed of the " + JOINT_LABEL[state.joint];
+}
+
+/* ---------- drawing ---------- */
+const css = (name) => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+function fit(canvas) {
+  const r = canvas.getBoundingClientRect(), d = window.devicePixelRatio || 1;
+  const w = Math.max(1, Math.round(r.width * d)), h = Math.max(1, Math.round(r.height * d));
+  if (canvas.width !== w || canvas.height !== h) { canvas.width = w; canvas.height = h; }
+  return { w, h, d };
+}
+function layoutBoxes() {
+  for (const id of ["boxDancer", "boxAvatar"]) {
+    const box = $(id);
+    box.style.aspectRatio = String(state.aspect);
+    box.style.width = `min(100%, calc(58vh * ${state.aspect}))`;
+  }
+}
+
+function drawFigure(ctx, f, W, H, color, style, alpha = 1) {
+  if (!f) return;
+  const P = (j) => [f[j * 2] * W, f[j * 2 + 1] * H];
+  const unit = H / 100;
+  ctx.save();
+  ctx.globalAlpha = alpha;
+  ctx.strokeStyle = color; ctx.fillStyle = color;
+  ctx.lineCap = "round"; ctx.lineJoin = "round";
+  const mid = [(P(1)[0] + P(2)[0]) / 2, (P(1)[1] + P(2)[1]) / 2];
+  const head = P(0);
+  if (style === "avatar") {
+    ctx.lineWidth = unit * 2.6;
+    ctx.beginPath();
+    for (const [a, b] of BONES) { const A = P(a), B = P(b); ctx.moveTo(A[0], A[1]); ctx.lineTo(B[0], B[1]); }
+    ctx.moveTo(mid[0], mid[1]); ctx.lineTo(head[0], head[1] + unit * 4);
+    ctx.stroke();
+    ctx.beginPath(); ctx.arc(head[0], head[1], unit * 4.2, 0, Math.PI * 2); ctx.fill();
+  } else {
+    ctx.lineWidth = Math.max(1, unit * 0.45);
+    ctx.beginPath();
+    for (const [a, b] of BONES) { const A = P(a), B = P(b); ctx.moveTo(A[0], A[1]); ctx.lineTo(B[0], B[1]); }
+    ctx.moveTo(mid[0], mid[1]); ctx.lineTo(head[0], head[1]);
+    ctx.stroke();
+    for (let j = 0; j < 13; j++) { const [x, y] = P(j); ctx.beginPath(); ctx.arc(x, y, unit * (j === 0 ? 1.6 : 1.0), 0, Math.PI * 2); ctx.fill(); }
+  }
+  ctx.restore();
+}
+
+function drawStages(i) {
+  const raw = state.frames[i], av = state.smoothed[i];
+  const cd = $("cvDancer"), ca = $("cvAvatar");
+  const d1 = fit(cd), d2 = fit(ca);
+  const c1 = cd.getContext("2d"), c2 = ca.getContext("2d");
+  c1.clearRect(0, 0, d1.w, d1.h);
+  c2.clearRect(0, 0, d2.w, d2.h);
+  drawFigure(c1, raw, d1.w, d1.h, css("--raw"), "raw");
+  if ($("ghost").checked) drawFigure(c2, raw, d2.w, d2.h, css("--raw"), "raw", 0.35);
+  drawFigure(c2, av, d2.w, d2.h, css("--avatar"), "avatar");
+}
+
+function drawChart(i) {
+  const cv = $("chart"), { w, h, d } = fit(cv), ctx = cv.getContext("2d");
+  ctx.clearRect(0, 0, w, h);
+  const n = state.frames.length;
+  if (n < 2) return;
+  const padT = 22 * d, padB = 10 * d, padX = 10 * d;
+  const sorted = [...state.rawSpeed].sort((a, b) => a - b);
+  const top = Math.max(1e-6, sorted[Math.floor(sorted.length * 0.995)] * 1.08);
+  const X = (k) => padX + (k / (n - 1)) * (w - padX * 2);
+  const Y = (v) => h - padB - Math.min(1, v / top) * (h - padT - padB);
+
+  ctx.font = `${11 * d}px ${css("--mono")}`;
+  ctx.textBaseline = "top";
+  for (const m of state.marks) {
+    const x0 = X(m.a * FPS), x1 = X(Math.min(n - 1, m.b * FPS));
+    ctx.fillStyle = css("--band"); ctx.fillRect(x0, padT - 4 * d, x1 - x0, h - padT - padB + 4 * d);
+    ctx.fillStyle = css("--muted"); ctx.fillText(m.label, x0 + 3 * d, 5 * d);
+  }
+  ctx.strokeStyle = css("--line"); ctx.lineWidth = d;
+  ctx.beginPath(); ctx.moveTo(padX, Y(0)); ctx.lineTo(w - padX, Y(0)); ctx.stroke();
+
+  const line = (arr, color, lw) => {
+    ctx.strokeStyle = color; ctx.lineWidth = lw * d; ctx.lineJoin = "round";
+    ctx.beginPath();
+    arr.forEach((v, k) => (k ? ctx.lineTo(X(k), Y(v)) : ctx.moveTo(X(k), Y(v))));
+    ctx.stroke();
+  };
+  line(state.rawSpeed, css("--raw"), 1.2);
+  line(state.avSpeed, css("--avatar"), 2.2);
+
+  ctx.strokeStyle = css("--ink"); ctx.lineWidth = 1.5 * d;
+  ctx.beginPath(); ctx.moveTo(X(i), padT - 6 * d); ctx.lineTo(X(i), h - padB); ctx.stroke();
+}
+
+/* ---------- loop ---------- */
+const duration = () => state.frames.length / FPS;
+function frameIndex() { return Math.min(state.frames.length - 1, Math.max(0, Math.floor(state.t * FPS))); }
+function tick(now) {
+  const dt = state.last ? (now - state.last) / 1000 : 0;
+  state.last = now;
+  if (state.frames.length) {
+    if (state.source === "video") state.t = $("video").currentTime;
+    else if (state.playing) { state.t += dt; if (state.t >= duration()) state.t = 0; }
+    const i = frameIndex();
+    drawStages(i); drawChart(i);
+  }
+  requestAnimationFrame(tick);
+}
+
+function setPlaying(p) {
+  state.playing = p;
+  $("play").textContent = p ? "❚❚" : "▶";
+  $("play").setAttribute("aria-label", p ? "Pause" : "Play");
+  const v = $("video");
+  if (state.source === "video") { if (p) v.play().catch(() => {}); else v.pause(); }
+}
+
+/* ---------- video analysis ---------- */
+let landmarker = null;
+async function getLandmarker() {
+  if (landmarker) return landmarker;
+  const base = "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14";
+  const vision = await import(base);
+  const files = await vision.FilesetResolver.forVisionTasks(base + "/wasm");
+  const opts = (delegate) => ({
+    baseOptions: { modelAssetPath: "https://storage.googleapis.com/mediapipe-models/pose_landmarker/pose_landmarker_lite/float16/1/pose_landmarker_lite.task", delegate },
+    runningMode: "VIDEO", numPoses: 1,
+  });
+  try { landmarker = await vision.PoseLandmarker.createFromOptions(files, opts("GPU")); }
+  catch { landmarker = await vision.PoseLandmarker.createFromOptions(files, opts("CPU")); }
+  return landmarker;
+}
+const once = (el, ev) => new Promise((r) => el.addEventListener(ev, r, { once: true }));
+
+async function analyze(file) {
+  const status = $("status"), prog = $("prog"), v = $("video");
+  status.classList.remove("err");
+  setPlaying(false);
+  status.textContent = "Loading the pose model…";
+  let lm;
+  try { lm = await getLandmarker(); }
+  catch (e) {
+    status.classList.add("err");
+    status.textContent = "The pose model couldn't load here. Open this page from its hosted address and try again.";
+    return;
+  }
+  v.src = URL.createObjectURL(file);
+  await once(v, "loadedmetadata");
+  const dur = Math.min(v.duration || 0, 60), n = Math.floor(dur * FPS);
+  if (!n) { status.classList.add("err"); status.textContent = "This file has no readable video."; return; }
+  prog.hidden = false; prog.value = 0;
+  const frames = [];
+  let prev = null;
+  for (let i = 0; i < n; i++) {
+    v.currentTime = i / FPS;
+    await once(v, "seeked");
+    const res = lm.detectForVideo(v, Math.round(i * 1000 / FPS) + 1);
+    const pts = res.landmarks && res.landmarks[0];
+    let f;
+    if (pts) { f = new Float32Array(26); MP_IDX.forEach((m, j) => { f[j * 2] = pts[m].x; f[j * 2 + 1] = pts[m].y; }); }
+    else f = prev ? prev.slice() : null;
+    if (f) { frames.push(f); prev = f; } else frames.push(null);
+    if (i % 5 === 0) { prog.value = i / n; status.textContent = `Reading poses… ${Math.round(i / n * 100)}%`; }
+  }
+  const firstGood = frames.find(Boolean);
+  if (!firstGood) { prog.hidden = true; status.classList.add("err"); status.textContent = "No dancer was found in this clip. Try a clip with the full body in view."; return; }
+  for (let i = 0; i < frames.length; i++) if (!frames[i]) frames[i] = (frames[i - 1] || firstGood).slice();
+  prog.hidden = true;
+  state.source = "video"; state.frames = frames; state.marks = [];
+  state.aspect = v.videoWidth / v.videoHeight || 3 / 4;
+  v.hidden = false; v.currentTime = 0;
+  layoutBoxes(); smoothAll();
+  status.textContent = `${file.name} · ${frames.length} frames read`;
+  setPlaying(true);
+}
+
+/* ---------- controls ---------- */
+function useDemo() {
+  const v = $("video");
+  v.pause(); v.hidden = true;
+  state.source = "demo"; state.t = 0;
+  buildDemo(); layoutBoxes(); smoothAll();
+  $("status").classList.remove("err");
+  $("status").textContent = "Synthetic 12-second phrase: gather and pause, reach, upper-body accent, heavy rise.";
+  $("btnDemo").setAttribute("aria-pressed", "true"); $("btnLoad").setAttribute("aria-pressed", "false");
+  setPlaying(true);
+}
+$("btnDemo").addEventListener("click", useDemo);
+$("btnLoad").addEventListener("click", () => $("file").click());
+$("file").addEventListener("change", (e) => {
+  const f = e.target.files[0]; if (!f) return;
+  $("btnDemo").setAttribute("aria-pressed", "false"); $("btnLoad").setAttribute("aria-pressed", "true");
+  analyze(f); e.target.value = "";
+});
+$("smooth").addEventListener("input", (e) => { state.s = e.target.value / 100; smoothAll(); });
+$("joint").addEventListener("change", (e) => { state.joint = e.target.value; computeSpeeds(); });
+$("play").addEventListener("click", () => setPlaying(!state.playing));
+
+function seekFromPointer(e) {
+  const r = $("chartbox").getBoundingClientRect();
+  const x = clamp((e.clientX - r.left) / r.width);
+  state.t = x * duration();
+  if (state.source === "video") $("video").currentTime = state.t;
+}
+let dragging = false;
+$("chartbox").addEventListener("pointerdown", (e) => { dragging = true; setPlaying(false); seekFromPointer(e); });
+window.addEventListener("pointermove", (e) => { if (dragging) seekFromPointer(e); });
+window.addEventListener("pointerup", () => { dragging = false; });
+
+useDemo();
+requestAnimationFrame(tick);
+</script>
