@@ -7,96 +7,95 @@
 <title>Smoothing Dial</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=Newsreader:ital,opsz,wght@0,6..72,400;1,6..72,400&family=IBM+Plex+Mono:wght@400;500&display=swap">
 <style>
 *,*::before,*::after{box-sizing:border-box}
 body{margin:0}
 [hidden]{display:none!important}
 
-/* Layout: matches the portfolio studies (Borrowed Bodies): grotesk title, serif body, mono labels, dark stages on a grey paper. */
+/* Layout: Apple HIG feel — one system typeface, centered large title, grouped inset sections on a light grey ground, dark rounded stages. */
 :root {
-  --paper: #ECEEF2; --surface: #F7F8FA; --ink: #14171D; --muted: #596070; --rule: #C9CED8;
-  --accent: #2C3CCB; --warm: #C9431F;
-  --stage: #0C0E12; --stage-ink: #E7E9EE; --stage-muted: #8A919E; --stage-rule: #262A33;
-  --raw: #FF7C5C; --avatar: #C9CEFF; --band: rgba(255, 255, 255, 0.05);
-  --display: "Bricolage Grotesque", "Helvetica Neue", Arial, sans-serif;
-  --body: "Newsreader", Georgia, "Times New Roman", serif;
-  --mono: "IBM Plex Mono", ui-monospace, Menlo, Consolas, monospace;
+  --bg: #F5F5F7; --group: #FFFFFF; --label: #1D1D1F; --secondary: #6E6E73; --tertiary: #86868B;
+  --sep: rgba(60, 60, 67, 0.18); --fill: rgba(118, 118, 128, 0.12);
+  --tint: #007AFF; --orange: #FF9F0A;
+  --stage: #000000; --stage-ink: #F5F5F7; --stage-muted: #8E8E93; --stage-rule: #2C2C2E;
+  --raw: #FF9F0A; --avatar: #64D2FF; --band: rgba(255, 255, 255, 0.06);
+  --font: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "Helvetica Neue", "Segoe UI", Arial, sans-serif;
+  --mono: var(--font);
 }
 @media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) { --paper: #101217; --surface: #171A20; --ink: #E5E7EC; --muted: #959CA8; --rule: #2A2F38; --accent: #8D99FF; --warm: #FF7C5C; --stage: #06070A; color-scheme: dark; }
+  :root:not([data-theme="light"]) { --bg: #000000; --group: #1C1C1E; --label: #F5F5F7; --secondary: #98989D; --tertiary: #8E8E93; --sep: rgba(84, 84, 88, 0.6); --fill: rgba(118, 118, 128, 0.24); --tint: #0A84FF; --stage: #0B0B0C; color-scheme: dark; }
 }
-:root[data-theme="dark"] { --paper: #101217; --surface: #171A20; --ink: #E5E7EC; --muted: #959CA8; --rule: #2A2F38; --accent: #8D99FF; --warm: #FF7C5C; --stage: #06070A; color-scheme: dark; }
+:root[data-theme="dark"] { --bg: #000000; --group: #1C1C1E; --label: #F5F5F7; --secondary: #98989D; --tertiary: #8E8E93; --sep: rgba(84, 84, 88, 0.6); --fill: rgba(118, 118, 128, 0.24); --tint: #0A84FF; --stage: #0B0B0C; color-scheme: dark; }
 
-body { background: var(--paper); color: var(--ink); font-family: var(--body); font-size: 17px; line-height: 1.55; }
+body { background: var(--bg); color: var(--label); font-family: var(--font); font-size: 17px; line-height: 1.47; letter-spacing: -0.01em; -webkit-font-smoothing: antialiased; }
 .wrap {
-  max-width: 1120px; margin: 0 auto;
+  max-width: 1080px; margin: 0 auto;
   padding-left: max(16px, env(safe-area-inset-left, 0px));
   padding-right: max(16px, env(safe-area-inset-right, 0px));
-  padding-block: 28px 64px;
-  display: grid; gap: 28px;
+  padding-block: 20px 64px;
+  display: grid; gap: 24px;
 }
-.top { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; flex-wrap: wrap; }
-.label { font-family: var(--mono); font-size: 11.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
-.back { font-family: var(--mono); font-size: 12px; color: var(--accent); text-decoration: none; border: 1px solid var(--rule); padding: 4px 10px; border-radius: 3px; }
-.back:hover { border-color: var(--accent); }
-header { display: grid; gap: 14px; }
-h1 { margin: 6px 0 0; font-family: var(--display); font-size: clamp(46px, 7.5vw, 96px); font-weight: 800; line-height: .9; letter-spacing: -.04em; text-wrap: balance; }
-h1 em { font-style: normal; color: var(--accent); }
-.lede { margin: 0; max-width: 62ch; }
+.top { display: flex; justify-content: flex-start; }
+.back { color: var(--tint); text-decoration: none; font-size: 17px; }
+.back:hover { text-decoration: underline; }
+header { display: grid; justify-items: center; text-align: center; gap: 10px; padding-block: 8px 4px; }
+.label { font-size: 13px; font-weight: 600; color: var(--secondary); letter-spacing: 0; text-transform: none; }
+h1 { margin: 0; font-size: clamp(40px, 6vw, 56px); font-weight: 700; line-height: 1.07; letter-spacing: -0.02em; text-wrap: balance; }
+.lede { margin: 0; max-width: 58ch; font-size: 19px; color: var(--secondary); }
 
-.source { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 14px; }
-.ctl { appearance: none; border: 1px solid var(--rule); background: var(--surface); color: var(--ink); border-radius: 3px; padding: 6px 11px; font-family: var(--mono); font-size: 12.5px; cursor: pointer; line-height: 1.3; }
-.ctl[aria-pressed="true"] { background: var(--ink); color: var(--paper); border-color: var(--ink); }
-.status { font-family: var(--mono); font-size: 12px; color: var(--muted); min-width: 0; }
-.status.err { color: var(--warm); }
-progress { width: 160px; height: 6px; accent-color: var(--accent); }
+.source { display: flex; flex-direction: column; align-items: center; gap: 10px; }
+.segmented { display: inline-flex; padding: 2px; border-radius: 9px; background: var(--fill); }
+.ctl { appearance: none; border: 0; background: transparent; color: var(--label); border-radius: 7px; padding: 6px 16px; font: 500 13px var(--font); cursor: pointer; }
+.segmented .ctl[aria-pressed="true"] { background: var(--group); box-shadow: 0 1px 3px rgba(0,0,0,.12), 0 0 0 .5px rgba(0,0,0,.04); }
+.status { font-size: 13px; color: var(--secondary); text-align: center; min-width: 0; }
+.status.err { color: #FF3B30; }
+progress { width: 200px; height: 4px; accent-color: var(--tint); }
 
-.stages { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
-.stage { margin: 0; display: grid; gap: 8px; min-width: 0; }
-.stage figcaption { display: flex; flex-direction: column; align-items: center; gap: 1px; text-align: center; }
-.stage figcaption b { font-family: var(--display); font-weight: 700; font-size: 18px; letter-spacing: -.01em; }
-.stage figcaption span { font-family: var(--mono); font-size: 11px; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
-.box { position: relative; margin-inline: auto; width: 100%; max-width: 100%; background: var(--stage); border-radius: 4px; overflow: hidden; }
+.stages { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.stage { margin: 0; display: grid; gap: 10px; min-width: 0; }
+.stage figcaption { display: flex; flex-direction: column; align-items: center; gap: 0; text-align: center; }
+.stage figcaption b { font-size: 17px; font-weight: 600; }
+.stage figcaption span { font-size: 13px; color: var(--secondary); }
+.box { position: relative; margin-inline: auto; width: 100%; max-width: 100%; background: var(--stage); border-radius: 18px; overflow: hidden; }
 .box canvas, .box video { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
 .box video { object-fit: contain; opacity: .35; }
-.key-raw { color: var(--warm); }
-.key-av { color: var(--accent); }
+.key-raw { color: var(--orange); }
+.key-av { color: var(--tint); }
 
-.dial { display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 14px 22px; border-top: 1px solid var(--rule); border-bottom: 1px solid var(--rule); padding-block: 16px; }
-.play { min-width: 64px; }
+.dial { display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 16px 24px; background: var(--group); border-radius: 18px; padding: 18px 22px; }
+.play { background: var(--fill); min-width: 72px; }
 .dial-main { display: grid; gap: 6px; min-width: 0; }
-.dial-main label { display: flex; justify-content: space-between; font-family: var(--display); font-weight: 600; font-size: 16px; }
-.dial-main label output { font-family: var(--mono); font-weight: 400; font-size: 13px; color: var(--muted); font-variant-numeric: tabular-nums; }
-input[type="range"] { width: 100%; accent-color: var(--accent); }
-.ends { display: flex; justify-content: space-between; gap: 12px; font-family: var(--mono); font-size: 10.5px; color: var(--muted); }
-.reads { display: grid; grid-auto-flow: column; gap: 22px; font-variant-numeric: tabular-nums; }
-.read { display: grid; gap: 2px; }
-.read small { font-family: var(--mono); font-size: 11px; letter-spacing: .07em; text-transform: uppercase; color: var(--muted); }
-.read strong { font-family: var(--display); font-size: 26px; font-weight: 800; letter-spacing: -.02em; }
-.opts { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: 10px 22px; font-family: var(--mono); font-size: 12px; color: var(--muted); }
-.opts select { font: 12px var(--mono); color: var(--ink); background: var(--surface); border: 1px solid var(--rule); border-radius: 3px; padding: 3px 6px; }
+.dial-main label { display: flex; justify-content: space-between; font-size: 17px; font-weight: 600; }
+.dial-main label output { font-weight: 400; color: var(--secondary); font-variant-numeric: tabular-nums; }
+input[type="range"] { width: 100%; accent-color: var(--tint); }
+.ends { display: flex; justify-content: space-between; gap: 12px; font-size: 12px; color: var(--tertiary); }
+.reads { display: grid; grid-auto-flow: column; gap: 24px; font-variant-numeric: tabular-nums; }
+.read { display: grid; gap: 0; text-align: right; }
+.read small { font-size: 12px; color: var(--secondary); }
+.read strong { font-size: 28px; font-weight: 600; letter-spacing: -0.02em; }
+.opts { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: 10px 24px; font-size: 15px; color: var(--secondary); border-top: .5px solid var(--sep); padding-top: 14px; }
+.opts select { font: 15px var(--font); color: var(--label); background: var(--fill); border: 0; border-radius: 8px; padding: 4px 8px; }
+.opts input[type="checkbox"] { accent-color: var(--tint); }
 
-.trace { display: grid; gap: 8px; }
+.trace { display: grid; gap: 10px; background: var(--group); border-radius: 18px; padding: 18px 22px 22px; }
 .trace-head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 6px 16px; }
-.trace-head b { font-family: var(--display); font-weight: 600; font-size: 16px; }
-.legend { display: flex; gap: 16px; font-family: var(--mono); font-size: 11.5px; color: var(--muted); }
-.legend i { display: inline-block; width: 16px; height: 2px; vertical-align: middle; margin-right: 6px; }
-.chartbox { position: relative; height: 170px; background: var(--stage); border-radius: 4px; cursor: ew-resize; }
+.trace-head b { font-size: 17px; font-weight: 600; }
+.legend { display: flex; gap: 16px; font-size: 13px; color: var(--secondary); }
+.legend i { display: inline-block; width: 14px; height: 3px; border-radius: 2px; vertical-align: middle; margin-right: 6px; }
+.chartbox { position: relative; height: 170px; background: var(--stage); border-radius: 12px; cursor: ew-resize; }
 .chartbox canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
 
-.notes { display: grid; gap: 10px; max-width: 70ch; font-size: 15.5px; color: var(--muted); }
+.notes { display: grid; gap: 10px; max-width: 68ch; margin-inline: auto; font-size: 15px; color: var(--secondary); text-align: left; }
 .notes p { margin: 0; }
-footer { font-family: var(--mono); font-size: 12px; color: var(--muted); display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; border-top: 1px solid var(--rule); padding-top: 16px; }
+footer { font-size: 12px; color: var(--tertiary); display: flex; justify-content: center; flex-wrap: wrap; gap: 6px 16px; border-top: .5px solid var(--sep); padding-top: 16px; }
 
-button:focus-visible, input:focus-visible, select:focus-visible, a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+button:focus-visible, input:focus-visible, select:focus-visible, a:focus-visible { outline: 3px solid color-mix(in srgb, var(--tint) 50%, transparent); outline-offset: 2px; }
 
 @media (max-width: 720px) {
   .stages { grid-template-columns: 1fr; }
   .dial { grid-template-columns: auto 1fr; }
   .reads { grid-column: 1 / -1; justify-content: start; }
+  .read { text-align: left; }
 }
 </style>
 </head>
@@ -104,16 +103,16 @@ button:focus-visible, input:focus-visible, select:focus-visible, a:focus-visible
 
 <main class="wrap">
   <div class="top">
-    <span class="label">Study 3 · Prototype · 2026</span>
-    <a class="back" href="https://jimin-byun.github.io/">← Portfolio</a>
+    <a class="back" href="https://jimin-byun.github.io/">‹ Portfolio</a>
   </div>
   <header>
-    <h1>Smoothing <em>Dial</em></h1>
-    <p class="lede">Pose estimation smooths a dancer's tracked joints so the avatar does not jitter. The same smoothing removes the short pauses and sharp accents that give a phrase its weight. Turn the dial and watch what the avatar keeps.</p>
+    <span class="label">Study 3 · Prototype · 2026</span>
+    <h1>Smoothing Dial</h1>
+    <p class="lede">Pose estimation smooths a dancer's tracked joints so the avatar does not jitter. The same smoothing delays and flattens the short pauses and sharp accents that give a phrase its weight. Turn the dial and watch what the avatar keeps.</p>
   </header>
 
   <section class="source" aria-label="Source">
-    <div class="source-btns" role="group" aria-label="Choose source" style="display:flex;gap:8px">
+    <div class="segmented" role="group" aria-label="Choose source">
       <button type="button" class="ctl" id="btnDemo" aria-pressed="true">Demo phrase</button>
       <button type="button" class="ctl" id="btnLoad" aria-pressed="false">Load a dance clip</button>
     </div>
@@ -143,7 +142,7 @@ button:focus-visible, input:focus-visible, select:focus-visible, a:focus-visible
     <div class="dial-main">
       <label for="smooth">Smoothing <output id="smoothOut">60</output></label>
       <input type="range" id="smooth" min="0" max="95" step="1" value="60">
-      <div class="ends"><span>← accents kept, jitter shows</span><span>steady, accents fade →</span></div>
+      <div class="ends"><span>Accents kept, jitter shows</span><span>Steady, accents fade</span></div>
     </div>
     <div class="reads">
       <div class="read"><small>Delay</small><strong id="lag">50 ms</strong></div>
@@ -169,7 +168,7 @@ button:focus-visible, input:focus-visible, select:focus-visible, a:focus-visible
   </section>
 
   <section class="notes">
-    <p>The filter is a causal exponential smoother, the kind real-time tracking uses because it cannot see the next frame. Stronger smoothing steadies the avatar but delays it and lowers its peaks. To be read, the dancer can move bigger and slower, or change the setting.</p>
+    <p>The filter is a causal exponential smoother, the kind real-time tracking uses because it cannot see the next frame. Stronger smoothing steadies the avatar but delays it and lowers its peaks. To be read, the dancer can change how they move, or change the setting.</p>
     <p>The demo phrase is synthetic: a held breath, a fast reach, a short upper-body accent, and a rise that speeds up. A loaded clip is analyzed in your browser with MediaPipe Pose Landmarker and does not leave your device. Clips are read up to 60 seconds.</p>
   </section>
   <footer><span>Jimin Byun</span><span>Smoothing Dial · early prototype, 2026</span></footer>
