@@ -3,116 +3,95 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="Smoothing Dial: an early prototype showing how pose-estimation smoothing flattens a dancer's pauses and accents.">
 <title>Smoothing Dial</title>
 <meta name="claude:viewport-fit-sides" content="cover">
-<meta name="description" content="A rehearsal sketch: how real-time smoothing in pose estimation flattens a dancer's pauses and accents.">
+
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@1,6..72,400;1,6..72,500&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=Newsreader:ital,opsz,wght@0,6..72,400;1,6..72,400&family=IBM+Plex+Mono:wght@400;500&display=swap">
 <style>
 *,*::before,*::after{box-sizing:border-box}
 body{margin:0}
-img{max-width:100%}
 [hidden]{display:none!important}
 
-/* Layout: a rehearsal-room bench — two stages side by side (body / avatar), the dial between them and the trace, one quiet column of text. */
+/* Layout: matches the portfolio studies (Borrowed Bodies): grotesk title, serif body, mono labels, dark stages on a grey paper. */
 :root {
-  --bg: #eceef1;
-  --surface: #f8f9fb;
-  --stage: #ffffff;
-  --ink: #1a1e27;
-  --muted: #5a6170;
-  --line: #d2d6dd;
-  --raw: #c0185a;
-  --avatar: #33466b;
-  --band: rgba(51, 70, 107, 0.07);
-  --display: "Newsreader", "Iowan Old Style", Georgia, serif;
-  --body: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
-  --mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  --paper: #ECEEF2; --surface: #F7F8FA; --ink: #14171D; --muted: #596070; --rule: #C9CED8;
+  --accent: #2C3CCB; --warm: #C9431F;
+  --stage: #0C0E12; --stage-ink: #E7E9EE; --stage-muted: #8A919E; --stage-rule: #262A33;
+  --raw: #FF7C5C; --avatar: #C9CEFF; --band: rgba(255, 255, 255, 0.05);
+  --display: "Bricolage Grotesque", "Helvetica Neue", Arial, sans-serif;
+  --body: "Newsreader", Georgia, "Times New Roman", serif;
+  --mono: "IBM Plex Mono", ui-monospace, Menlo, Consolas, monospace;
 }
 @media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) {
-    --bg: #11141a; --surface: #181c24; --stage: #0c0f14; --ink: #e5e8ee; --muted: #98a0b0;
-    --line: #2b313d; --raw: #ff5a92; --avatar: #a6badf; --band: rgba(166, 186, 223, 0.08);
-    color-scheme: dark;
-  }
+  :root:not([data-theme="light"]) { --paper: #101217; --surface: #171A20; --ink: #E5E7EC; --muted: #959CA8; --rule: #2A2F38; --accent: #8D99FF; --warm: #FF7C5C; --stage: #06070A; color-scheme: dark; }
 }
-:root[data-theme="dark"] {
-  --bg: #11141a; --surface: #181c24; --stage: #0c0f14; --ink: #e5e8ee; --muted: #98a0b0;
-  --line: #2b313d; --raw: #ff5a92; --avatar: #a6badf; --band: rgba(166, 186, 223, 0.08);
-  color-scheme: dark;
-}
-body { background: var(--bg); color: var(--ink); font-family: var(--body); font-size: 15px; line-height: 1.55; }
+:root[data-theme="dark"] { --paper: #101217; --surface: #171A20; --ink: #E5E7EC; --muted: #959CA8; --rule: #2A2F38; --accent: #8D99FF; --warm: #FF7C5C; --stage: #06070A; color-scheme: dark; }
+
+body { background: var(--paper); color: var(--ink); font-family: var(--body); font-size: 17px; line-height: 1.55; }
 .wrap {
-  max-width: 1080px; margin: 0 auto;
+  max-width: 1120px; margin: 0 auto;
   padding-left: max(16px, env(safe-area-inset-left, 0px));
   padding-right: max(16px, env(safe-area-inset-right, 0px));
-  padding-block: 40px 56px;
+  padding-block: 28px 64px;
   display: grid; gap: 28px;
 }
-header { display: grid; gap: 10px; max-width: 64ch; }
-.eyebrow { margin: 0; font-family: var(--mono); font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
-h1 { margin: 0; font-family: var(--display); font-style: italic; font-weight: 400; font-size: clamp(38px, 6vw, 58px); line-height: 1.02; text-wrap: balance; }
-.lede { margin: 0; font-size: 16px; color: var(--ink); }
-.lede em { font-style: normal; color: var(--raw); }
+.top { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; flex-wrap: wrap; }
+.label { font-family: var(--mono); font-size: 11.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+.back { font-family: var(--mono); font-size: 12px; color: var(--accent); text-decoration: none; border: 1px solid var(--rule); padding: 4px 10px; border-radius: 3px; }
+.back:hover { border-color: var(--accent); }
+header { display: grid; gap: 14px; }
+h1 { margin: 6px 0 0; font-family: var(--display); font-size: clamp(46px, 7.5vw, 96px); font-weight: 800; line-height: .9; letter-spacing: -.04em; text-wrap: balance; }
+h1 em { font-style: normal; color: var(--accent); }
+.lede { margin: 0; max-width: 62ch; }
 
-.source { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 18px; }
-.seg { display: inline-flex; border: 1px solid var(--line); border-radius: 999px; padding: 3px; background: var(--surface); }
-.seg button {
-  font: 500 13px var(--body); color: var(--muted); background: transparent; border: 0; border-radius: 999px;
-  padding: 7px 14px; cursor: pointer;
-}
-.seg button[aria-pressed="true"] { background: var(--ink); color: var(--bg); }
+.source { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 14px; }
+.ctl { appearance: none; border: 1px solid var(--rule); background: var(--surface); color: var(--ink); border-radius: 3px; padding: 6px 11px; font-family: var(--mono); font-size: 12.5px; cursor: pointer; line-height: 1.3; }
+.ctl[aria-pressed="true"] { background: var(--ink); color: var(--paper); border-color: var(--ink); }
 .status { font-family: var(--mono); font-size: 12px; color: var(--muted); min-width: 0; }
-.status.err { color: var(--raw); }
-progress { width: 160px; height: 6px; accent-color: var(--avatar); }
+.status.err { color: var(--warm); }
+progress { width: 160px; height: 6px; accent-color: var(--accent); }
 
-.stages { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+.stages { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
 .stage { margin: 0; display: grid; gap: 8px; min-width: 0; }
-.stage figcaption { display: flex; flex-direction: column; align-items: center; gap: 0; font-size: 13px; text-align: center; }
-.stage figcaption b { font-weight: 600; font-size: 15px; }
-.stage figcaption span { font-family: var(--mono); font-size: 12px; color: var(--muted); }
-.box {
-  position: relative; margin-inline: auto; width: 100%; max-width: 100%;
-  background: var(--stage); border: 1px solid var(--line); border-radius: 6px; overflow: hidden;
-}
+.stage figcaption { display: flex; flex-direction: column; align-items: center; gap: 1px; text-align: center; }
+.stage figcaption b { font-family: var(--display); font-weight: 700; font-size: 18px; letter-spacing: -.01em; }
+.stage figcaption span { font-family: var(--mono); font-size: 11px; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+.box { position: relative; margin-inline: auto; width: 100%; max-width: 100%; background: var(--stage); border-radius: 4px; overflow: hidden; }
 .box canvas, .box video { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
-.box video { object-fit: contain; }
-.key-raw { color: var(--raw); }
-.key-av { color: var(--avatar); }
+.box video { object-fit: contain; opacity: .35; }
+.key-raw { color: var(--warm); }
+.key-av { color: var(--accent); }
 
-.dial {
-  display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 14px 20px;
-  background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 16px 18px;
-}
-.play {
-  width: 44px; height: 44px; border-radius: 50%; border: 1px solid var(--line); background: var(--stage);
-  color: var(--ink); cursor: pointer; display: grid; place-items: center; font: 600 13px var(--body);
-}
+.dial { display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 14px 22px; border-top: 1px solid var(--rule); border-bottom: 1px solid var(--rule); padding-block: 16px; }
+.play { min-width: 64px; }
 .dial-main { display: grid; gap: 6px; min-width: 0; }
-.dial-main label { display: flex; justify-content: space-between; font-size: 13px; font-weight: 600; }
-.dial-main label output { font-family: var(--mono); font-weight: 500; }
-input[type="range"] { width: 100%; accent-color: var(--avatar); }
-.ends { display: flex; justify-content: space-between; font-family: var(--mono); font-size: 11px; color: var(--muted); }
-.reads { display: grid; grid-auto-flow: column; gap: 20px; font-variant-numeric: tabular-nums; }
+.dial-main label { display: flex; justify-content: space-between; font-family: var(--display); font-weight: 600; font-size: 16px; }
+.dial-main label output { font-family: var(--mono); font-weight: 400; font-size: 13px; color: var(--muted); font-variant-numeric: tabular-nums; }
+input[type="range"] { width: 100%; accent-color: var(--accent); }
+.ends { display: flex; justify-content: space-between; gap: 12px; font-family: var(--mono); font-size: 10.5px; color: var(--muted); }
+.reads { display: grid; grid-auto-flow: column; gap: 22px; font-variant-numeric: tabular-nums; }
 .read { display: grid; gap: 2px; }
-.read small { font-family: var(--mono); font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); }
-.read strong { font-family: var(--mono); font-size: 20px; font-weight: 500; }
-.opts { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: 10px 22px; font-size: 13px; color: var(--muted); }
-.opts select { font: 13px var(--body); color: var(--ink); background: var(--stage); border: 1px solid var(--line); border-radius: 4px; padding: 3px 6px; }
+.read small { font-family: var(--mono); font-size: 11px; letter-spacing: .07em; text-transform: uppercase; color: var(--muted); }
+.read strong { font-family: var(--display); font-size: 26px; font-weight: 800; letter-spacing: -.02em; }
+.opts { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: 10px 22px; font-family: var(--mono); font-size: 12px; color: var(--muted); }
+.opts select { font: 12px var(--mono); color: var(--ink); background: var(--surface); border: 1px solid var(--rule); border-radius: 3px; padding: 3px 6px; }
 
 .trace { display: grid; gap: 8px; }
-.trace-head { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 6px 16px; font-size: 13px; }
-.trace-head b { font-weight: 600; }
-.legend { display: flex; gap: 16px; font-family: var(--mono); font-size: 12px; color: var(--muted); }
+.trace-head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 6px 16px; }
+.trace-head b { font-family: var(--display); font-weight: 600; font-size: 16px; }
+.legend { display: flex; gap: 16px; font-family: var(--mono); font-size: 11.5px; color: var(--muted); }
 .legend i { display: inline-block; width: 16px; height: 2px; vertical-align: middle; margin-right: 6px; }
-.chartbox { position: relative; height: 160px; background: var(--stage); border: 1px solid var(--line); border-radius: 6px; cursor: ew-resize; }
+.chartbox { position: relative; height: 170px; background: var(--stage); border-radius: 4px; cursor: ew-resize; }
 .chartbox canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
 
-.notes { display: grid; gap: 8px; max-width: 70ch; font-size: 13px; color: var(--muted); border-top: 1px solid var(--line); padding-top: 18px; }
+.notes { display: grid; gap: 10px; max-width: 70ch; font-size: 15.5px; color: var(--muted); }
 .notes p { margin: 0; }
+footer { font-family: var(--mono); font-size: 12px; color: var(--muted); display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; border-top: 1px solid var(--rule); padding-top: 16px; }
 
-button:focus-visible, input:focus-visible, select:focus-visible { outline: 2px solid var(--raw); outline-offset: 2px; }
+button:focus-visible, input:focus-visible, select:focus-visible, a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 
 @media (max-width: 720px) {
   .stages { grid-template-columns: 1fr; }
@@ -124,16 +103,19 @@ button:focus-visible, input:focus-visible, select:focus-visible { outline: 2px s
 <body>
 
 <main class="wrap">
+  <div class="top">
+    <span class="label">Study 3 · Prototype · 2026</span>
+    <a class="back" href="https://jimin-byun.github.io/">← Portfolio</a>
+  </div>
   <header>
-    <p class="eyebrow">Rehearsal sketch · prototype</p>
-    <h1>Smoothing Dial</h1>
-    <p class="lede">Real-time pose estimation smooths a dancer's tracked joints to remove jitter. The same filter flattens the <em>short pauses and sharp accents</em> that give a phrase its weight. Turn the dial and watch what the avatar keeps, and what the dancer would have to change to be read.</p>
+    <h1>Smoothing <em>Dial</em></h1>
+    <p class="lede">Pose estimation smooths a dancer's tracked joints so the avatar does not jitter. The same smoothing removes the short pauses and sharp accents that give a phrase its weight. Turn the dial and watch what the avatar keeps.</p>
   </header>
 
   <section class="source" aria-label="Source">
-    <div class="seg" role="group" aria-label="Choose source">
-      <button type="button" id="btnDemo" aria-pressed="true">Demo phrase</button>
-      <button type="button" id="btnLoad" aria-pressed="false">Load a dance clip</button>
+    <div class="source-btns" role="group" aria-label="Choose source" style="display:flex;gap:8px">
+      <button type="button" class="ctl" id="btnDemo" aria-pressed="true">Demo phrase</button>
+      <button type="button" class="ctl" id="btnLoad" aria-pressed="false">Load a dance clip</button>
     </div>
     <input type="file" id="file" accept="video/*" hidden>
     <span class="status" id="status">Synthetic 12-second phrase: gather and pause, reach, upper-body accent, heavy rise.</span>
@@ -157,11 +139,11 @@ button:focus-visible, input:focus-visible, select:focus-visible { outline: 2px s
   </section>
 
   <section class="dial" aria-label="Smoothing">
-    <button type="button" class="play" id="play" aria-label="Pause">❚❚</button>
+    <button type="button" class="ctl play" id="play">Pause</button>
     <div class="dial-main">
       <label for="smooth">Smoothing <output id="smoothOut">60</output></label>
       <input type="range" id="smooth" min="0" max="95" step="1" value="60">
-      <div class="ends"><span>accents kept, jitter shows</span><span>stable, accents fade</span></div>
+      <div class="ends"><span>← accents kept, jitter shows</span><span>steady, accents fade →</span></div>
     </div>
     <div class="reads">
       <div class="read"><small>Delay</small><strong id="lag">50 ms</strong></div>
@@ -186,11 +168,11 @@ button:focus-visible, input:focus-visible, select:focus-visible { outline: 2px s
     <div class="chartbox" id="chartbox"><canvas id="chart"></canvas></div>
   </section>
 
-  <footer class="notes">
-    <p>The filter is a causal exponential smoother, the kind real-time tracking pipelines use because they cannot see the next frame. Stronger smoothing steadies the avatar but delays it and lowers its peaks. The dancer's options are to move bigger and slower until the system reads them, or to change the setting.</p>
-    <p>The demo phrase is synthetic, built to include a held breath, a fast reach, a short upper-body accent and a rise that accelerates. A loaded clip is analyzed in your browser with MediaPipe Pose Landmarker and never leaves your device. Clips are read up to 60 seconds.</p>
-    <p>Sketch by Jimin Byun, 2026.</p>
-  </footer>
+  <section class="notes">
+    <p>The filter is a causal exponential smoother, the kind real-time tracking uses because it cannot see the next frame. Stronger smoothing steadies the avatar but delays it and lowers its peaks. To be read, the dancer can move bigger and slower, or change the setting.</p>
+    <p>The demo phrase is synthetic: a held breath, a fast reach, a short upper-body accent, and a rise that speeds up. A loaded clip is analyzed in your browser with MediaPipe Pose Landmarker and does not leave your device. Clips are read up to 60 seconds.</p>
+  </section>
+  <footer><span>Jimin Byun</span><span>Smoothing Dial · early prototype, 2026</span></footer>
 </main>
 
 <script type="module">
@@ -264,7 +246,7 @@ function buildDemo() {
   state.frames = frames;
   state.aspect = 3 / 4;
   state.marks = [
-    { a: 2.1, b: 3.05, label: "gather · pause" },
+    { a: 2.1, b: 3.05, label: "pause" },
     { a: 3.05, b: 3.45, label: "reach" },
     { a: 6.48, b: 7.2, label: "accent" },
     { a: 8.1, b: 8.8, label: "heavy rise" },
@@ -411,9 +393,9 @@ function drawChart(i) {
   for (const m of state.marks) {
     const x0 = X(m.a * FPS), x1 = X(Math.min(n - 1, m.b * FPS));
     ctx.fillStyle = css("--band"); ctx.fillRect(x0, padT - 4 * d, x1 - x0, h - padT - padB + 4 * d);
-    ctx.fillStyle = css("--muted"); ctx.fillText(m.label, x0 + 3 * d, 5 * d);
+    ctx.fillStyle = css("--stage-muted"); ctx.fillText(m.label, x0 + 3 * d, 5 * d);
   }
-  ctx.strokeStyle = css("--line"); ctx.lineWidth = d;
+  ctx.strokeStyle = css("--stage-rule"); ctx.lineWidth = d;
   ctx.beginPath(); ctx.moveTo(padX, Y(0)); ctx.lineTo(w - padX, Y(0)); ctx.stroke();
 
   const line = (arr, color, lw) => {
@@ -425,7 +407,7 @@ function drawChart(i) {
   line(state.rawSpeed, css("--raw"), 1.2);
   line(state.avSpeed, css("--avatar"), 2.2);
 
-  ctx.strokeStyle = css("--ink"); ctx.lineWidth = 1.5 * d;
+  ctx.strokeStyle = css("--stage-ink"); ctx.lineWidth = 1.5 * d;
   ctx.beginPath(); ctx.moveTo(X(i), padT - 6 * d); ctx.lineTo(X(i), h - padB); ctx.stroke();
 }
 
@@ -446,8 +428,7 @@ function tick(now) {
 
 function setPlaying(p) {
   state.playing = p;
-  $("play").textContent = p ? "❚❚" : "▶";
-  $("play").setAttribute("aria-label", p ? "Pause" : "Play");
+  $("play").textContent = p ? "Pause" : "Play";
   const v = $("video");
   if (state.source === "video") { if (p) v.play().catch(() => {}); else v.pause(); }
 }
