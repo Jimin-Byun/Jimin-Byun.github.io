@@ -199,16 +199,16 @@ try{ if('scrollRestoration' in history) history.scrollRestoration='manual'; }cat
 </section>
 
 <section id="studies" aria-labelledby="h-st">
-  <div class="head"><div class="label">03</div><h2 id="h-st">Interactive studies</h2><p>Recordings of my own dancing, turned into pose data and given back to other bodies.</p></div>
+  <div class="head"><div class="label">03</div><h2 id="h-st">Interactive studies</h2><p>Videos of my own dancing, turned into pose data and then put back onto other bodies.</p></div>
   <div class="studies">
     <a class="study" href="points.html">
       <div class="shot"><img src="thumb-points.jpg" alt="Violet and red traces of two dancers’ wrists and ankles on a dark stage" width="828" height="436" loading="lazy"></div>
-      <div class="s"><div class="n">Study 1 · Duet</div><h3>What the Points Keep</h3><p class="q">When movement becomes data, what survives and what disappears?</p><p class="d">A duet read through four lenses: the filmed body, the tracked points, approximate Laban Effort, and the trace each dancer leaves around the body.</p>
+      <div class="s"><div class="n">Study 1 · Duet</div><h3>What the Points Keep</h3><p class="q">When a dancer’s movement is turned into data, which qualities stay and which get lost?</p><p class="d">I ran a duet through pose tracking and looked at it in four ways: the filmed body, the tracked points, approximate Laban Effort, and the trace each dancer leaves around the body.</p>
         <ul class="tags"><li>YOLO11 pose</li><li>2D · 17 points</li><li>Laban Effort (approx.)</li></ul><span class="go">Open the study</span></div>
     </a>
     <a class="study" href="bodies.html">
       <div class="shot"><img src="thumb-bodies.jpg" alt="A grey mannequin figure on a round stage, with the original video in the corner" width="828" height="436" loading="lazy"></div>
-      <div class="s"><div class="n">Study 2 · Solo</div><h3>Borrowed Bodies</h3><p class="q">When another body carries a movement, what does that body change?</p><p class="d">A solo lifted into 3D and carried by four avatar bodies, viewed from five angles beside the original video.</p>
+      <div class="s"><div class="n">Study 2 · Solo</div><h3>Borrowed Bodies</h3><p class="q">When another body carries a movement, what does that body change?</p><p class="d">I rebuilt a solo in 3D and put it on four avatar bodies. You can watch it from five angles beside the original video.</p>
         <ul class="tags"><li>MediaPipe 3D</li><li>Avatar</li><li>Uncanny valley</li></ul><span class="go">Open the study</span></div>
     </a>
   </div>
@@ -231,4 +231,72 @@ document.querySelectorAll('a.film').forEach(function(a){
   });
 });
 </script>
+<style id="neu">
+/* Neumorphic skin: one soft base colour; cards rise out of it, controls and tracks press into it */
+:root{
+  --paper:#E4E8EF; --surface:#E4E8EF; --rule:#CBD2DE; --accent-soft:#E4E8EF;
+  --hi:rgba(255,255,255,.95); --lo:rgba(158,170,191,.58);
+  --raise:8px 8px 18px var(--lo),-8px -8px 18px var(--hi);
+  --raise-sm:4px 4px 10px var(--lo),-4px -4px 10px var(--hi);
+  --press:inset 4px 4px 9px var(--lo),inset -4px -4px 9px var(--hi);
+  --press-sm:inset 2px 2px 5px var(--lo),inset -2px -2px 5px var(--hi);
+  --r-lg:22px; --r-md:14px; --r-sm:10px;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --paper:#1D2027; --surface:#1D2027; --rule:#2C313B; --accent-soft:#1D2027;
+  --hi:rgba(255,255,255,.055); --lo:rgba(0,0,0,.55)}}
+:root[data-theme="dark"]{
+  --paper:#1D2027; --surface:#1D2027; --rule:#2C313B; --accent-soft:#1D2027;
+  --hi:rgba(255,255,255,.055); --lo:rgba(0,0,0,.55)}
+body{background:var(--paper)}
+
+/* raised cards */
+.ri,.work,.thesis,.study,.fcol,.panel,.fx-col,.lower>div,.uncanny{
+  background:var(--paper)!important;border:0!important;border-radius:var(--r-lg)!important;box-shadow:var(--raise)}
+.fx-col,.fcol{border-top:0!important;position:relative;overflow:hidden}
+.fx-col::before,.fcol::before{content:"";position:absolute;left:22px;right:22px;top:0;height:3px;border-radius:0 0 3px 3px;background:var(--c)}
+
+/* sticky index bar */
+.top{background:color-mix(in srgb,var(--paper) 92%,transparent)!important;border-bottom:0!important;box-shadow:0 6px 14px -8px var(--lo)}
+.top a{border-radius:999px;transition:box-shadow .2s,color .2s}
+.top a:hover{background:transparent!important;box-shadow:var(--press-sm);color:var(--ink)}
+
+/* small raised pills */
+.chips li,.study .tags li,.lang{background:var(--paper)!important;border:0!important;box-shadow:var(--raise-sm);border-radius:999px}
+.lang{padding:5px 12px}
+
+/* pressed-in wells */
+.cloud,.stat,.meta li,.caveat,.timeline,.bar{background:var(--paper)!important;border:0!important;box-shadow:var(--press)}
+.cloud{border-radius:var(--r-md)!important;padding:22px!important}
+.stat{border-radius:var(--r-md)!important}
+.meta li{box-shadow:var(--press-sm);border-radius:8px!important}
+.caveat{border-radius:var(--r-md)!important;border-left:0!important}
+.timeline{border-radius:var(--r-md)!important;padding:6px;overflow:hidden}
+.bar{height:10px!important;border-radius:999px!important;box-shadow:var(--press-sm)}
+.bar i{top:-3px!important;height:16px!important;width:6px!important;border-radius:3px!important;background:var(--accent)!important;transform:translateX(-3px)!important;box-shadow:1px 1px 3px var(--lo)}
+
+/* media frames */
+.film,.stage{border-radius:var(--r-md)!important;box-shadow:var(--raise-sm)}
+.inset{border-radius:var(--r-sm)!important}
+.study{padding:14px;transition:box-shadow .25s!important}
+.study:hover{transform:none!important;box-shadow:12px 12px 26px var(--lo),-12px -12px 26px var(--hi)}
+.study .shot{border-radius:var(--r-md);overflow:hidden;box-shadow:var(--press-sm)}
+.study .s{padding:16px 8px 6px!important}
+
+/* buttons: raised, pressed when on */
+.lenses,.seg{background:transparent!important;border:0!important;overflow:visible!important;gap:12px!important;padding:2px}
+.lens,.seg button,.ctl,.btn{background:var(--paper)!important;border:0!important;border-radius:var(--r-sm)!important;box-shadow:var(--raise-sm);color:var(--ink)!important;transition:box-shadow .18s,color .18s}
+.lens,.seg button{padding:11px 12px!important}
+.ctl,.btn{padding:8px 13px!important}
+.lens:hover,.seg button:hover,.ctl:hover,.btn:hover{box-shadow:2px 2px 6px var(--lo),-2px -2px 6px var(--hi)}
+.lens:active,.seg button:active,.ctl:active,.btn:active{box-shadow:var(--press-sm)}
+.lens[aria-pressed="true"],.seg button[aria-pressed="true"],.ctl[aria-pressed="true"]{box-shadow:var(--press)!important;color:var(--accent)!important}
+.lens[aria-pressed="true"] .n,.seg button[aria-pressed="true"] .n{color:var(--accent)!important;opacity:.8}
+.film .play{box-shadow:3px 3px 8px rgba(0,0,0,.35)}
+
+/* quieter rules inside cards */
+.note{border-top:0!important;padding-top:4px!important}
+th,td{border-bottom-color:var(--rule)!important}
+.source{border-top:0!important;padding:20px;border-radius:var(--r-lg);box-shadow:var(--press)}
+</style>
 </body></html>
