@@ -169,13 +169,14 @@ button:focus-visible, input:focus-visible, select:focus-visible, a:focus-visible
 
   <section class="notes">
     <p>The filter is a causal exponential smoother, the kind real-time tracking uses because it cannot see the next frame. Stronger smoothing steadies the avatar but delays it and lowers its peaks. To be read, the dancer can change how they move, or change the setting.</p>
-    <p>The demo phrase is synthetic: a held breath, a fast reach, a short upper-body accent, and a rise that speeds up. A loaded clip is analyzed in your browser with MediaPipe Pose Landmarker and does not leave your device. Clips are read up to 60 seconds.</p>
+    <p>The demo phrase is synthetic: a held breath, a fast reach, a short upper-body accent, and a rise that speeds up. A loaded clip is analyzed in your browser with MediaPipe Pose Landmarker and does not leave your device. Clips are read up to 10 minutes; a longer clip is read for its first 10 minutes and plays only that part.</p>
   </section>
   <footer><span>Jimin Byun</span><span>Smoothing Dial · early prototype, 2026</span></footer>
 </main>
 
 <script type="module">
 const FPS = 30;
+const MAX_SEC = 600; // clips are read up to 10 minutes
 const MP_IDX = [0, 11, 12, 13, 14, 15, 16, 23, 24, 25, 26, 27, 28];
 const BONES = [[1,2],[1,3],[3,5],[2,4],[4,6],[1,7],[2,8],[7,8],[7,9],[9,11],[8,10],[10,12]];
 const JOINT_LABEL = { rw: "reaching wrist", lw: "other wrist", chest: "chest", pelvis: "pelvis" };
@@ -417,7 +418,12 @@ function tick(now) {
   const dt = state.last ? (now - state.last) / 1000 : 0;
   state.last = now;
   if (state.frames.length) {
-    if (state.source === "video") state.t = $("video").currentTime;
+    if (state.source === "video") {
+      const v = $("video");
+      // past the analyzed part, loop back so the avatar never freezes on its last pose
+      if (v.currentTime >= duration()) v.currentTime = 0;
+      state.t = v.currentTime;
+    }
     else if (state.playing) { state.t += dt; if (state.t >= duration()) state.t = 0; }
     const i = frameIndex();
     drawStages(i); drawChart(i);
@@ -463,7 +469,7 @@ async function analyze(file) {
   }
   v.src = URL.createObjectURL(file);
   await once(v, "loadedmetadata");
-  const dur = Math.min(v.duration || 0, 60), n = Math.floor(dur * FPS);
+  const dur = Math.min(v.duration || 0, MAX_SEC), n = Math.floor(dur * FPS);
   if (!n) { status.classList.add("err"); status.textContent = "This file has no readable video."; return; }
   prog.hidden = false; prog.value = 0;
   const frames = [];
