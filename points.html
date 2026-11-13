@@ -182,11 +182,11 @@ footer{font-size:12px}
     <div>
       <div class="topbar"><div class="label">Interactive study · 2026 · Jimin Byun</div><span style="display:flex;gap:8px;flex-wrap:wrap"><a class="lang" href="./">← Portfolio</a><a class="lang" href="bodies.html">Part 2: Borrowed Bodies</a></span></div>
       <h1>What the <em>Points</em> Keep</h1>
-      <p class="lede">A dance phrase passed through a pose-tracking system and read through four lenses. Each lens shows what the machine receives from the moving body, what it can compute back, and what it leaves out.</p>
+      <p class="lede">I ran a short duet through a pose-tracking system and looked at the result in four ways. Each view shows a different part of what the data kept and what it lost.</p>
     </div>
     <div class="question">
       <div class="label">Question</div>
-      <p>When a dancer’s movement becomes data, which qualities survive the translation, and which disappear?</p>
+      <p>When a dancer’s movement is turned into data, what stays and what gets lost?</p>
     </div>
   </header>
 
@@ -226,7 +226,7 @@ footer{font-size:12px}
     </aside>
   </section>
 
-  <section class="fx" aria-label="What this study shows"><h2>What this study shows</h2><p class="lead">A summary of what the pose data kept and lost in this duet.</p><div class="fx-grid"><div class="fx-col "><h3>Carried over</h3><ul><li><b>Rhythm</b><span>When a movement turns sudden the Time value rises, and when it slows the value falls.</span></li><li><b>Reach</b><span>The Residue lens draws how far each dancer reaches around the body.</span></li></ul></div><div class="fx-col no"><h3>Not recorded</h3><ul><li><b>Breath</b><span>There are no points on the chest or back, so the widening of the ribs leaves no trace.</span></li><li><b>Intention</b><span>A reach toward a partner and a push away, on the same path at the same speed, get the same values.</span></li></ul></div><div class="fx-col lim"><h3>Limits</h3><ul><li><b>Five points</b><span>Effort and the traces use only the head, wrists and ankles; the hands and feet themselves are not tracked.</span></li><li><b>The lift</b><span>From 15.4 to 21.9 seconds one dancer is hidden by the other and drops out of the data.</span></li><li><b>Effort values</b><span>They are an approximation and have not been checked against trained Laban analysts.</span></li></ul></div></div></section>
+  <section class="fx" aria-label="What this study shows"><h2>What this study shows</h2><p class="lead">What the pose data kept and lost in this duet.</p><div class="fx-grid"><div class="fx-col "><h3>Carried over</h3><ul><li><b>Rhythm</b><span>When a movement turns sudden the Time value rises, and when it slows the value falls.</span></li><li><b>Reach</b><span>The Residue lens draws how far each dancer reaches around the body.</span></li></ul></div><div class="fx-col no"><h3>Not recorded</h3><ul><li><b>Breath</b><span>There are no points on the chest or back, so breathing does not show up in the data.</span></li><li><b>Intention</b><span>A reach toward a partner and a push away, on the same path at the same speed, get the same values.</span></li></ul></div><div class="fx-col lim"><h3>Limits</h3><ul><li><b>Five points</b><span>Effort and the traces use only the head, wrists and ankles; the hands and feet themselves are not tracked.</span></li><li><b>The lift</b><span>From 15.4 to 21.9 seconds one dancer is hidden by the other and drops out of the data.</span></li><li><b>Effort values</b><span>They are an approximation and have not been checked against trained Laban analysts.</span></li></ul></div></div></section>
   <section class="lower">
     <div>
       <h2>How the system reads movement</h2>
@@ -244,10 +244,10 @@ footer{font-size:12px}
       <p class="fine" id="method"></p>
     </div>
     <div class="essay">
-      <h2>What the data cannot hold</h2>
-      <p>The four values follow the speed, acceleration, jerk and path of five points. They register changes in tempo and suddenness, and the Quality lens makes them visible.</p>
-      <p>What they cannot register is why a movement is made. A reach toward someone and a push away, along the same path at the same speed, receive the same values. Maxine Sheets-Johnstone (1999) describes movement as a way of thinking that is felt from inside; the data has no record of that inside.</p>
-      <p>In my doctoral research, I want to study where and how such qualities are lost or changed as movement passes through motion capture, avatars, and AI systems.</p>
+      <h2>What the numbers miss</h2>
+      <p>The four values come only from the speed, acceleration, jerk and path of five points. So they pick up when a movement speeds up or becomes sudden, and the Quality view shows this.</p>
+      <p>But they cannot tell why the movement is made. If I reach toward someone or push them away along the same path at the same speed, the numbers come out the same. Maxine Sheets-Johnstone (1999) writes about movement as a kind of thinking that the mover feels from the inside. That part is not in the data.</p>
+      <p>This is what I want to look at more closely in my PhD: where and how these qualities get lost or changed when movement goes through motion capture, avatars and AI.</p>
     </div>
   </section>
 
@@ -306,14 +306,14 @@ const DRIVES = {"000":"Float","001":"Glide","010":"Flick","011":"Dab","100":"Wri
 const COOL=[111,134,255], WARM=[255,106,69];
 const DANCER=["A","B","C"];
 const LENSES = {
-  body:{title:"Body", text:()=>"The phrase as performed. Weight, breath, gaze and intention arrive together and cannot be pulled apart. Every other lens is measured against this one.",
-    keeps:"Everything the eye takes in.", loses:"Being there: this is a recording."},
-  points:{title:"Points", text:()=>`Pose estimation reduces each body to ${S.skel.unit}, sampled about thirty times a second. Hollow points mark joints the system is unsure of; its confidence drops when a limb turns away or crosses the torso.`+
-      (S.maxPeople>1?" When the dancers touch, the system has to decide where one body ends and the other begins, and it does not always decide correctly.":""),
+  body:{title:"Body", text:()=>"The original video of the duet. I use it as the reference when I look at the other three views.",
+    keeps:"What you can see in the video.", loses:"The live room. This is still a recording."},
+  points:{title:"Points", text:()=>`Pose estimation turns each body into ${S.skel.unit}, about 30 times a second. Hollow points are joints the system is not sure about. This happens a lot when a limb turns away or crosses the torso.`+
+      (S.maxPeople>1?" When the dancers touch, it sometimes mixes up whose arm or leg is whose.":""),
     keeps:"Position, frame by frame.", loses:"Breath, gaze, muscular tension, intention."},
-  quality:{title:"Quality", text:()=>"Laban’s Effort describes how a movement is done rather than where it goes. Each factor is approximated from changes in position. A trail follows the head, wrists and ankles: it widens with speed, turns red with suddenness and breaks apart when the flow is bound.",
-    keeps:"Changes of speed and suddenness.", loses:"The felt reason for a dynamic."},
-  residue:{title:"Residue", text:()=>`With the ${S.maxPeople>1?"bodies":"body"} removed, the phrase becomes a drawing that grows as it plays. Wrists, ankles and head are traced around ${S.maxPeople>1?"each dancer’s":"the dancer’s"} own pelvis, inside the kinesphere Laban described as the space a body can reach without travelling. Measured this way, the camera’s zooms and pans leave almost no mark on the trace.`,
+  quality:{title:"Quality", text:()=>"Laban’s Effort is about how a movement is done, not where it goes. Here I only approximate each factor from changes in position. The trail follows the head, wrists and ankles. It gets wider when they move fast, redder when the movement is sudden, and breaks up when the flow is bound.",
+    keeps:"Changes of speed and suddenness.", loses:"Why the dancer moves that way."},
+  residue:{title:"Residue", text:()=>`This view hides the ${S.maxPeople>1?"bodies":"body"} and only draws the paths of the head, wrists and ankles while the video plays. The paths are measured from ${S.maxPeople>1?"each dancer’s":"the dancer’s"} pelvis, so they show roughly the kinesphere, which Laban described as the space a body can reach without travelling. Because of this, the camera’s zooms and pans barely change the drawing.`,
     keeps:"The shape of each dancer’s reach.", loses:"Travel across the stage."}
 };
 
