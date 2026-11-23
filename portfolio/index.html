@@ -58,7 +58,7 @@ section{scroll-margin-top:72px;display:grid;gap:24px}
 
 /* research interest */
 .ri{background:var(--surface);border:1px solid var(--rule);border-radius:12px;padding:clamp(20px,3vw,32px);display:grid;gap:20px}
-.ri-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(16px,3vw,32px)}
+.ri-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:clamp(16px,3vw,32px)}
 .ri-grid div{display:grid;gap:8px;align-content:start;min-width:0}
 .ri-grid b{font-family:var(--mono);font-weight:500;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);border-top:2px solid var(--accent);padding-top:10px}
 .ri-grid div:nth-child(2) p{font-weight:600}
@@ -155,7 +155,7 @@ try{ if('scrollRestoration' in history) history.scrollRestoration='manual'; }cat
 </header>
 
 <section id="research" aria-labelledby="h-ri">
-  <div class="ri"><div class="label" id="h-ri">Research interest</div><div class="ri-grid"><div><b>Observed</b><p>When I turned my own dancing into pose data (YOLO11, MediaPipe), the timing and speed of each phrase carried over. Breath in the torso, the weight put into a movement, and the articulation of the hands and feet did not. These tools record only where the joints are, with no points on the chest or along the fingers and toes.</p></div><div><b>Question</b><p>As movement is mediated through technologies such as motion capture, avatars, and AI, where are such qualities lost or changed, and what does that change for the dancers, choreographers, and audiences who work with the result?</p></div><div><b>Approach</b><p>Making and testing work with these systems in the studio, and reading what the data records against performance analysis and dancers’ own accounts of moving.</p></div></div></div>
+  <div class="ri"><div class="label" id="h-ri">Research interest</div><div class="ri-grid"><div><b>Observed</b><p>When I turned my own dancing into pose data (YOLO11, MediaPipe) and put it on avatars, the timing and speed of each phrase carried over. The breath in my torso, the weight I put into a movement, and the small work of the hands and feet came back as something else. The system reads only where the joints are, so the avatar danced the phrase in its own way. I started to see this less as a failed copy and more as the system’s own reading of the dance, the way two dancers never do the same phrase in the same way.</p></div><div><b>Question</b><p>When a dance moves into a digital body, what of it remains, and what becomes a new performance? I want to look at who and what makes this difference visible, the dancer who knows how the phrase should feel and the audience who watches the avatar, and how the meaning of a performance changes along the way.</p></div></div></div>
 </section>
 
 <section id="choreography" aria-labelledby="h-ch">
@@ -203,7 +203,7 @@ try{ if('scrollRestoration' in history) history.scrollRestoration='manual'; }cat
   <div class="studies">
     <a class="study" href="points.html">
       <div class="shot"><img src="../thumb-points.jpg" alt="Violet and red traces of two dancers’ wrists and ankles on a dark stage" width="828" height="436" loading="lazy"></div>
-      <div class="s"><div class="n">Study 1 · Duet</div><h3>What the Points Keep</h3><p class="q">When a dancer’s movement is turned into data, which qualities stay and which get lost?</p><p class="d">I ran a duet through pose tracking and looked at it in four ways. The study shows the filmed body, the tracked points, Effort values computed from joint motion, and the trace each dancer leaves around the body.</p>
+      <div class="s"><div class="n">Study 1 · Duet</div><h3>What the Points Keep</h3><p class="q">When a dancer’s movement is turned into data, what stays the same and what comes out differently?</p><p class="d">I ran a duet through pose tracking and looked at it in four ways. The study shows the filmed body, the tracked points, Effort values computed from joint motion, and the trace each dancer leaves around the body.</p>
         <ul class="tags"><li>YOLO11 pose</li><li>2D · 17 points</li><li>Effort (computed)</li></ul><span class="go">Open the study</span></div>
     </a>
     <a class="study" href="bodies.html">
